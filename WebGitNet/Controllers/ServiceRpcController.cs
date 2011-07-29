@@ -46,7 +46,7 @@ namespace WebGitNet.Controllers
             var repoPath = ((FileInfo)resourceInfo.FileSystemInfo).Directory.FullName;
 
             string input;
-            using (var request = new StreamReader(Request.InputStream, Encoding.Default))
+            using (var request = new StreamReader(Request.InputStream, Encoding.GetEncoding(1252)))
             {
                 input = request.ReadToEnd();
             }
