@@ -38,5 +38,10 @@ namespace WebGitNet.Controllers
 
             return View("List", resourceInfo);
         }
+
+        private static GitCommandResult GitCommand(string commandFormat, string service, string repoPath)
+        {
+            return new GitCommandResult(commandFormat, service, repoPath);
+        }
     }
 }
