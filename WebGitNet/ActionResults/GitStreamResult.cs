@@ -53,7 +53,7 @@ namespace WebGitNet.ActionResults
             response.BufferOutput = false;
             response.ContentEncoding = Encoding.GetEncoding(1252);
 
-            using (var git = GitUtilities.Start(string.Format(this.commandFormat, this.action), this.repoPath))
+            using (var git = GitUtilities.Start(string.Format(this.commandFormat, this.action), this.repoPath, redirectInput: true))
             {
                 var readThread = new Thread(() =>
                 {

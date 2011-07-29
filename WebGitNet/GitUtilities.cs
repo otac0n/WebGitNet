@@ -15,23 +15,21 @@ namespace WebGitNet
     {
         public static string Execute(string command, string workingDir)
         {
-            using (var process = Start(command, workingDir))
+            using (var process = Start(command, workingDir, redirectInput: false))
             {
                 return process.StandardOutput.ReadToEnd();
             }
         }
 
-        public static Process Start(string command, string workingDir)
+        public static Process Start(string command, string workingDir, bool redirectInput = false)
         {
             var git = WebConfigurationManager.AppSettings["GitCommand"];
             var startInfo = new ProcessStartInfo(git, command)
             {
                 WorkingDirectory = workingDir,
-                RedirectStandardError = true,
-                RedirectStandardInput = true,
+                RedirectStandardInput = redirectInput,
                 RedirectStandardOutput = true,
                 StandardOutputEncoding = Encoding.GetEncoding(1252),
-                StandardErrorEncoding = Encoding.GetEncoding(1252),
                 UseShellExecute = false,
                 CreateNoWindow = true,
             };
