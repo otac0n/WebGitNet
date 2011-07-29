@@ -7,6 +7,8 @@
 
 namespace WebGitNet.Models
 {
+    using System.IO;
+
     public class ResourceInfo
     {
         public ResourceType Type { get; set; }
@@ -16,5 +18,7 @@ namespace WebGitNet.Models
         public string Name { get; set; }
 
         public string FullPath { get; set; }
+
+        public FileSystemInfo FileSystemInfo { get; set; }
     }
 }

@@ -32,10 +32,12 @@ namespace WebGitNet.Models
             else if (File.Exists(fullPath))
             {
                 info.Type = ResourceType.File;
+                info.FileSystemInfo = new FileInfo(fullPath);
             }
             else if (Directory.Exists(fullPath))
             {
                 info.Type = ResourceType.Directory;
+                info.FileSystemInfo = new DirectoryInfo(fullPath);
             }
             else
             {
@@ -45,7 +47,7 @@ namespace WebGitNet.Models
             if (info.Type != ResourceType.NotFound)
             {
                 info.LocalPath = fullPath.Substring(this.rootPath.Length).Replace(@"\", @"/");
-                info.Name = new FileInfo(fullPath).Name;
+                info.Name = info.FileSystemInfo.Name;
             }
 
             return info;
