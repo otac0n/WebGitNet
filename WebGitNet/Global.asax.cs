@@ -22,9 +22,14 @@ namespace WebGitNet
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                "File Access",
+                "git/{*url}",
+                new { controller = "File", action = "Fetch" });
+
+            routes.MapRoute(
                 "Default",
-                "{controller}/{action}/{id}",
-                new { controller = "Home", action = "Index", id = UrlParameter.Optional });
+                string.Empty,
+                new { controller = "Home", action = "Index" });
         }
 
         protected void Application_Start()
