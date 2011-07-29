@@ -8,6 +8,7 @@
 namespace WebGitNet
 {
     using System.Diagnostics;
+    using System.Text;
     using System.Web.Configuration;
 
     public static class GitUtilities
@@ -29,6 +30,8 @@ namespace WebGitNet
                 RedirectStandardError = true,
                 RedirectStandardInput = true,
                 RedirectStandardOutput = true,
+                StandardOutputEncoding = Encoding.GetEncoding(1252),
+                StandardErrorEncoding = Encoding.GetEncoding(1252),
                 UseShellExecute = false,
                 CreateNoWindow = true,
             };
