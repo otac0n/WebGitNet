@@ -33,8 +33,10 @@
                 return HttpNotFound();
             }
 
-            var result = GitUtilities.Execute("log -n 5", resourceInfo.FullPath);
-            return Content(result, "text/plain");
+            ViewBag.RepoName = resourceInfo.Name;
+            ViewBag.LastCommit = GitUtilities.Execute("log -1 --shortstat", resourceInfo.FullPath);
+
+            return View();
         }
     }
 }

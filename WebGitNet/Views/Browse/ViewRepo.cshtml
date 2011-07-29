@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = ViewBag.RepoName;
+
+    var lastCommit = ViewBag.LastCommit;
+}
+
+@section headers
+{
+    <link href="@Url.Content("~/Content/browse.css")" rel="stylesheet" type="text/css" />
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="log-entry">@lastCommit</div>
