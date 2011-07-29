@@ -20,6 +20,14 @@ namespace WebGitNet.Models
             this.rootPath = this.dirInfo.FullName + Path.DirectorySeparatorChar;
         }
 
+        public DirectoryInfo DirectoryInfo
+        {
+            get
+            {
+                return this.dirInfo;
+            }
+        }
+
         public ResourceInfo GetResourceInfo(string resourcePath)
         {
             var fullPath = this.FindFullPath(resourcePath);

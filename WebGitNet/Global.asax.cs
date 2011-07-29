@@ -22,6 +22,16 @@ namespace WebGitNet
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                "Browse Index",
+                "browse",
+                new { controller = "Browse", action = "Index" });
+
+            routes.MapRoute(
+                "View Repo",
+                "browse/{repo}",
+                new { controller = "Browse", action = "ViewRepo" });
+
+            routes.MapRoute(
                 "Get */info/refs",
                 "git/{*url}",
                 new { controller = "File", action = "GetInfoRefs" },

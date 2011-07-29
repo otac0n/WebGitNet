@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="ActionResults\GitCommandResult.cs" />
     <Compile Include="ActionResults\GitStreamResult.cs" />
+    <Compile Include="Controllers\BrowseController.cs" />
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\ServiceRpcController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -119,6 +120,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
+    <Content Include="Views\Browse\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

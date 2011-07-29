@@ -1,0 +1,12 @@
+﻿@model IList<string>
+
+@{
+    ViewBag.Title = "Repositories";
+}
+
+<h2>Repositories</h2>
+
+@foreach (var repo in Model)
+{
+    @Html.ActionLink(repo, "ViewRepo", new { repo = repo });
+}
