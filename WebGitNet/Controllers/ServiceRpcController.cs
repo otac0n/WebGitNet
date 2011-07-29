@@ -8,9 +8,9 @@
 namespace WebGitNet.Controllers
 {
     using System.IO;
-    using System.Text;
     using System.Web.Configuration;
     using System.Web.Mvc;
+    using WebGitNet.ActionResults;
     using WebGitNet.Models;
 
     public class ServiceRpcController : Controller
@@ -26,13 +26,13 @@ namespace WebGitNet.Controllers
         [HttpPost]
         public ActionResult UploadPack(string url)
         {
-            return ServiceRpc(url, "upload-pack");
+            return this.ServiceRpc(url, "upload-pack");
         }
 
         [HttpPost]
         public ActionResult ReceivePack(string url)
         {
-            return ServiceRpc(url, "receive-pack");
+            return this.ServiceRpc(url, "receive-pack");
         }
 
         private ActionResult ServiceRpc(string url, string action)
@@ -45,20 +45,7 @@ namespace WebGitNet.Controllers
 
             var repoPath = ((FileInfo)resourceInfo.FileSystemInfo).Directory.FullName;
 
-            string input;
-            using (var request = new StreamReader(Request.InputStream, Encoding.GetEncoding(1252)))
-            {
-                input = request.ReadToEnd();
-            }
-
-            string output;
-            using (var git = GitUtilities.Start(action + " --stateless-rpc .", repoPath))
-            {
-                git.StandardInput.Write(input);
-                output = git.StandardOutput.ReadToEnd();
-            }
-
-            return Content(output, "application/git-" + action + "-result");
+            return new GitStreamResult("{0} --stateless-rpc .", action, repoPath);
         }
     }
 }

@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionResults\GitCommandResult.cs" />
+    <Compile Include="ActionResults\GitStreamResult.cs" />
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\ServiceRpcController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
