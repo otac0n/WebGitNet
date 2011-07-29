@@ -1,4 +1,11 @@
-﻿namespace WebGitNet.ActionResults
+﻿//-----------------------------------------------------------------------
+// <copyright file="GitCommandResult.cs" company="(none)">
+//  Copyright © 2011 John Gietzen. All rights reserved.
+// </copyright>
+// <author>John Gietzen</author>
+//-----------------------------------------------------------------------
+
+namespace WebGitNet.ActionResults
 {
     using System;
     using System.Web.Mvc;
