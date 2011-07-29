@@ -54,7 +54,7 @@ namespace WebGitNet.ActionResults
 
             using (var git = GitUtilities.Start(string.Format(this.commandFormat, this.action), this.repoPath))
             {
-                var buffer = new char[8192];
+                var buffer = new char[4194304];
                 int read;
 
                 using (var input = new StreamReader(request.InputStream, Encoding.GetEncoding(1252)))
