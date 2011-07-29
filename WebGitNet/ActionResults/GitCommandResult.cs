@@ -8,6 +8,7 @@
 namespace WebGitNet.ActionResults
 {
     using System;
+    using System.Text;
     using System.Web.Mvc;
 
     public class GitCommandResult : ActionResult
@@ -48,6 +49,7 @@ namespace WebGitNet.ActionResults
 
             response.StatusCode = 200;
             response.ContentType = "application/x-git-" + this.service + "-advertisement";
+            response.ContentEncoding = Encoding.GetEncoding(1252);
             response.Write(PacketFormat(string.Format("# service=git-{0}\n", this.service)));
             response.Write(PacketFlush());
             response.Write(commandResult);
