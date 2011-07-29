@@ -1,8 +1,7 @@
-﻿@model DirectoryInfo
+﻿@model ResourceInfo
 
 @{
-    string location = ViewBag.Location;
-    ViewBag.Title = "Index of git/" + location;
+    ViewBag.Title = "Index of git/" + Model.LocalPath;
 }
 
 <h2>@ViewBag.Title</h2>

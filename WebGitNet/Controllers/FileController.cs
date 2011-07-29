@@ -23,8 +23,20 @@ namespace WebGitNet.Controllers
 
         public ActionResult Fetch(string url)
         {
-            ViewBag.Location = url ?? string.Empty;
-            return View("List");
+            url = url ?? string.Empty;
+            var resourceInfo = this.fileManager.GetResourceInfo(url);
+
+            if (resourceInfo.Type == ResourceType.NotFound)
+            {
+                return HttpNotFound();
+            }
+
+            if (resourceInfo.Type == ResourceType.File)
+            {
+                return File(resourceInfo.FullPath, "application/octet-stream");
+            }
+
+            return View("List", resourceInfo);
         }
     }
 }

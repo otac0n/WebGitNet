@@ -66,6 +66,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\FileManager.cs" />
+    <Compile Include="Models\ResourceInfo.cs" />
+    <Compile Include="Models\ResourceType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

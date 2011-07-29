@@ -11,13 +11,52 @@ namespace WebGitNet.Models
 
     public class FileManager
     {
-        private readonly string fullPath;
+        private readonly string rootPath;
         private readonly DirectoryInfo dirInfo;
 
         public FileManager(string path)
         {
             this.dirInfo = new DirectoryInfo(path);
-            this.fullPath = this.dirInfo.FullName;
+            this.rootPath = this.dirInfo.FullName + Path.DirectorySeparatorChar;
+        }
+
+        public ResourceInfo GetResourceInfo(string resourcePath)
+        {
+            var fullPath = this.FindFullPath(resourcePath);
+            var info = new ResourceInfo { FullPath = fullPath };
+
+            if (!fullPath.StartsWith(this.rootPath))
+            {
+                info.Type = ResourceType.NotFound;
+            }
+            else if (File.Exists(fullPath))
+            {
+                info.Type = ResourceType.File;
+            }
+            else if (Directory.Exists(fullPath))
+            {
+                info.Type = ResourceType.Directory;
+            }
+            else
+            {
+                info.Type = ResourceType.NotFound;
+            }
+
+            if (info.Type != ResourceType.NotFound)
+            {
+                info.LocalPath = fullPath.Substring(this.rootPath.Length).Replace(@"\", @"/");
+                info.Name = new FileInfo(fullPath).Name;
+            }
+
+            return info;
+        }
+
+        private string FindFullPath(string url)
+        {
+            var path = Path.Combine(this.rootPath, url);
+            var info = new FileInfo(path);
+
+            return info.FullName;
         }
     }
 }
