@@ -1,0 +1,9 @@
+
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.[Cc]ache
+*.docstates
+Thumbs.db
+*.Publish.xml
