@@ -60,13 +60,8 @@ namespace WebGitNet.Controllers
             {
                 var repoPath = ((FileInfo)resourceInfo.FileSystemInfo).Directory.Parent.FullName;
 
-                return GitCommand("{0} --stateless-rpc --advertise-refs .", service, repoPath);
+                return new GitCommandResult("{0} --stateless-rpc --advertise-refs .", service, repoPath);
             }
-        }
-
-        private static GitCommandResult GitCommand(string commandFormat, string service, string repoPath)
-        {
-            return new GitCommandResult(commandFormat, service, repoPath);
         }
 
         private string GetService()
