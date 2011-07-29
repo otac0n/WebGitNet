@@ -10,6 +10,7 @@ namespace WebGitNet.ActionResults
     using System;
     using System.IO;
     using System.Text;
+    using System.Threading;
     using System.Web.Mvc;
 
     public class GitStreamResult : ActionResult
@@ -54,21 +55,29 @@ namespace WebGitNet.ActionResults
 
             using (var git = GitUtilities.Start(string.Format(this.commandFormat, this.action), this.repoPath))
             {
-                var buffer = new char[4194304];
-                int read;
-
-                using (var input = new StreamReader(request.InputStream, Encoding.GetEncoding(1252)))
+                var readThread = new Thread(() =>
                 {
-                    while ((read = input.ReadBlock(buffer, 0, buffer.Length)) > 0)
+                    var readBuffer = new char[1048576];
+                    int readCount;
+
+                    using (var input = new StreamReader(request.InputStream, Encoding.GetEncoding(1252)))
                     {
-                        git.StandardInput.Write(buffer, 0, read);
+                        while ((readCount = input.ReadBlock(readBuffer, 0, readBuffer.Length)) > 0)
+                        {
+                            git.StandardInput.Write(readBuffer, 0, readCount);
+                        }
                     }
+                });
+                readThread.Start();
+
+                var writeBuffer = new char[4194304];
+                int writeCount;
+                while ((writeCount = git.StandardOutput.ReadBlock(writeBuffer, 0, writeBuffer.Length)) > 0)
+                {
+                    response.Write(writeBuffer, 0, writeCount);
                 }
 
-                while ((read = git.StandardOutput.ReadBlock(buffer, 0, buffer.Length)) > 0)
-                {
-                    response.Write(buffer, 0, read);
-                }
+                readThread.Join();
             }
         }
     }
