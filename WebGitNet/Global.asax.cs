@@ -28,6 +28,18 @@ namespace WebGitNet
                 new { url = @"(.*?)/info/refs" });
 
             routes.MapRoute(
+                "Post */git-upload-pack",
+                "git/{*url}",
+                new { controller = "ServiceRpc", action = "UploadPack" },
+                new { url = @"(.*?)/git-upload-pack" });
+
+            routes.MapRoute(
+                "Post */git-receive-pack",
+                "git/{*url}",
+                new { controller = "ServiceRpc", action = "ReceivePack" },
+                new { url = @"(.*?)/git-receive-pack" });
+
+            routes.MapRoute(
                 "File Access",
                 "git/{*url}",
                 new { controller = "File", action = "Fetch" });
