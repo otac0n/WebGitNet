@@ -46,7 +46,7 @@ namespace WebGitNet.Controllers
             var service = this.GetService();
             var resourceInfo = this.fileManager.GetResourceInfo(url);
 
-            if (service == null || resourceInfo.Type != ResourceType.File)
+            if (service == null || resourceInfo.Type == ResourceType.Directory)
             {
                 if (resourceInfo.Type != ResourceType.Directory)
                 {
