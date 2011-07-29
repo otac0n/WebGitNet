@@ -42,6 +42,9 @@ namespace WebGitNet.Models
             else
             {
                 info.Type = ResourceType.NotFound;
+                info.FileSystemInfo = fullPath.EndsWith(Path.DirectorySeparatorChar.ToString())
+                    ? (FileSystemInfo)new DirectoryInfo(fullPath)
+                    : new FileInfo(fullPath);
             }
 
             if (info.Type != ResourceType.NotFound)
