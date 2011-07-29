@@ -2,6 +2,22 @@
 
 @{
     ViewBag.Title = "Index of git/" + Model.LocalPath;
+    var dirInfo = Model.FileSystemInfo as DirectoryInfo;
 }
 
 <h2>@ViewBag.Title</h2>
+
+<ul>
+@foreach (var dir in dirInfo.EnumerateDirectories())
+{
+    <li class="folder">
+        @Html.ActionLink(dir.Name, "Fetch", new { url = Path.Combine(Model.LocalPath, dir.Name) + "/" })
+    </li>
+}
+@foreach (var file in dirInfo.EnumerateFiles())
+{
+    <li class="file">
+        @Html.ActionLink(file.Name, "Fetch", new { url = Path.Combine(Model.LocalPath, file.Name) })
+    </li>
+}
+</ul>
