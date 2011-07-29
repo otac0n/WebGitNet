@@ -7,10 +7,20 @@
 
 namespace WebGitNet.Controllers
 {
+    using System.Web.Configuration;
     using System.Web.Mvc;
+    using WebGitNet.Models;
 
     public class FileController : Controller
     {
+        private readonly FileManager fileManager;
+
+        public FileController()
+        {
+            var reposPath = WebConfigurationManager.AppSettings["RepositoriesPath"];
+            this.fileManager = new FileManager(reposPath);
+        }
+
         public ActionResult Fetch(string url)
         {
             ViewBag.Location = url ?? string.Empty;
