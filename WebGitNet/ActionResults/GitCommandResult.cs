@@ -42,7 +42,25 @@ namespace WebGitNet.ActionResults
 
         public override void ExecuteResult(ControllerContext context)
         {
-            throw new NotImplementedException();
+            var response = context.HttpContext.Response;
+
+            var commandResult = GitUtilities.Execute(string.Format(this.commandFormat, this.service), this.workingDir);
+
+            response.StatusCode = 200;
+            response.ContentType = "application/x-git-" + this.service + "-advertisement";
+            response.Write(PacketFormat(string.Format("# service=git-{0}\n", this.service)));
+            response.Write(PacketFlush());
+            response.Write(commandResult);
+        }
+
+        private static string PacketFormat(string packet)
+        {
+            return (packet.Length + 4).ToString("X").PadLeft(4, '0') + packet;
+        }
+
+        private static string PacketFlush()
+        {
+            return "0000";
         }
     }
 }
