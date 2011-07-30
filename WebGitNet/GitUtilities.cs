@@ -35,7 +35,7 @@ namespace WebGitNet
                 WorkingDirectory = workingDir,
                 RedirectStandardInput = redirectInput,
                 RedirectStandardOutput = true,
-                StandardOutputEncoding = outputEncoding ?? Encoding.GetEncoding(1252),
+                StandardOutputEncoding = outputEncoding ?? Encoding.GetEncoding(28591),
                 UseShellExecute = false,
                 CreateNoWindow = true,
             };
