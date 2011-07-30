@@ -26,7 +26,7 @@
 <div id="last-commit" class="page-section">
 @if (lastCommit == null)
 {
-<text><span class="empty-commit-history">There are no commits in this repository.</span></text>
+    <span class="empty-commit-history">There are no commits in this repository.</span>
 }
 else
 {
@@ -35,9 +35,13 @@ else
 }
 </div>
 
-@if (currentTree != null)
-{
 <div id="page-section">
-@Html.Partial("ObjectTree", currentTree)
-</div>
+@if (currentTree == null || currentTree.Objects.Count == 0)
+{
+    <span class="empty-tree">There are no files being tracked in this repository.</span>
 }
+else
+{
+@Html.Partial("ObjectTree", currentTree)
+}
+</div>
