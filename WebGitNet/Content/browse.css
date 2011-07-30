@@ -3,3 +3,7 @@
     white-space : pre-line;
 }
 
+.clone-info input 
+{
+    width : 400px;
+}
