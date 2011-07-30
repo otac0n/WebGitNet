@@ -69,7 +69,7 @@ namespace WebGitNet
                     select parseResults(r)).ToList();
         }
 
-        public static List<ObjectInfo> GetTreeInfo(string repoPath, string tree, string path = null)
+        public static TreeView GetTreeInfo(string repoPath, string tree, string path = null)
         {
             if (string.IsNullOrEmpty(tree))
             {
@@ -105,8 +105,9 @@ namespace WebGitNet
                     name);
             };
 
-            return (from r in results.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries)
-                    select parseResults(r)).ToList();
+            var objects = from r in results.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries)
+                          select parseResults(r);
+            return new TreeView(tree, path, objects);
         }
 
         private static string ParseResultLine(string prefix, string result, out string rest)

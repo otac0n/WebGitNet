@@ -78,6 +78,7 @@
     <Compile Include="Models\ObjectType.cs" />
     <Compile Include="Models\ResourceInfo.cs" />
     <Compile Include="Models\ResourceType.cs" />
+    <Compile Include="Models\TreeView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,20 +1,13 @@
-﻿@model IEnumerable<WebGitNet.Models.ObjectInfo>
+﻿@model TreeView
 
 @{
     ViewBag.Title = ViewBag.RepoName + " tree";
-
-    string tree = ViewBag.Tree;
-    string path = ViewBag.Path ?? "";
-    if (!path.EndsWith("/") && !string.IsNullOrEmpty(path))
-    {
-        path += "/";
-    }
 }
 
 <h2>@ViewBag.Title</h2>
 
 <div>
-@tree / @path
+@Model.Tree / @Model.Path
 </div>
 
 <table>
@@ -27,7 +20,7 @@
         </th>
     </tr>
 
-@foreach (var item in Model.OrderByDescending(i => i.ObjectType).ThenBy(i => i.Name))
+@foreach (var item in Model.Objects.OrderByDescending(i => i.ObjectType).ThenBy(i => i.Name))
 {
     <tr>
         <td>
@@ -36,11 +29,11 @@
         <td>
         @if (item.ObjectType == ObjectType.Tree)
         {
-            @Html.ActionLink(item.Name, "ViewTree", new { @object = tree, path = path + item.Name + "/" })
+            @Html.ActionLink(item.Name, "ViewTree", new { @object = Model.Tree, path = Model.Path + item.Name + "/" })
         }
         else
         {
-            @Html.ActionLink(item.Name, "ViewBlob", new { @object = tree, path = path + item.Name })
+            @Html.ActionLink(item.Name, "ViewBlob", new { @object = Model.Tree, path = Model.Path + item.Name })
         }
         </td>
     </tr>
