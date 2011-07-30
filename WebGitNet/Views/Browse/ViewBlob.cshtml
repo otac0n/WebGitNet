@@ -1,0 +1,30 @@
+﻿@{
+    string fileName = ViewBag.FileName;
+    string contentType = ViewBag.ContentType;
+    string repoName = ViewBag.RepoName;
+    string tree = ViewBag.Tree;
+    string path = ViewBag.Path;
+
+    ViewBag.Title = "View " + fileName;
+}
+
+<h2>View Blob</h2>
+
+<div>
+@tree / @path
+</div>
+
+<div class="blob-preview">
+  <div class="content-type">@contentType</div>
+  <div class="raw-version-link">@Html.ActionLink("raw version", "ViewBlob", new { repo = repoName, @object = tree, path = path, raw = true })</div>
+@if (contentType.StartsWith("image/"))
+{
+  <div class="image-preview">
+    <img src="@Url.Action("ViewBlob", new { repo = repoName, @object = tree, path = path, raw = true })" />
+  </div>
+}
+else
+{
+    <div class="preview-unavailable">Preview is unavailable.</div>
+}
+</div>

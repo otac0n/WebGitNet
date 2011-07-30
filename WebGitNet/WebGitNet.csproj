@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionResults\GitCommandResult.cs" />
+    <Compile Include="ActionResults\GitFileResult.cs" />
     <Compile Include="ActionResults\GitStreamResult.cs" />
     <Compile Include="Controllers\BrowseController.cs" />
     <Compile Include="Controllers\FileController.cs" />
@@ -72,6 +73,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="HtmlHelpers.cs" />
+    <Compile Include="MimeUtilities.cs" />
     <Compile Include="Models\AccessLevel.cs" />
     <Compile Include="Models\CreateRepoRequest.cs" />
     <Compile Include="Models\LogEntry.cs" />
@@ -135,6 +137,7 @@
     <Content Include="Views\Browse\ViewTree.cshtml" />
     <Content Include="Views\Browse\ObjectTree.cshtml" />
     <Content Include="Views\Manage\Create.cshtml" />
+    <Content Include="Views\Browse\ViewBlob.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

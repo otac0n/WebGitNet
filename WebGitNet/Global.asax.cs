@@ -37,6 +37,11 @@ namespace WebGitNet
                 new { controller = "Browse", action = "ViewTree", path = UrlParameter.Optional });
 
             routes.MapRoute(
+                "View Blob",
+                "browse/{repo}/blob/{object}/{*path}",
+                new { controller = "Browse", action = "ViewBlob", path = UrlParameter.Optional });
+
+            routes.MapRoute(
                 "Get */info/refs",
                 "git/{*url}",
                 new { controller = "File", action = "GetInfoRefs" },

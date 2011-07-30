@@ -7,9 +7,11 @@
 
 namespace WebGitNet.Controllers
 {
+    using System.IO;
     using System.Linq;
     using System.Web.Configuration;
     using System.Web.Mvc;
+    using WebGitNet.ActionResults;
     using WebGitNet.Models;
 
     public class BrowseController : Controller
@@ -61,6 +63,31 @@ namespace WebGitNet.Controllers
             ViewBag.Path = path ?? string.Empty;
 
             return View(items);
+        }
+
+        public ActionResult ViewBlob(string repo, string @object, string path, bool raw = false)
+        {
+            var resourceInfo = this.fileManager.GetResourceInfo(repo);
+            if (resourceInfo.Type != ResourceType.Directory || string.IsNullOrEmpty(path))
+            {
+                return HttpNotFound();
+            }
+
+            var fileName = Path.GetFileName(path);
+            var contentType = MimeUtilities.GetMimeType(fileName);
+
+            if (raw)
+            {
+                return new GitFileResult(resourceInfo.FullPath, @object, path, contentType);
+            }
+
+            ViewBag.RepoName = resourceInfo.Name;
+            ViewBag.Tree = @object;
+            ViewBag.Path = path;
+            ViewBag.FileName = fileName;
+            ViewBag.ContentType = contentType;
+
+            return View();
         }
     }
 }

@@ -112,6 +112,27 @@ namespace WebGitNet
             return new TreeView(tree, path, objects);
         }
 
+        public static Process StartGetBlob(string repoPath, string tree, string path)
+        {
+            if (string.IsNullOrEmpty(tree))
+            {
+                throw new ArgumentNullException("tree");
+            }
+
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            if (!Regex.IsMatch(tree, "^[-a-zA-Z0-9]+$"))
+            {
+                throw new ArgumentOutOfRangeException("tree", "tree mush be the id of a tree-ish object.");
+            }
+
+            path = path.Replace("\\", "\\\\").Replace("\"", "\\\"");
+            return Start(string.Format("show {0}:\"{1}\"", tree, path), repoPath, redirectInput: false);
+        }
+
         public static void CreateRepo(string repoPath)
         {
             var workingDir = Path.GetDirectoryName(repoPath);
