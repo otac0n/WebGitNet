@@ -45,5 +45,19 @@ namespace WebGitNet.Controllers
 
             return View();
         }
+
+        public ActionResult ViewTree(string repo, string @object)
+        {
+            var resourceInfo = this.fileManager.GetResourceInfo(repo);
+            if (resourceInfo.Type != ResourceType.Directory)
+            {
+                return HttpNotFound();
+            }
+
+            var items = GitUtilities.GetTreeInfo(resourceInfo.FullPath, @object);
+            ViewBag.RepoName = resourceInfo.Name;
+
+            return View(items);
+        }
     }
 }

@@ -16,15 +16,15 @@
     </div>
 }
     <div class="commit-ref">
-        <span>commit:</span> @Html.ActionLink(Model.Commit, "ViewCommit")
+        <span>commit:</span> @Html.ActionLink(Model.Commit, "ViewCommit", new { @object = Model.Commit })
     </div>
     <div class="tree-ref">
-        <span>tree:</span> @Html.ActionLink(Model.Tree, "ViewTree")
+        <span>tree:</span> @Html.ActionLink(Model.Tree, "ViewTree", new { @object = Model.Tree })
     </div>
 @foreach (var parent in Model.Parent.Split(' '))
 {
     <div class="tree-ref">
-        <span>parent:</span> @Html.ActionLink(parent, "ViewTree")
+        <span>parent:</span> @Html.ActionLink(parent, "ViewTree", new { @object = parent })
     </div>
 }
 </div>

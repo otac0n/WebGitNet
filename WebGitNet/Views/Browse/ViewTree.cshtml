@@ -1,0 +1,32 @@
+﻿@model IEnumerable<WebGitNet.Models.ObjectInfo>
+
+@{
+    ViewBag.Title = ViewBag.RepoName + " tree " + ViewBag.Tree;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<table>
+    <tr>
+        <th>
+            Size
+        </th>
+        <th>
+            Name
+        </th>
+    </tr>
+
+@foreach (var item in Model.OrderByDescending(i => i.ObjectType).ThenBy(i => i.Name))
+{
+    <tr>
+        <td>
+            @item.Size
+        </td>
+        <td>
+            @Html.ActionLink(item.Name, item.ObjectType == ObjectType.Tree ? "ViewTree" : "ViewBlob", new { @object = item.Hash })
+        </td>
+    </tr>
+}
+
+</table>
+
