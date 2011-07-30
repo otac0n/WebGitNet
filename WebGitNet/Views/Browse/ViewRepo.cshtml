@@ -2,6 +2,7 @@
     ViewBag.Title = ViewBag.RepoName;
 
     LogEntry lastCommit = ViewBag.LastCommit;
+    TreeView currentTree = ViewBag.CurrentTree;
 
     var requestUrl = Url.RequestContext.HttpContext.Request.Url;
     var repoUrl = requestUrl.Scheme + "://" + requestUrl.Authority + Url.Action("Fetch", "File", new { url = ViewBag.RepoName });
@@ -21,7 +22,7 @@
   </table>
 </div>
 
-<div id="last-commit">
+<div id="last-commit" class="page-section">
 @if (lastCommit == null)
 {
 <text><span class="empty-commit-history">There are no commits in this repository.</span></text>
@@ -32,3 +33,10 @@ else
 @Html.Partial("LogEntry", lastCommit)</text>
 }
 </div>
+
+@if (currentTree != null)
+{
+<div id="page-section">
+@Html.Partial("ObjectTree", currentTree)
+</div>
+}

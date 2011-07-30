@@ -131,6 +131,7 @@
     <Content Include="Views\Browse\ViewRepo.cshtml" />
     <Content Include="Views\Browse\LogEntry.cshtml" />
     <Content Include="Views\Browse\ViewTree.cshtml" />
+    <Content Include="Views\Browse\ObjectTree.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

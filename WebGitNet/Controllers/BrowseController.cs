@@ -42,6 +42,7 @@ namespace WebGitNet.Controllers
 
             ViewBag.RepoName = resourceInfo.Name;
             ViewBag.LastCommit = GitUtilities.GetLogEntries(resourceInfo.FullPath, 1).FirstOrDefault();
+            ViewBag.CurrentTree = GitUtilities.GetTreeInfo(resourceInfo.FullPath, "HEAD");
 
             return View();
         }
