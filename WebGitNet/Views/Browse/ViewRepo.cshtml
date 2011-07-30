@@ -4,7 +4,7 @@
     LogEntry lastCommit = ViewBag.LastCommit;
 
     var requestUrl = Url.RequestContext.HttpContext.Request.Url;
-    var repoUrl = requestUrl.Scheme + "://" + requestUrl.Authority + Url.Action("Fetch", "File", new { url = ViewBag.RepoName + "/" });
+    var repoUrl = requestUrl.Scheme + "://" + requestUrl.Authority + Url.Action("Fetch", "File", new { url = ViewBag.RepoName });
 }
 
 @section headers
