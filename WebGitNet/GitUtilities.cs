@@ -12,6 +12,7 @@ namespace WebGitNet
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Web.Configuration;
     using WebGitNet.Models;
 
@@ -68,11 +69,55 @@ namespace WebGitNet
                     select parseResults(r)).ToList();
         }
 
+        public static List<ObjectInfo> GetTreeInfo(string repoPath, string tree)
+        {
+            if (string.IsNullOrEmpty(tree) || !Regex.IsMatch(tree, "^[a-fA-F0-9]+$"))
+            {
+                throw new ArgumentOutOfRangeException("tree", "tree mush be a commit hash or partial commit hash.");
+            }
+
+            var results = Execute("ls-tree -l -z " + tree, repoPath, Encoding.UTF8);
+
+            Func<string, ObjectInfo> parseResults = result =>
+            {
+                var mode = ParseTreePart(result, "[ ]+", out result);
+                var type = ParseTreePart(result, "[ ]+", out result);
+                var hash = ParseTreePart(result, "[ ]+", out result);
+                var size = ParseTreePart(result, "\\t+", out result);
+                var name = result;
+
+                return new ObjectInfo(
+                    (ObjectType)Enum.Parse(typeof(ObjectType), type, ignoreCase: true),
+                    hash,
+                    size == "-" ? (int?)null : int.Parse(size),
+                    name);
+            };
+
+            return (from r in results.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries)
+                    select parseResults(r)).ToList();
+        }
+
         private static string ParseResultLine(string prefix, string result, out string rest)
         {
             var parts = result.Split(new[] { '\n' }, 2);
             rest = parts[1];
             return parts[0].Substring(prefix.Length);
+        }
+
+        private static string ParseTreePart(string result, string delimiterPattern, out string rest)
+        {
+            var match = Regex.Match(result, delimiterPattern);
+
+            if (!match.Success)
+            {
+                rest = result;
+                return null;
+            }
+            else
+            {
+                rest = result.Substring(match.Index + match.Length);
+                return result.Substring(0, match.Index);
+            }
         }
     }
 }
