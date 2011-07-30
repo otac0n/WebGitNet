@@ -22,6 +22,13 @@
 </div>
 
 <div id="last-commit">
-Last Commit:
-@Html.Partial("LogEntry", lastCommit)
+@if (lastCommit == null)
+{
+<text><span class="empty-commit-history">There are no commits in this repository.</span></text>
+}
+else
+{
+<text>Last Commit:
+@Html.Partial("LogEntry", lastCommit)</text>
+}
 </div>
