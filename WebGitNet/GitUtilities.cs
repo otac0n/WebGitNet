@@ -83,7 +83,7 @@ namespace WebGitNet
                 throw new ArgumentOutOfRangeException("tree", "tree mush be the id of a tree-ish object.");
             }
 
-            path = path ?? "";
+            path = path ?? string.Empty;
             path = path.Replace("\\", "\\\\").Replace("\"", "\\\"");
             var results = Execute(string.Format("ls-tree -l -z {0}:\"{1}\"", tree, path), repoPath, Encoding.UTF8);
 

@@ -58,7 +58,7 @@ namespace WebGitNet.Controllers
             var items = GitUtilities.GetTreeInfo(resourceInfo.FullPath, @object, path);
             ViewBag.RepoName = resourceInfo.Name;
             ViewBag.Tree = @object;
-            ViewBag.Path = path ?? "";
+            ViewBag.Path = path ?? string.Empty;
 
             return View(items);
         }
