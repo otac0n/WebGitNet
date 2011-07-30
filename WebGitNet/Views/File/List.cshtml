@@ -11,13 +11,13 @@
 @foreach (var dir in dirInfo.EnumerateDirectories())
 {
     <li class="folder">
-        @Html.ActionLink(dir.Name, "Fetch", new { url = Path.Combine(Model.LocalPath, dir.Name) + "/" })
+        @Html.ActionLink(dir.Name, "Fetch", new { url = Model.LocalPath + "/" + dir.Name + "/" })
     </li>
 }
 @foreach (var file in dirInfo.EnumerateFiles())
 {
     <li class="file">
-        @Html.ActionLink(file.Name, "Fetch", new { url = Path.Combine(Model.LocalPath, file.Name) })
+        @Html.ActionLink(file.Name, "Fetch", new { url = Model.LocalPath + "/" + file.Name })
     </li>
 }
 </ul>
