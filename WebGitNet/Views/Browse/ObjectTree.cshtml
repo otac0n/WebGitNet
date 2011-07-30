@@ -1,0 +1,33 @@
+﻿@model TreeView
+<div>
+@Model.Tree / @Model.Path
+</div>
+
+<table>
+    <tr>
+        <th>
+            Size
+        </th>
+        <th>
+            Name
+        </th>
+    </tr>
+@foreach (var item in Model.Objects.OrderByDescending(i => i.ObjectType).ThenBy(i => i.Name))
+{
+    <tr>
+        <td>
+            @item.Size
+        </td>
+        <td>
+        @if (item.ObjectType == ObjectType.Tree)
+        {
+            @Html.ActionLink(item.Name, "ViewTree", new { @object = Model.Tree, path = Model.Path + item.Name + "/" })
+        }
+        else
+        {
+            @Html.ActionLink(item.Name, "ViewBlob", new { @object = Model.Tree, path = Model.Path + item.Name })
+        }
+        </td>
+    </tr>
+}
+</table>
