@@ -34,7 +34,7 @@
             }
 
             ViewBag.RepoName = resourceInfo.Name;
-            ViewBag.LastCommit = GitUtilities.Execute("log -1 --shortstat", resourceInfo.FullPath);
+            ViewBag.LastCommit = GitUtilities.GetLogEntries(resourceInfo.FullPath, 1).FirstOrDefault();
 
             return View();
         }
