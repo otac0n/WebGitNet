@@ -69,14 +69,26 @@ namespace WebGitNet
                     select parseResults(r)).ToList();
         }
 
-        public static List<ObjectInfo> GetTreeInfo(string repoPath, string tree)
+        public static List<ObjectInfo> GetTreeInfo(string repoPath, string tree, string path = null)
         {
-            if (string.IsNullOrEmpty(tree) || !Regex.IsMatch(tree, "^[a-fA-F0-9]+$"))
+            if (string.IsNullOrEmpty(tree))
             {
-                throw new ArgumentOutOfRangeException("tree", "tree mush be a commit hash or partial commit hash.");
+                throw new ArgumentNullException("tree");
             }
 
-            var results = Execute("ls-tree -l -z " + tree, repoPath, Encoding.UTF8);
+            if (!Regex.IsMatch(tree, "^[-a-zA-Z0-9]+$"))
+            {
+                throw new ArgumentOutOfRangeException("tree", "tree mush be the id of a tree-ish object.");
+            }
+
+            path = path ?? "";
+            path = path.Replace("\\", "\\\\").Replace("\"", "\\\"");
+            var results = Execute(string.Format("ls-tree -l -z {0}:\"{1}\"", tree, path), repoPath, Encoding.UTF8);
+
+            if (results.StartsWith("fatal: "))
+            {
+                throw new Exception(results);
+            }
 
             Func<string, ObjectInfo> parseResults = result =>
             {

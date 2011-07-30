@@ -46,7 +46,7 @@ namespace WebGitNet.Controllers
             return View();
         }
 
-        public ActionResult ViewTree(string repo, string @object)
+        public ActionResult ViewTree(string repo, string @object, string path)
         {
             var resourceInfo = this.fileManager.GetResourceInfo(repo);
             if (resourceInfo.Type != ResourceType.Directory)
@@ -54,8 +54,10 @@ namespace WebGitNet.Controllers
                 return HttpNotFound();
             }
 
-            var items = GitUtilities.GetTreeInfo(resourceInfo.FullPath, @object);
+            var items = GitUtilities.GetTreeInfo(resourceInfo.FullPath, @object, path);
             ViewBag.RepoName = resourceInfo.Name;
+            ViewBag.Tree = @object;
+            ViewBag.Path = path ?? "";
 
             return View(items);
         }

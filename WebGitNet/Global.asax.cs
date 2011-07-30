@@ -33,8 +33,8 @@ namespace WebGitNet
 
             routes.MapRoute(
                 "View Tree",
-                "browse/{repo}/tree/{object}",
-                new { controller = "Browse", action = "ViewTree" });
+                "browse/{repo}/tree/{object}/{*path}",
+                new { controller = "Browse", action = "ViewTree", path = UrlParameter.Optional });
 
             routes.MapRoute(
                 "Get */info/refs",

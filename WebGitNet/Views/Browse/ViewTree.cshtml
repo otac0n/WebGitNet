@@ -1,10 +1,21 @@
 ﻿@model IEnumerable<WebGitNet.Models.ObjectInfo>
 
 @{
-    ViewBag.Title = ViewBag.RepoName + " tree " + ViewBag.Tree;
+    ViewBag.Title = ViewBag.RepoName + " tree";
+
+    string tree = ViewBag.Tree;
+    string path = ViewBag.Path ?? "";
+    if (!path.EndsWith("/") && !string.IsNullOrEmpty(path))
+    {
+        path += "/";
+    }
 }
 
 <h2>@ViewBag.Title</h2>
+
+<div>
+@tree / @path
+</div>
 
 <table>
     <tr>
@@ -23,7 +34,14 @@
             @item.Size
         </td>
         <td>
-            @Html.ActionLink(item.Name, item.ObjectType == ObjectType.Tree ? "ViewTree" : "ViewBlob", new { @object = item.Hash })
+        @if (item.ObjectType == ObjectType.Tree)
+        {
+            @Html.ActionLink(item.Name, "ViewTree", new { @object = tree, path = path + item.Name + "/" })
+        }
+        else
+        {
+            @Html.ActionLink(item.Name, "ViewBlob", new { @object = tree, path = path + item.Name })
+        }
         </td>
     </tr>
 }
