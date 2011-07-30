@@ -38,7 +38,6 @@ p, ul
 
 h1, h2, h3, h4, h5, h6
 {
-    font-size: 1.5em;
     color: #000;
 }
 
@@ -51,8 +50,10 @@ h1
 
 h2
 {
+    font-size: 1.5em;
     padding: 0 0 10px 0;
 }
+
 h3
 {
     font-size: 1.2em;
@@ -103,8 +104,6 @@ h5, h6
 {
     padding: 30px 30px 15px 30px;
     background-color: #fff;
-    margin-bottom: 30px;
-    _height: 1px; /* only IE6 applies CSS properties starting with an underscore */
 }
 
 #footer
@@ -232,12 +231,14 @@ table th
 #menucontainer
 {
     margin-top:40px;
+    position : absolute;
+    right: 0;
+    bottom : 0;
 }
 
 div#title
 {
     display:block;
-    float:left;
     text-align:left;
 }
 
