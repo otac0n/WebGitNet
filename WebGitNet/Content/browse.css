@@ -1,6 +1,40 @@
-﻿.commit-message
+﻿#last-commit
+{
+    margin : 2em 0;
+}
+
+.commit-message
 {
     white-space : pre-line;
+}
+
+.log-entry
+{
+    position : relative;
+
+    background: #E8EEF4;
+    border: solid 1px #696969;
+    margin: 4px 0;
+    padding: 1em;
+
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.commit-person, .commit-person img
+{
+    vertical-align: middle;
+}
+
+.commit-references
+{
+    position: absolute;
+    top: 1em;
+    right: 1em;
+
+    text-align: right;
+    font-family: Consolas, Monospace;
 }
 
 .clone-info input 

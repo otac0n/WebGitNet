@@ -1,30 +1,32 @@
 ﻿@model WebGitNet.Models.LogEntry
 <div class="log-entry">
-    <div class="commit-message">
-        @Model.Message
-    </div>
-    <div class="commit-author">
-        @Html.Gravatar(Model.AuthorEmail, Model.Author, 24)
-        <a href="mailto:@Model.AuthorEmail">@Model.Author</a>
-    </div>
+  <div class="commit-message">
+      @Model.Message
+  </div>
+  <div class="commit-author commit-person">
+      @Html.Gravatar(Model.AuthorEmail, Model.Author, 24)
+      <a href="mailto:@Model.AuthorEmail">@Model.Author</a> (author)
+  </div>
 @if (Model.Author != Model.Committer ||
-     Model.AuthorEmail != Model.CommitterEmail)
+     Model.AuthorEmail.Trim().ToLowerInvariant() != Model.CommitterEmail.Trim().ToLowerInvariant())
 {
-    <div class="commit-committer">
-        @Html.Gravatar(Model.CommitterEmail, Model.Committer, 24)
-        <a href="mailto:@Model.CommitterEmail">@Model.Committer</a>
-    </div>
+  <div class="commit-committer commit-person">
+      @Html.Gravatar(Model.CommitterEmail, Model.Committer, 24)
+      <a href="mailto:@Model.CommitterEmail">@Model.Committer</a> (committer)
+  </div>
 }
+  <div class="commit-references">
     <div class="commit-ref">
         <span>commit:</span> @Html.ActionLink(Model.Commit, "ViewCommit", new { @object = Model.Commit })
     </div>
     <div class="tree-ref">
         <span>tree:</span> @Html.ActionLink(Model.Tree, "ViewTree", new { @object = Model.Tree })
     </div>
-@foreach (var parent in Model.Parent.Split(' '))
-{
+  @foreach (var parent in Model.Parent.Split(' '))
+  {
     <div class="tree-ref">
         <span>parent:</span> @Html.ActionLink(parent, "ViewTree", new { @object = parent })
     </div>
-}
+  }
+  </div>
 </div>
