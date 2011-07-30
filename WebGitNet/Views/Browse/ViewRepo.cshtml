@@ -11,32 +11,4 @@
 
 <h2>@ViewBag.Title</h2>
 
-<div class="log-entry">
-    <div class="commit-message">
-        @lastCommit.Message
-    </div>
-    <div class="commit-author">
-        @Html.Gravatar(lastCommit.AuthorEmail, lastCommit.Author, 24)
-        <a href="mailto:@lastCommit.AuthorEmail">@lastCommit.Author</a>
-    </div>
-@if (lastCommit.Author != lastCommit.Committer ||
-     lastCommit.AuthorEmail != lastCommit.CommitterEmail)
-{
-    <div class="commit-committer">
-        @Html.Gravatar(lastCommit.CommitterEmail, lastCommit.Committer, 24)
-        <a href="mailto:@lastCommit.CommitterEmail">@lastCommit.Committer</a>
-    </div>
-}
-    <div class="commit-ref">
-        <span>commit:</span> @Html.ActionLink(lastCommit.Commit, "ViewCommit")
-    </div>
-    <div class="tree-ref">
-        <span>tree:</span> @Html.ActionLink(lastCommit.Tree, "ViewTree")
-    </div>
-@foreach (var parent in lastCommit.Parent.Split(' '))
-{
-    <div class="tree-ref">
-        <span>parent:</span> @Html.ActionLink(parent, "ViewTree")
-    </div>
-}
-</div>
+@Html.Partial("LogEntry", lastCommit)
