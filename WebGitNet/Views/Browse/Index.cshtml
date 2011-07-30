@@ -6,7 +6,9 @@
 
 <h2>Repositories</h2>
 
+<ul>
 @foreach (var repo in Model)
 {
-    @Html.ActionLink(repo, "ViewRepo", new { repo = repo });
+    <li>@Html.ActionLink(repo, "ViewRepo", new { repo = repo })</li>
 }
+</ul>
