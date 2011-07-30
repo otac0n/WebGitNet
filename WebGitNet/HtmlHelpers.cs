@@ -1,4 +1,11 @@
-﻿namespace WebGitNet
+﻿//-----------------------------------------------------------------------
+// <copyright file="HtmlHelpers.cs" company="(none)">
+//  Copyright © 2011 John Gietzen. All rights reserved.
+// </copyright>
+// <author>John Gietzen</author>
+//-----------------------------------------------------------------------
+
+namespace WebGitNet
 {
     using System.Security.Cryptography;
     using System.Text;
@@ -8,7 +15,8 @@
     {
         public static MvcHtmlString Gravatar(this HtmlHelper html, string email, string name, int size = 72)
         {
-            var imgUrl = string.Format("http://www.gravatar.com/avatar/{0}.jpg?s={1}&d=mm&r=g",
+            var imgUrl = string.Format(
+                "http://www.gravatar.com/avatar/{0}.jpg?s={1}&d=mm&r=g",
                 HashString(email),
                 size);
 

@@ -72,7 +72,6 @@ namespace WebGitNet
         {
             var parts = result.Split(new[] { '\n' }, 2);
             rest = parts[1];
-            Debug.Assert(parts[0].StartsWith(prefix));
             return parts[0].Substring(prefix.Length);
         }
     }
