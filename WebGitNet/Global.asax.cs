@@ -61,7 +61,7 @@ namespace WebGitNet
 
             routes.MapRoute(
                 "Default",
-                string.Empty,
+                "{controller}/{action}",
                 new { controller = "Home", action = "Index" });
         }
 

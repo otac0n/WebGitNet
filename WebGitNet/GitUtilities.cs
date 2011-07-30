@@ -10,6 +10,7 @@ namespace WebGitNet
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -111,6 +112,19 @@ namespace WebGitNet
             return new TreeView(tree, path, objects);
         }
 
+        public static void CreateRepo(string repoPath)
+        {
+            var workingDir = Path.GetDirectoryName(repoPath);
+            var newPath = repoPath.Replace("\\", "\\\\").Replace("\"", "\\\"");
+            var results = Execute(string.Format("init --bare \"{0}\"", newPath), workingDir);
+
+            var errorLines = results.Split('\n').Where(l => l.StartsWith("fatal:")).ToList();
+            if (errorLines.Count > 0)
+            {
+                throw new CreateRepoFailedException(string.Join(results, Environment.NewLine));
+            }
+        }
+
         private static string ParseResultLine(string prefix, string result, out string rest)
         {
             var parts = result.Split(new[] { '\n' }, 2);
@@ -131,6 +145,29 @@ namespace WebGitNet
             {
                 rest = result.Substring(match.Index + match.Length);
                 return result.Substring(0, match.Index);
+            }
+        }
+
+        [global::System.Serializable]
+        public class CreateRepoFailedException : Exception
+        {
+            public CreateRepoFailedException()
+            {
+            }
+
+            public CreateRepoFailedException(string message)
+                : base(message)
+            {
+            }
+
+            public CreateRepoFailedException(string message, Exception inner)
+                : base(message, inner)
+            {
+            }
+
+            protected CreateRepoFailedException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+                : base(info, context)
+            {
             }
         }
     }
