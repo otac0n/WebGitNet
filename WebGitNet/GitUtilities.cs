@@ -49,7 +49,7 @@ namespace WebGitNet
 
         public static List<LogEntry> GetLogEntries(string repoPath, int count)
         {
-            var results = Execute("log -1 --encoding=UTF-8 --format=\"format:commit %H%ntree %T%nparent %P%nauthor %an%nauthor mail %ae%ncommitter %cn%ncommitter mail %ce%n%B%x00\"", repoPath, Encoding.UTF8);
+            var results = Execute("log -1 --encoding=UTF-8 --format=\"format:commit %H%ntree %T%nparent %P%nauthor %an%nauthor mail %ae%ncommitter %cn%ncommitter mail %ce%nsubject %s%n%b%x00\"", repoPath, Encoding.UTF8);
 
             Func<string, LogEntry> parseResults = result =>
             {
@@ -60,9 +60,10 @@ namespace WebGitNet
                 var authorEmail = ParseResultLine("author mail ", result, out result);
                 var committer = ParseResultLine("committer ", result, out result);
                 var committerEmail = ParseResultLine("committer mail ", result, out result);
-                var message = result;
+                var subject = ParseResultLine("subject ", result, out result);
+                var body = result;
 
-                return new LogEntry(commit, tree, parent, author, authorEmail, committer, committerEmail, message);
+                return new LogEntry(commit, tree, parent, author, authorEmail, committer, committerEmail, subject, body);
             };
 
             return (from r in results.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries)

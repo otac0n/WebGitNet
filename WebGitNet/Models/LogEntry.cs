@@ -16,9 +16,10 @@ namespace WebGitNet.Models
         private readonly string authorEmail;
         private readonly string committer;
         private readonly string committerEmail;
-        private readonly string message;
+        private readonly string subject;
+        private readonly string body;
 
-        public LogEntry(string commit, string tree, string parent, string author, string authorEmail, string committer, string committerEmail, string message)
+        public LogEntry(string commit, string tree, string parent, string author, string authorEmail, string committer, string committerEmail, string subject, string body)
         {
             this.commit = commit;
             this.tree = tree;
@@ -27,7 +28,8 @@ namespace WebGitNet.Models
             this.authorEmail = authorEmail;
             this.committer = committer;
             this.committerEmail = committerEmail;
-            this.message = message;
+            this.subject = subject;
+            this.body = body;
         }
 
         public string Commit
@@ -86,11 +88,19 @@ namespace WebGitNet.Models
             }
         }
 
-        public string Message
+        public string Subject
         {
             get
             {
-                return this.message;
+                return this.subject;
+            }
+        }
+
+        public string Body
+        {
+            get
+            {
+                return this.body;
             }
         }
     }

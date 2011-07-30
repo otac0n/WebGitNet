@@ -25,6 +25,7 @@
 .commit-person, .commit-person img
 {
     vertical-align: middle;
+    margin-top: 1em;
 }
 
 .commit-references

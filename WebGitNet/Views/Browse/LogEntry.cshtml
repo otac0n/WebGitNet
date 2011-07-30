@@ -1,8 +1,6 @@
 ﻿@model WebGitNet.Models.LogEntry
 <div class="log-entry">
-  <div class="commit-message">
-      @Model.Message
-  </div>
+  <div class="commit-message">@Model.Subject</div>
   <div class="commit-author commit-person">
       @Html.Gravatar(Model.AuthorEmail, Model.Author, 24)
       <a href="mailto:@Model.AuthorEmail">@Model.Author</a> (author)
