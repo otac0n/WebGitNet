@@ -9,7 +9,6 @@ namespace WebGitNet.ActionResults
 {
     using System;
     using System.IO;
-    using System.Text;
     using System.Threading;
     using System.Web.Mvc;
 
@@ -51,7 +50,7 @@ namespace WebGitNet.ActionResults
             response.ContentType = "application/git-" + this.action + "-result";
             response.Buffer = false;
             response.BufferOutput = false;
-            response.ContentEncoding = Encoding.GetEncoding(28591);
+            response.ContentEncoding = GitUtilities.DefaultEncoding;
 
             using (var git = GitUtilities.Start(string.Format(this.commandFormat, this.action), this.repoPath, redirectInput: true))
             {
@@ -60,7 +59,7 @@ namespace WebGitNet.ActionResults
                     var readBuffer = new char[1048576];
                     int readCount;
 
-                    using (var input = new StreamReader(request.InputStream, Encoding.GetEncoding(28591)))
+                    using (var input = new StreamReader(request.InputStream, GitUtilities.DefaultEncoding))
                     {
                         while ((readCount = input.ReadBlock(readBuffer, 0, readBuffer.Length)) > 0)
                         {

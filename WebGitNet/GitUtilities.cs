@@ -19,6 +19,11 @@ namespace WebGitNet
 
     public static class GitUtilities
     {
+        public static Encoding DefaultEncoding
+        {
+            get { return Encoding.GetEncoding(28591); }
+        }
+
         public static string Execute(string command, string workingDir, Encoding outputEncoding = null)
         {
             using (var process = Start(command, workingDir, redirectInput: false, outputEncoding: outputEncoding))
@@ -35,7 +40,7 @@ namespace WebGitNet
                 WorkingDirectory = workingDir,
                 RedirectStandardInput = redirectInput,
                 RedirectStandardOutput = true,
-                StandardOutputEncoding = outputEncoding ?? Encoding.GetEncoding(28591),
+                StandardOutputEncoding = outputEncoding ?? DefaultEncoding,
                 UseShellExecute = false,
                 CreateNoWindow = true,
             };

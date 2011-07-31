@@ -7,7 +7,6 @@
 
 namespace WebGitNet.ActionResults
 {
-    using System.Text;
     using System.Web.Mvc;
 
     public class GitFileResult : ActionResult
@@ -33,7 +32,7 @@ namespace WebGitNet.ActionResults
             response.ContentType = this.contentType;
             response.Buffer = false;
             response.BufferOutput = false;
-            response.ContentEncoding = Encoding.GetEncoding(28591);
+            response.ContentEncoding = GitUtilities.DefaultEncoding;
 
             using (var git = GitUtilities.StartGetBlob(this.repoPath, this.tree, this.path))
             {
