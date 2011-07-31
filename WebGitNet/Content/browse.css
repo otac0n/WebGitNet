@@ -43,9 +43,40 @@
     width : 600px;
 }
 
+.blob-preview
+{
+    margin: 1em 0;
+    border: 1px solid black;
+}
+
+.preview-header
+{
+    position: relative;
+    background: #EEE;
+    padding: 8px;
+}
+
+.blob-content-type
+{
+}
+
+.blob-raw-version-link
+{
+    position: absolute;
+    right: 8px;
+    top: 8px;
+}
+
 .preview-contents
 {
     text-align: center;
+    background: #888;
+    padding: 8px;
+}
+
+.preview-unavailable
+{
+    color: #fff;
 }
 
 .image-preview
@@ -59,4 +90,5 @@
 .image-preview img
 {
     vertical-align: top;
+    border: 1px solid white;
 }

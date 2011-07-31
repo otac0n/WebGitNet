@@ -20,8 +20,10 @@
 </div>
 
 <div class="blob-preview">
-  <div class="content-type">@contentType</div>
-  <div class="raw-version-link">@Html.ActionLink("raw version", "ViewBlob", new { repo = repoName, @object = tree, path = path, raw = true })</div>
+  <div class="preview-header">
+    <div class="blob-content-type">@contentType</div>
+    <div class="blob-raw-version-link">@Html.ActionLink("raw version", "ViewBlob", new { repo = repoName, @object = tree, path = path, raw = true })</div>
+  </div>
   <div class="preview-contents">
 @if (contentType.StartsWith("image/"))
 {
