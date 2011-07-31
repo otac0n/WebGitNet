@@ -8,7 +8,6 @@
 namespace WebGitNet.ActionResults
 {
     using System;
-    using System.Text;
     using System.Threading;
     using System.Web.Mvc;
 
@@ -48,24 +47,20 @@ namespace WebGitNet.ActionResults
             var request = context.HttpContext.Request;
 
             response.ContentType = "application/git-" + this.action + "-result";
-            response.Buffer = false;
-            response.BufferOutput = false;
             response.ContentEncoding = GitUtilities.DefaultEncoding;
+            response.Flush();
 
             using (var git = GitUtilities.Start(string.Format(this.commandFormat, this.action), this.repoPath, redirectInput: true))
             {
                 var readThread = new Thread(() =>
                 {
                     var readBuffer = new byte[524288];
-                    var readChars = new char[readBuffer.Length];
                     int readCount;
 
                     var input = request.InputStream;
-                    var encoding = Encoding.GetEncoding(1252);
                     while ((readCount = input.Read(readBuffer, 0, readBuffer.Length)) > 0)
                     {
-                        readCount = encoding.GetChars(readBuffer, 0, readCount, readChars, 0);
-                        git.StandardInput.Write(readChars, 0, readCount);
+                        git.StandardInput.BaseStream.Write(readBuffer, 0, readCount);
                     }
                 });
                 readThread.Start();
@@ -75,9 +70,11 @@ namespace WebGitNet.ActionResults
                 while ((writeCount = git.StandardOutput.ReadBlock(writeBuffer, 0, writeBuffer.Length)) > 0)
                 {
                     response.Write(writeBuffer, 0, writeCount);
+                    response.Flush();
                 }
 
                 readThread.Join();
+                git.WaitForExit();
             }
         }
     }

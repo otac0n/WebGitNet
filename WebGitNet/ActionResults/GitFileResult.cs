@@ -43,6 +43,8 @@ namespace WebGitNet.ActionResults
                 {
                     response.Write(writeBuffer, 0, writeCount);
                 }
+
+                git.WaitForExit();
             }
         }
     }

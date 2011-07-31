@@ -26,9 +26,11 @@ namespace WebGitNet
 
         public static string Execute(string command, string workingDir, Encoding outputEncoding = null)
         {
-            using (var process = Start(command, workingDir, redirectInput: false, outputEncoding: outputEncoding))
+            using (var git = Start(command, workingDir, redirectInput: false, outputEncoding: outputEncoding))
             {
-                return process.StandardOutput.ReadToEnd();
+                var result = git.StandardOutput.ReadToEnd();
+                git.WaitForExit();
+                return result;
             }
         }
 
