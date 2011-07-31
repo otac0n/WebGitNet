@@ -58,7 +58,7 @@ namespace WebGitNet
         public static List<LogEntry> GetLogEntries(string repoPath, int count, string @object = null)
         {
             @object = @object ?? "HEAD";
-            var results = Execute(string.Format("log -n {0} --encoding=UTF-8 --format=\"format:commit %H%ntree %T%nparent %P%nauthor %an%nauthor mail %ae%ncommitter %cn%ncommitter mail %ce%nsubject %s%n%b%x00\" {1}", count, @object), repoPath, Encoding.UTF8);
+            var results = Execute(string.Format("log -n {0} --encoding=UTF-8 -z --format=\"format:commit %H%ntree %T%nparent %P%nauthor %an%nauthor mail %ae%ncommitter %cn%ncommitter mail %ce%nsubject %s%n%b%x00\" {1}", count, @object), repoPath, Encoding.UTF8);
 
             Func<string, LogEntry> parseResults = result =>
             {

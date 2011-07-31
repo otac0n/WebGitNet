@@ -1,0 +1,17 @@
+﻿@model IEnumerable<LogEntry>
+
+@{
+    ViewBag.Title = "View Commits";
+}
+
+@section headers
+{
+    <link href="@Url.Content("~/Content/browse.css")" rel="stylesheet" type="text/css" />
+}
+
+<h2>@ViewBag.Title</h2>
+
+@foreach (var entry in Model)
+{
+    @Html.Partial("LogEntry", entry)
+}

@@ -36,7 +36,8 @@
 else
 {
 <text>Last Commit:
-@Html.Partial("LogEntry", lastCommit)</text>
+@Html.Partial("LogEntry", lastCommit)
+@Html.ActionLink("View Recent Commits", "ViewCommits")</text>
 }
 </div>
 

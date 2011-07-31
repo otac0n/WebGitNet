@@ -63,9 +63,25 @@ namespace WebGitNet.Controllers
                 return HttpNotFound();
             }
 
+            ViewBag.RepoName = resourceInfo.Name;
             ViewBag.CommitLogEntry = commit;
 
             return View();
+        }
+
+        public ActionResult ViewCommits(string repo)
+        {
+            var resourceInfo = this.fileManager.GetResourceInfo(repo);
+            if (resourceInfo.Type != ResourceType.Directory)
+            {
+                return HttpNotFound();
+            }
+
+            var commits = GitUtilities.GetLogEntries(resourceInfo.FullPath, 20);
+
+            ViewBag.RepoName = resourceInfo.Name;
+
+            return View(commits);
         }
 
         public ActionResult ViewTree(string repo, string @object, string path)
