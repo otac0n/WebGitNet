@@ -141,6 +141,37 @@ namespace WebGitNet
             return Start(string.Format("show {0}:\"{1}\"", tree, path), repoPath, redirectInput: false);
         }
 
+        public static MemoryStream GetBlob(string repoPath, string tree, string path)
+        {
+            MemoryStream blob = null;
+            try
+            {
+                blob = new MemoryStream();
+                using (var git = StartGetBlob(repoPath, tree, path))
+                {
+                    var buffer = new byte[1048576];
+                    var readCount = 0;
+                    while ((readCount = git.StandardOutput.BaseStream.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        blob.Write(buffer, 0, readCount);
+                    }
+                }
+
+                blob.Seek(0, SeekOrigin.Begin);
+
+                var tempBlob = blob;
+                blob = null;
+                return tempBlob;
+            }
+            finally
+            {
+                if (blob != null)
+                {
+                    blob.Dispose();
+                }
+            }
+        }
+
         public static void CreateRepo(string repoPath)
         {
             var workingDir = Path.GetDirectoryName(repoPath);

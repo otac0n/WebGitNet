@@ -23,6 +23,13 @@ namespace WebGitNet
             return new MvcHtmlString("<img alt=\"" + html.AttributeEncode(name) + "\" src=\"" + html.AttributeEncode(imgUrl) + "\" />");
         }
 
+        public static MvcHtmlString FormatCode(this HtmlHelper html, string code)
+        {
+            code = html.Encode(code);
+            code = code.Replace(" ", "&nbsp;");
+            return new MvcHtmlString(code);
+        }
+
         private static string HashString(string value)
         {
             byte[] data = Encoding.UTF8.GetBytes(value.Trim().ToLowerInvariant());

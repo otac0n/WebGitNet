@@ -7,6 +7,7 @@
 
 namespace WebGitNet.Controllers
 {
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Web.Configuration;
@@ -121,8 +122,25 @@ namespace WebGitNet.Controllers
             ViewBag.Path = path;
             ViewBag.FileName = fileName;
             ViewBag.ContentType = contentType;
+            List<string> model = null;
 
-            return View();
+            if (contentType.StartsWith("text/"))
+            {
+                model = new List<string>();
+
+                using (var blob = GitUtilities.GetBlob(resourceInfo.FullPath, @object, path))
+                {
+                    using (var reader = new StreamReader(blob, detectEncodingFromByteOrderMarks: true))
+                    {
+                        while (!reader.EndOfStream)
+                        {
+                            model.Add(reader.ReadLine());
+                        }
+                    }
+                }
+            }
+
+            return View(model);
         }
     }
 }

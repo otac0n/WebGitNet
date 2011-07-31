@@ -72,11 +72,42 @@
     text-align: center;
     background: #888;
     padding: 8px;
+    overflow: auto;
 }
 
 .preview-unavailable
 {
     color: #fff;
+}
+
+.text-preview table
+{
+    width: 100%;
+    background: white;
+    border: none;
+    font-family: Consolas, Monospace;
+}
+
+.text-preview td
+{
+    border: none;
+}
+
+td.line-numbers
+{
+    text-align: right;
+    width: 0;
+    white-space: nowrap;
+}
+
+td.text-lines
+{
+    text-align: left;
+}
+
+.text-line
+{
+    white-space: pre;
 }
 
 .image-preview
