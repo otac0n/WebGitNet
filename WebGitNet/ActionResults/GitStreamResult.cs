@@ -8,6 +8,7 @@
 namespace WebGitNet.ActionResults
 {
     using System;
+    using System.Text;
     using System.Threading;
     using System.Web.Mvc;
 
@@ -60,7 +61,7 @@ namespace WebGitNet.ActionResults
                     int readCount;
 
                     var input = request.InputStream;
-                    var encoding = GitUtilities.DefaultEncoding;
+                    var encoding = Encoding.GetEncoding(1252);
                     while ((readCount = input.Read(readBuffer, 0, readBuffer.Length)) > 0)
                     {
                         readCount = encoding.GetChars(readBuffer, 0, readCount, readChars, 0);
