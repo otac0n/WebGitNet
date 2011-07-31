@@ -1,6 +1,13 @@
 ﻿@model WebGitNet.Models.LogEntry
+@{
+    bool? showDetails = ViewBag.Details;
+}
 <div class="log-entry">
-  <div class="commit-message">@Model.Subject</div>
+  <div class="commit-subject">@Model.Subject</div>
+@if (showDetails == true)
+{
+  <div class="commit-body">@Model.Body</div>
+}
   <div class="commit-author commit-person">
       @Html.Gravatar(Model.AuthorEmail, Model.Author, 24)
       <a href="mailto:@Model.AuthorEmail">@Model.Author</a> (author)

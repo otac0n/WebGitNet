@@ -1,0 +1,14 @@
+﻿@{
+    LogEntry commitLogEntry = ViewBag.CommitLogEntry;
+
+    ViewBag.Title = "View Commit";
+}
+
+@section headers
+{
+    <link href="@Url.Content("~/Content/browse.css")" rel="stylesheet" type="text/css" />
+}
+
+<h2>@ViewBag.Title</h2>
+
+@Html.Partial("LogEntry", commitLogEntry, new ViewDataDictionary { { "Details", true } })

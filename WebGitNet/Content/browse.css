@@ -3,7 +3,7 @@
     margin : 2em 0;
 }
 
-.commit-message
+.commit-subject, .commit-body
 {
     white-space : pre-line;
 }

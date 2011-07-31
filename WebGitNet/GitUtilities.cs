@@ -55,9 +55,10 @@ namespace WebGitNet
             Execute("update-server-info", repoPath);
         }
 
-        public static List<LogEntry> GetLogEntries(string repoPath, int count)
+        public static List<LogEntry> GetLogEntries(string repoPath, int count, string @object = null)
         {
-            var results = Execute("log -1 --encoding=UTF-8 --format=\"format:commit %H%ntree %T%nparent %P%nauthor %an%nauthor mail %ae%ncommitter %cn%ncommitter mail %ce%nsubject %s%n%b%x00\"", repoPath, Encoding.UTF8);
+            @object = @object ?? "HEAD";
+            var results = Execute(string.Format("log -n {0} --encoding=UTF-8 --format=\"format:commit %H%ntree %T%nparent %P%nauthor %an%nauthor mail %ae%ncommitter %cn%ncommitter mail %ce%nsubject %s%n%b%x00\" {1}", count, @object), repoPath, Encoding.UTF8);
 
             Func<string, LogEntry> parseResults = result =>
             {
