@@ -90,6 +90,7 @@
       <Link>CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
     <Content Include="Content\browse.css" />
+    <Content Include="Content\checkerboard.png" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
