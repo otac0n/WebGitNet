@@ -12,6 +12,11 @@
 @section headers
 {
     <link href="@Url.Content("~/Content/browse.css")" rel="stylesheet" type="text/css" />
+    <script>
+        $(function () {
+            $(".clone-info input").focus(function () { this.select(); });
+        });
+    </script>
 }
 
 <h2>@ViewBag.Title</h2>
