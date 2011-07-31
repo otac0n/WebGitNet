@@ -42,3 +42,21 @@
 {
     width : 600px;
 }
+
+.preview-contents
+{
+    text-align: center;
+}
+
+.image-preview
+{
+    border: 1px solid black;
+    display: inline-block;
+    background: url(checkerboard.png);
+    background-repeat: repeat;
+}
+
+.image-preview img
+{
+    vertical-align: top;
+}
