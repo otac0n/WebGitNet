@@ -10,7 +10,15 @@
 
 @section headers
 {
+    <script src="@Url.Content("~/Scripts/jquery.background-position.min.js")"></script>
     <link href="@Url.Content("~/Content/browse.css")" rel="stylesheet" type="text/css" />
+    <script>
+        $(function () {
+            (function animate_background() {
+                $('.image-preview').css('backgroundPosition', '0px 0px').animate({ backgroundPosition: '32px 16px' }, 2000, 'linear', animate_background);
+            })();
+        });
+    </script>
 }
 
 <h2>View Blob</h2>
