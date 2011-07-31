@@ -62,6 +62,8 @@ namespace WebGitNet.ActionResults
                     {
                         git.StandardInput.BaseStream.Write(readBuffer, 0, readCount);
                     }
+
+                    git.StandardInput.Close();
                 });
                 readThread.Start();
 
