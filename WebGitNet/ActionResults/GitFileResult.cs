@@ -30,9 +30,10 @@ namespace WebGitNet.ActionResults
             var request = context.HttpContext.Request;
 
             response.ContentType = this.contentType;
+            response.AddHeader("Content-disposition", "attachment");
+            response.ContentEncoding = GitUtilities.DefaultEncoding;
             response.Buffer = false;
             response.BufferOutput = false;
-            response.ContentEncoding = GitUtilities.DefaultEncoding;
 
             using (var git = GitUtilities.StartGetBlob(this.repoPath, this.tree, this.path))
             {
