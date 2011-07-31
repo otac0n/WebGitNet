@@ -8,6 +8,11 @@
     ViewBag.Title = "View " + fileName;
 }
 
+@section headers
+{
+    <link href="@Url.Content("~/Content/browse.css")" rel="stylesheet" type="text/css" />
+}
+
 <h2>View Blob</h2>
 
 <div>
@@ -17,14 +22,16 @@
 <div class="blob-preview">
   <div class="content-type">@contentType</div>
   <div class="raw-version-link">@Html.ActionLink("raw version", "ViewBlob", new { repo = repoName, @object = tree, path = path, raw = true })</div>
+  <div class="preview-contents">
 @if (contentType.StartsWith("image/"))
 {
-  <div class="image-preview">
-    <img src="@Url.Action("ViewBlob", new { repo = repoName, @object = tree, path = path, raw = true })" />
-  </div>
+    <div class="image-preview">
+      <img src="@Url.Action("ViewBlob", new { repo = repoName, @object = tree, path = path, raw = true })" />
+    </div>
 }
 else
 {
     <div class="preview-unavailable">Preview is unavailable.</div>
 }
+  </div>
 </div>
