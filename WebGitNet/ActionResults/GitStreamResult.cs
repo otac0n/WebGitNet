@@ -8,7 +8,6 @@
 namespace WebGitNet.ActionResults
 {
     using System;
-    using System.IO;
     using System.Threading;
     using System.Web.Mvc;
 
@@ -56,15 +55,16 @@ namespace WebGitNet.ActionResults
             {
                 var readThread = new Thread(() =>
                 {
-                    var readBuffer = new char[1048576];
+                    var readBuffer = new byte[524288];
+                    var readChars = new char[readBuffer.Length];
                     int readCount;
 
-                    using (var input = new StreamReader(request.InputStream, GitUtilities.DefaultEncoding))
+                    var input = request.InputStream;
+                    var encoding = GitUtilities.DefaultEncoding;
+                    while ((readCount = input.Read(readBuffer, 0, readBuffer.Length)) > 0)
                     {
-                        while ((readCount = input.ReadBlock(readBuffer, 0, readBuffer.Length)) > 0)
-                        {
-                            git.StandardInput.Write(readBuffer, 0, readCount);
-                        }
+                        readCount = encoding.GetChars(readBuffer, 0, readCount, readChars, 0);
+                        git.StandardInput.Write(readChars, 0, readCount);
                     }
                 });
                 readThread.Start();
