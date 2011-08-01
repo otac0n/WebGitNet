@@ -43,6 +43,7 @@
 .commit-person .name, .commit-person .date
 {
     margin-left: 30px;
+    width: 50%;
 }
 
 .commit-references
