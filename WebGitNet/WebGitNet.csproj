@@ -93,6 +93,7 @@
     <Content Include="Content\checkerboard.png" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\jquery.background-position.min.js" />
+    <Content Include="Scripts\jquery.timeago.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -11,10 +11,12 @@
 
 @section headers
 {
+    <script src="@Url.Content("~/Scripts/jquery.timeago.min.js")"></script>
     <link href="@Url.Content("~/Content/browse.css")" rel="stylesheet" type="text/css" />
     <script>
         $(function () {
             $(".clone-info input").focus(function () { this.select(); });
+            $("div.date").timeago();
         });
     </script>
 }

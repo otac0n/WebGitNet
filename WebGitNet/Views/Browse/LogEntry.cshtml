@@ -25,7 +25,7 @@
   <div class="commit-author commit-person">
       <div class="avatar">@Html.Gravatar(Model.AuthorEmail, Model.Author, 24)</div>
       <div class="name"><a href="mailto:@Model.AuthorEmail">@Model.Author</a> <span class="role">(author)</span></div>
-      <div class="date">@Model.AuthorDate.ToString("R")</div>
+      <div class="date" title="@Model.AuthorDate.ToString("u")">@Model.AuthorDate.ToString("u")</div>
   </div>
 @if (Model.Author != Model.Committer ||
      Model.AuthorEmail.Trim().ToLowerInvariant() != Model.CommitterEmail.Trim().ToLowerInvariant())
@@ -33,7 +33,7 @@
   <div class="commit-committer commit-person">
       <div class="avatar">@Html.Gravatar(Model.CommitterEmail, Model.Committer, 24)</div>
       <div class="name"><a href="mailto:@Model.CommitterEmail">@Model.Committer</a> <span class="role">(committer)</span></div>
-      <div class="date">@Model.AuthorDate.ToString("R")</div>
+      <div class="date" title="@Model.CommitterDate.ToString("u")">@Model.CommitterDate.ToString("u")</div>
   </div>
 }
 </div>
