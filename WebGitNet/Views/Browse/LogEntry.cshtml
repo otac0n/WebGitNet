@@ -3,6 +3,20 @@
     bool? showDetails = ViewBag.Details;
 }
 <div class="log-entry">
+  <div class="commit-references">
+    <div class="commit-ref">
+        <span>commit:</span> @Html.ActionLink(Model.Commit, "ViewCommit", new { @object = Model.Commit })
+    </div>
+    <div class="tree-ref">
+        <span>tree:</span> @Html.ActionLink(Model.Tree, "ViewTree", new { @object = Model.Tree })
+    </div>
+  @foreach (var parent in Model.Parent.Split(' '))
+  {
+    <div class="tree-ref">
+        <span>parent:</span> @Html.ActionLink(parent, "ViewCommit", new { @object = parent })
+    </div>
+  }
+  </div>
   <div class="commit-subject">@Model.Subject</div>
 @if (showDetails == true)
 {
@@ -20,18 +34,4 @@
       <a href="mailto:@Model.CommitterEmail">@Model.Committer</a> (committer)
   </div>
 }
-  <div class="commit-references">
-    <div class="commit-ref">
-        <span>commit:</span> @Html.ActionLink(Model.Commit, "ViewCommit", new { @object = Model.Commit })
-    </div>
-    <div class="tree-ref">
-        <span>tree:</span> @Html.ActionLink(Model.Tree, "ViewTree", new { @object = Model.Tree })
-    </div>
-  @foreach (var parent in Model.Parent.Split(' '))
-  {
-    <div class="tree-ref">
-        <span>parent:</span> @Html.ActionLink(parent, "ViewCommit", new { @object = parent })
-    </div>
-  }
-  </div>
 </div>

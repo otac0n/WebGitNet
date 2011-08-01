@@ -5,7 +5,7 @@
 
 .commit-subject, .commit-body
 {
-    white-space : pre-line;
+    white-space : pre-wrap;
 }
 
 .log-entry
@@ -30,9 +30,7 @@
 
 .commit-references
 {
-    position: absolute;
-    top: 1em;
-    right: 1em;
+    float: right;
 
     text-align: right;
     font-family: Consolas, Monospace;
