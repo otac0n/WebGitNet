@@ -64,10 +64,12 @@ namespace WebGitNet.Controllers
                 return HttpNotFound();
             }
 
+            var diffs = GitUtilities.GetDiffInfo(resourceInfo.FullPath, commit.CommitHash);
+
             ViewBag.RepoName = resourceInfo.Name;
             ViewBag.CommitLogEntry = commit;
 
-            return View();
+            return View(diffs);
         }
 
         public ActionResult ViewCommits(string repo)

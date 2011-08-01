@@ -81,6 +81,47 @@ namespace WebGitNet
                     select parseResults(r)).ToList();
         }
 
+        public static List<DiffInfo> GetDiffInfo(string repoPath, string commit)
+        {
+            var diffs = new List<DiffInfo>();
+            List<string> diffLines = null;
+
+            Action addLastDiff = () =>
+            {
+                if (diffLines != null)
+                {
+                    diffs.Add(new DiffInfo(diffLines));
+                }
+            };
+
+            using (var git = Start(string.Format("diff-tree -p -c -r {0}", commit), repoPath))
+            {
+                while (!git.StandardOutput.EndOfStream)
+                {
+                    var line = git.StandardOutput.ReadLine();
+
+                    if (diffLines == null && !line.StartsWith("diff"))
+                    {
+                        continue;
+                    }
+
+                    if (line.StartsWith("diff"))
+                    {
+                        addLastDiff();
+                        diffLines = new List<string> { line };
+                    }
+                    else
+                    {
+                        diffLines.Add(line);
+                    }
+                }
+            }
+
+            addLastDiff();
+
+            return diffs;
+        }
+
         public static TreeView GetTreeInfo(string repoPath, string tree, string path = null)
         {
             if (string.IsNullOrEmpty(tree))

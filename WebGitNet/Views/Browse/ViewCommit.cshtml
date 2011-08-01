@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IList<DiffInfo>
+
+@{
     LogEntry commitLogEntry = ViewBag.CommitLogEntry;
 
     ViewBag.Title = "View Commit";
@@ -18,3 +20,15 @@
 <h2>@ViewBag.Title</h2>
 
 @Html.Partial("LogEntry", commitLogEntry, new ViewDataDictionary { { "Details", true } })
+
+@foreach (var diff in Model)
+{
+<div class="diff-container page-section">
+  <div class="diff">
+    @foreach (var line in diff.Lines)
+    {
+    <span class="diff-line">@Html.FormatCode(line)</span><br />
+    }
+  </div>
+</div>
+}
