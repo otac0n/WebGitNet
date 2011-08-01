@@ -8,6 +8,11 @@
     white-space : pre-wrap;
 }
 
+.commit-body
+{
+    margin-top: 1em;
+}
+
 .log-entry
 {
     position : relative;
