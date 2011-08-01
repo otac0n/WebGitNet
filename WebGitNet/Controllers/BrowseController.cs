@@ -10,6 +10,7 @@ namespace WebGitNet.Controllers
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using System.Web.Configuration;
     using System.Web.Mvc;
     using WebGitNet.ActionResults;
@@ -126,7 +127,7 @@ namespace WebGitNet.Controllers
             ViewBag.ContentType = contentType;
             List<string> model = null;
 
-            if (contentType.StartsWith("text/"))
+            if (contentType.StartsWith("text/") || contentType == "application/xml" || Regex.IsMatch(contentType, @"^application/.*\+xml$"))
             {
                 model = new List<string>();
 
