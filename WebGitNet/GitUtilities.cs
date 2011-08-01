@@ -58,7 +58,7 @@ namespace WebGitNet
         public static List<LogEntry> GetLogEntries(string repoPath, int count, string @object = null)
         {
             @object = @object ?? "HEAD";
-            var results = Execute(string.Format("log -n {0} --encoding=UTF-8 -z --format=\"format:commit %H%ntree %T%nparent %P%nauthor %an%nauthor mail %ae%ncommitter %cn%ncommitter mail %ce%nsubject %s%n%b%x00\" {1}", count, @object), repoPath, Encoding.UTF8);
+            var results = Execute(string.Format("log -n {0} --encoding=UTF-8 -z --format=\"format:commit %H%ntree %T%nparent %P%nauthor %an%nauthor mail %ae%nauthor date %aD%ncommitter %cn%ncommitter mail %ce%ncommitter date %cD%nsubject %s%n%b%x00\" {1}", count, @object), repoPath, Encoding.UTF8);
 
             Func<string, LogEntry> parseResults = result =>
             {
@@ -67,12 +67,14 @@ namespace WebGitNet
                 var parent = ParseResultLine("parent ", result, out result);
                 var author = ParseResultLine("author ", result, out result);
                 var authorEmail = ParseResultLine("author mail ", result, out result);
+                var authorDate = ParseResultLine("author date ", result, out result);
                 var committer = ParseResultLine("committer ", result, out result);
                 var committerEmail = ParseResultLine("committer mail ", result, out result);
+                var committerDate = ParseResultLine("committer date ", result, out result);
                 var subject = ParseResultLine("subject ", result, out result);
                 var body = result;
 
-                return new LogEntry(commit, tree, parent, author, authorEmail, committer, committerEmail, subject, body);
+                return new LogEntry(commit, tree, parent, author, authorEmail, authorDate, committer, committerEmail, committerDate, subject, body);
             };
 
             return (from r in results.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries)

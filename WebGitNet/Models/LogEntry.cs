@@ -7,36 +7,46 @@
 
 namespace WebGitNet.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class LogEntry
     {
-        private readonly string commit;
+        private readonly string commitHash;
         private readonly string tree;
-        private readonly string parent;
+        private readonly IList<string> parents;
         private readonly string author;
         private readonly string authorEmail;
+        private readonly DateTimeOffset authorDate;
         private readonly string committer;
         private readonly string committerEmail;
+        private readonly DateTimeOffset committerDate;
         private readonly string subject;
         private readonly string body;
 
-        public LogEntry(string commit, string tree, string parent, string author, string authorEmail, string committer, string committerEmail, string subject, string body)
+        public LogEntry(string commitHash, string tree, string parents, string author, string authorEmail, string authorDate, string committer, string committerEmail, string committerDate, string subject, string body)
         {
-            this.commit = commit;
+            this.commitHash = commitHash;
             this.tree = tree;
-            this.parent = parent;
+            this.parents = string.IsNullOrEmpty(parents)
+                ? (IList<string>)new string[0]
+                : parents.Split(' ').ToList().AsReadOnly();
             this.author = author;
             this.authorEmail = authorEmail;
+            this.authorDate = DateTimeOffset.Parse(authorDate);
             this.committer = committer;
             this.committerEmail = committerEmail;
+            this.committerDate = DateTimeOffset.Parse(committerDate);
             this.subject = subject;
             this.body = body;
         }
 
-        public string Commit
+        public string CommitHash
         {
             get
             {
-                return this.commit;
+                return this.commitHash;
             }
         }
 
@@ -48,11 +58,11 @@ namespace WebGitNet.Models
             }
         }
 
-        public string Parent
+        public IList<string> Parents
         {
             get
             {
-                return this.parent;
+                return this.parents;
             }
         }
 
@@ -72,6 +82,14 @@ namespace WebGitNet.Models
             }
         }
 
+        public DateTimeOffset AuthorDate
+        {
+            get
+            {
+                return this.authorDate;
+            }
+        }
+
         public string Committer
         {
             get
@@ -85,6 +103,14 @@ namespace WebGitNet.Models
             get
             {
                 return this.committerEmail;
+            }
+        }
+
+        public DateTimeOffset CommitterDate
+        {
+            get
+            {
+                return this.committerDate;
             }
         }
 

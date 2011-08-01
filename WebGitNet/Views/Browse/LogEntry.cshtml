@@ -5,12 +5,12 @@
 <div class="log-entry">
   <div class="commit-references">
     <div class="commit-ref">
-        <span>commit:</span> @Html.ActionLink(Model.Commit, "ViewCommit", new { @object = Model.Commit })
+        <span>commit:</span> @Html.ActionLink(Model.CommitHash, "ViewCommit", new { @object = Model.CommitHash })
     </div>
     <div class="tree-ref">
         <span>tree:</span> @Html.ActionLink(Model.Tree, "ViewTree", new { @object = Model.Tree })
     </div>
-  @foreach (var parent in Model.Parent.Split(' '))
+  @foreach (var parent in Model.Parents)
   {
     <div class="tree-ref">
         <span>parent:</span> @Html.ActionLink(parent, "ViewCommit", new { @object = parent })
