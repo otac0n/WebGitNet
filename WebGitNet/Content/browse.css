@@ -22,10 +22,22 @@
     border-radius: 5px;
 }
 
-.commit-person, .commit-person img
+.commit-person
 {
-    vertical-align: middle;
+    position: relative;
     margin-top: 1em;
+}
+
+.commit-person .avatar
+{
+    position: absolute;
+    left: 0;
+    top: 5px;
+}
+
+.commit-person .name, .commit-person .date
+{
+    margin-left: 30px;
 }
 
 .commit-references

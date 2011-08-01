@@ -23,15 +23,17 @@
   <div class="commit-body">@Model.Body</div>
 }
   <div class="commit-author commit-person">
-      @Html.Gravatar(Model.AuthorEmail, Model.Author, 24)
-      <a href="mailto:@Model.AuthorEmail">@Model.Author</a> (author)
+      <div class="avatar">@Html.Gravatar(Model.AuthorEmail, Model.Author, 24)</div>
+      <div class="name"><a href="mailto:@Model.AuthorEmail">@Model.Author</a> <span class="role">(author)</span></div>
+      <div class="date">@Model.AuthorDate.ToString("R")</div>
   </div>
 @if (Model.Author != Model.Committer ||
      Model.AuthorEmail.Trim().ToLowerInvariant() != Model.CommitterEmail.Trim().ToLowerInvariant())
 {
   <div class="commit-committer commit-person">
-      @Html.Gravatar(Model.CommitterEmail, Model.Committer, 24)
-      <a href="mailto:@Model.CommitterEmail">@Model.Committer</a> (committer)
+      <div class="avatar">@Html.Gravatar(Model.CommitterEmail, Model.Committer, 24)</div>
+      <div class="name"><a href="mailto:@Model.CommitterEmail">@Model.Committer</a> <span class="role">(committer)</span></div>
+      <div class="date">@Model.AuthorDate.ToString("R")</div>
   </div>
 }
 </div>
