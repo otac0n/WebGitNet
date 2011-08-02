@@ -118,36 +118,6 @@
     color: #fff;
 }
 
-.text-preview table
-{
-    width: 100%;
-    background: white;
-    border: none;
-    font-family: Consolas, Monospace;
-}
-
-.text-preview td
-{
-    border: none;
-}
-
-td.line-numbers
-{
-    text-align: right;
-    width: 0;
-    white-space: nowrap;
-}
-
-td.text-lines
-{
-    text-align: left;
-}
-
-.text-line
-{
-    white-space: pre;
-}
-
 .image-preview
 {
     border: 1px solid black;
