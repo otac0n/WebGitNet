@@ -27,7 +27,7 @@
   <div class="diff">
     @foreach (var line in diff.Lines)
     {
-    <span class="diff-line">@Html.Encode(line).Replace(" ", "&nbsp;")</span><br />
+    <span class="diff-line">@Html.Raw(Html.Encode(line).Replace(" ", "&nbsp;"))</span><br />
     }
   </div>
 </div>
