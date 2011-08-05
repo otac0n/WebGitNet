@@ -260,11 +260,11 @@ namespace WebGitNet
             var startInfo = new ProcessStartInfo(sh, string.Format("-- \"{0}\"", hookFile.FullName.Replace("\\", "\\\\").Replace("\"", "\\\"")))
             {
                 WorkingDirectory = repoPath,
-                RedirectStandardInput = false,
-                RedirectStandardOutput = false,
                 UseShellExecute = false,
                 CreateNoWindow = true,
             };
+
+            startInfo.EnvironmentVariables["PATH"] = Environment.GetEnvironmentVariable("PATH") + Path.PathSeparator + Path.GetDirectoryName(sh);
 
             // Start the script and wait for exit.
             using (var script = Process.Start(startInfo))
