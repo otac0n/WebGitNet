@@ -81,6 +81,39 @@ namespace WebGitNet
                     select parseResults(r)).ToList();
         }
 
+        public static List<UserImpact> GetUserImpacts(string repoPath)
+        {
+            string impactData;
+            using (var git = Start("log --format=format:%an --shortstat", repoPath, outputEncoding: Encoding.UTF8))
+            {
+                impactData = git.StandardOutput.ReadToEnd();
+            }
+
+            var individualImpacts = from imp in Regex.Split(impactData, @"\n\n")
+                                    let lines = imp.Split('\n')
+                                    where lines.Length == 2
+                                    let match = Regex.Match(lines[1], @"^ \d+ files changed, (?<insertions>\d+) insertions\(\+\), (?<deletions>\d+) deletions\(-\)$")
+                                    select new UserImpact
+                                    {
+                                        Author = lines[0],
+                                        Commits = 1,
+                                        Insertions = int.Parse(match.Groups["insertions"].Value),
+                                        Deletions = int.Parse(match.Groups["deletions"].Value),
+                                    };
+
+            return
+                individualImpacts
+                .GroupBy(i => i.Author, StringComparer.InvariantCultureIgnoreCase)
+                .Select(g => new UserImpact
+                {
+                    Author = g.Key,
+                    Commits = g.Sum(ui => ui.Commits),
+                    Insertions = g.Sum(ui => ui.Insertions),
+                    Deletions = g.Sum(ui => ui.Deletions),
+                })
+                .ToList();
+        }
+
         public static List<DiffInfo> GetDiffInfo(string repoPath, string commit)
         {
             var diffs = new List<DiffInfo>();
