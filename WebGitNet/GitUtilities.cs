@@ -228,6 +228,51 @@ namespace WebGitNet
             }
         }
 
+        public static void ExecutePostCreateHook(string repoPath)
+        {
+            var sh = WebConfigurationManager.AppSettings["ShCommand"];
+
+            // If 'sh.exe' is not configured, derive the path relative to the git.exe command path.
+            if (string.IsNullOrEmpty(sh))
+            {
+                var git = WebConfigurationManager.AppSettings["GitCommand"];
+                sh = Path.Combine(Path.GetDirectoryName(git), "sh.exe");
+            }
+
+            // Find the path of the post-create hook.
+            var repositories = WebConfigurationManager.AppSettings["RepositoriesPath"];
+            var hookRelativePath = WebConfigurationManager.AppSettings["PostCreateHook"];
+
+            // If the hook path is not configured, default to a path of "post-create", relative to the repository directory.
+            if (string.IsNullOrEmpty(hookRelativePath))
+            {
+                hookRelativePath = "post-create";
+            }
+
+            // Get the full path info for the hook file, and ensure that it exists.
+            var hookFile = new FileInfo(Path.Combine(repositories, hookRelativePath));
+            if (!hookFile.Exists)
+            {
+                return;
+            }
+
+            // Prepare to start sh.exe like: `sh.exe -- "C:\Path\To\Hook-Script"`.
+            var startInfo = new ProcessStartInfo(sh, string.Format("-- \"{0}\"", hookFile.FullName.Replace("\\", "\\\\").Replace("\"", "\\\"")))
+            {
+                WorkingDirectory = repoPath,
+                RedirectStandardInput = false,
+                RedirectStandardOutput = false,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            };
+
+            // Start the script and wait for exit.
+            using (var script = Process.Start(startInfo))
+            {
+                script.WaitForExit();
+            }
+        }
+
         private static string ParseResultLine(string prefix, string result, out string rest)
         {
             var parts = result.Split(new[] { '\n' }, 2);

@@ -67,6 +67,9 @@ namespace WebGitNet.Controllers
             }
 
             io::File.WriteAllText(Path.Combine(repoPath, "description"), request.Description);
+
+            GitUtilities.ExecutePostCreateHook(repoPath);
+
             return RedirectToAction("ViewRepo", "Browse", new { repo = request.RepoName });
         }
     }
