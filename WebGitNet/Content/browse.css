@@ -31,6 +31,7 @@
 {
     position: relative;
     margin-top: 1em;
+    width: 50%;
 }
 
 .commit-person .avatar
@@ -43,7 +44,6 @@
 .commit-person .name, .commit-person .date
 {
     margin-left: 30px;
-    width: 50%;
 }
 
 .commit-references
