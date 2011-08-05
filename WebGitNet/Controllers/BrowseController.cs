@@ -50,6 +50,19 @@ namespace WebGitNet.Controllers
             return View();
         }
 
+        public ActionResult ViewRepoImpact(string repo)
+        {
+            var resourceInfo = this.fileManager.GetResourceInfo(repo);
+            if (resourceInfo.Type != ResourceType.Directory)
+            {
+                return HttpNotFound();
+            }
+
+            var userImpacts = GitUtilities.GetUserImpacts(resourceInfo.FullPath);
+
+            return View(userImpacts);
+        }
+
         public ActionResult ViewCommit(string repo, string @object)
         {
             var resourceInfo = this.fileManager.GetResourceInfo(repo);

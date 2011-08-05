@@ -181,6 +181,7 @@
     <Content Include="Views\Browse\ViewBlob.cshtml" />
     <Content Include="Views\Browse\ViewCommit.cshtml" />
     <Content Include="Views\Browse\ViewCommits.cshtml" />
+    <Content Include="Views\Browse\ViewRepoImpact.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

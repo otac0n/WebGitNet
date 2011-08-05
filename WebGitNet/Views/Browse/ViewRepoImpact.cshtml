@@ -1,0 +1,58 @@
+﻿@model IEnumerable<UserImpact>
+
+@{
+    ViewBag.Title = "Repository Impact";
+}
+
+@helper PieChart(string title, Dictionary<string, int> data, int width = 500, int height = 300)
+{
+    var legend = string.Join("|", data.Keys);
+    var chartData = string.Join(",", data.Values);
+    var sum = data.Values.Sum();
+    var labels = string.Join("|", from d in data.Values select ((double)d/sum).ToString("P"));
+
+    <img src="http://chart.apis.google.com/chart?chs=@(width)x@(height)&cht=p&chds=a&chd=t:@(chartData)&chdl=@(legend)&chdlp=l&chl=@(labels)&chtt=@(title)" />
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+<div class="impact-graphs">
+    @PieChart("Commits", Model.ToDictionary(k => k.Author, k => k.Commits), width: 400, height: 200)
+    @PieChart("Impact", Model.ToDictionary(k => k.Author, k => k.Insertions + k.Deletions), width: 400, height: 200)
+</div>
+
+<table>
+    <tr>
+        <th>
+            Author
+        </th>
+        <th>
+            Commits
+        </th>
+        <th>
+            Insertions
+        </th>
+        <th>
+            Deletions
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Author)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Commits)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Insertions)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Deletions)
+        </td>
+    </tr>
+}
+
+</table>

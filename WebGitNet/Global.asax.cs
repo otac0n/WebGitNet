@@ -32,6 +32,11 @@ namespace WebGitNet
                 new { controller = "Browse", action = "ViewRepo" });
 
             routes.MapRoute(
+                "View Repo Impact",
+                "browse/{repo}/impact",
+                new { controller = "Browse", action = "ViewRepoImpact" });
+
+            routes.MapRoute(
                 "View Tree",
                 "browse/{repo}/tree/{object}/{*path}",
                 new { controller = "Browse", action = "ViewTree", path = UrlParameter.Optional });
