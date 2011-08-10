@@ -198,6 +198,7 @@ table
 {
   border: solid 1px #e8eef4;
   border-collapse: collapse;
+  width: 100%;
 }
 
 table td
@@ -210,8 +211,8 @@ table th
 {
   padding: 6px 5px;
   text-align: left;
-  background-color: #e8eef4;
-  border: solid 1px #e8eef4;
+  background-color: #eee;
+  border: solid 1px #eee;
 }
 
 .clear
@@ -314,4 +315,10 @@ div#title
 .tri-state
 {
     width: 6em;
+}
+
+ul 
+{
+    margin: 0px;
+    padding-left: 20px;
 }
