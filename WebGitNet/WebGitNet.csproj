@@ -96,7 +96,6 @@
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ServiceRpcController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="GitUtilities.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -169,7 +168,6 @@
     <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\File\List.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />

@@ -12,8 +12,12 @@
         <h1>@ViewBag.Title</h1>
         <div id="menucontainer">
             <ul id="menu">
-                <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                <li>@Html.ActionLink("Browse", "Index", "Browse")</li>
+                <li>@Html.ActionLink("Create Repo", "Create", "Manage")</li>
             </ul>
+        </div>
+        <div id="breadcrumber">
+            @Html.ActionLink(Html.ViewContext.RouteData.Values["controller"].ToString(), "Index") <strong>&gt;</strong> @Html.ViewContext.RouteData.Values["repo"] <strong>&gt;</strong> @ViewBag.Title
         </div>
     </div>
 
