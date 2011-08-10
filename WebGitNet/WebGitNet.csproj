@@ -124,6 +124,7 @@
     <Content Include="Content\browse.css" />
     <Content Include="Content\checkerboard.png" />
     <Content Include="Content\code.css" />
+    <Content Include="Content\logo.png" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <None Include="mime-types.txt">

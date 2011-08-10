@@ -8,27 +8,21 @@
 </head>
 
 <body>
-    <div class="page">
-
-        <div id="header">
-            <div id="title">
-                <h1>WebGit .NET</h1>
-            </div>
-
-            <div id="menucontainer">
-                <ul id="menu">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                </ul>
-            </div>
+    <div id="header">
+        <h1>@ViewBag.Title</h1>
+        <div id="menucontainer">
+            <ul id="menu">
+                <li>@Html.ActionLink("Home", "Index", "Home")</li>
+            </ul>
         </div>
+    </div>
 
-        <div id="main">
-            @RenderBody()
-        </div>
+    <div id="main">
+        @RenderBody()
+    </div>
 
-        <div id="footer">
-            Copyright &copy; @DateTime.Now.Year John Gietzen. All rights reserved.
-        </div>
+    <div id="footer">
+        Copyright &copy; @DateTime.Now.Year John Gietzen. All rights reserved.
     </div>
 </body>
 </html>
