@@ -321,3 +321,8 @@ ul
     color: #000;
     text-decoration: none;
 }
+
+#breadcrumber a:hover
+{
+    text-decoration: underline;
+}
