@@ -120,10 +120,14 @@
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
       <Link>CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
+    <Content Include="Content\asc.gif" />
+    <Content Include="Content\bg.gif" />
     <Content Include="Content\browse.css" />
     <Content Include="Content\checkerboard.png" />
     <Content Include="Content\code.css" />
+    <Content Include="Content\desc.gif" />
     <Content Include="Content\logo.png" />
+    <Content Include="Content\tablesort.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <None Include="mime-types.txt">
@@ -131,6 +135,7 @@
     </None>
     <EmbeddedResource Include="PygmentsHosting.py" />
     <Content Include="Scripts\jquery.background-position.min.js" />
+    <Content Include="Scripts\jquery.tablesorter.min.js" />
     <Content Include="Scripts\jquery.timeago.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

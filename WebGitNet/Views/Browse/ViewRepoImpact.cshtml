@@ -4,6 +4,17 @@
     ViewBag.Title = "Repository Impact";
 }
 
+@section headers
+{
+    <link href="@Url.Content("~/Content/tablesort.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/jquery.tablesorter.min.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+            $(".tablesorter").tablesorter();
+        });
+    </script>
+}
+
 @helper PieChart(string title, Dictionary<string, int> data, int width = 500, int height = 300)
 {
     var legend = string.Join("|", data.Keys);
@@ -19,7 +30,8 @@
     @PieChart("Impact", Model.ToDictionary(k => k.Author, k => k.Impact), width: 400, height: 200)
 </div>
 
-<table>
+<table class="tablesorter">
+  <thead>
     <tr>
         <th>Author</th>
         <th>Commits</th>
@@ -27,7 +39,8 @@
         <th>Deletions</th>
         <th>Impact</th>
     </tr>
-
+  </thead>
+  <tbody>
 @foreach (var item in Model) {
     <tr>
         <td>@Html.DisplayFor(modelItem => item.Author)</td>
@@ -37,5 +50,5 @@
         <td>@Html.DisplayFor(modelItem => item.Impact)</td>
     </tr>
 }
-
+  </tbody>
 </table>
