@@ -84,21 +84,23 @@ namespace WebGitNet
         public static List<UserImpact> GetUserImpacts(string repoPath)
         {
             string impactData;
-            using (var git = Start("log --format=format:%an --shortstat", repoPath, outputEncoding: Encoding.UTF8))
+            using (var git = Start("log -z --format=format:%an --shortstat", repoPath, outputEncoding: Encoding.UTF8))
             {
                 impactData = git.StandardOutput.ReadToEnd();
             }
 
-            var individualImpacts = from imp in Regex.Split(impactData, @"\n\n")
-                                    let lines = imp.Split('\n')
-                                    where lines.Length == 2
-                                    let match = Regex.Match(lines[1], @"^ \d+ files changed, (?<insertions>\d+) insertions\(\+\), (?<deletions>\d+) deletions\(-\)$")
+            var individualImpacts = from imp in impactData.Split('\0')
+                                    let lines = imp.Split("\n".ToArray(), StringSplitOptions.RemoveEmptyEntries)
+                                    let changeLine = lines.Length > 1 ? lines[1] : ""
+                                    let match = Regex.Match(changeLine, @"^ \d+ files changed, (?<insertions>\d+) insertions\(\+\), (?<deletions>\d+) deletions\(-\)$")
+                                    let insertions = match.Success ? int.Parse(match.Groups["insertions"].Value) : 0
+                                    let deletions = match.Success ? int.Parse(match.Groups["deletions"].Value) : 0
                                     select new UserImpact
                                     {
                                         Author = lines[0],
                                         Commits = 1,
-                                        Insertions = int.Parse(match.Groups["insertions"].Value),
-                                        Deletions = int.Parse(match.Groups["deletions"].Value),
+                                        Insertions = insertions,
+                                        Deletions = deletions,
                                     };
 
             return
