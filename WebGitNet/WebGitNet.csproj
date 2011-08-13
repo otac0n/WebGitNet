@@ -103,6 +103,7 @@
     <Compile Include="HtmlHelpers.cs" />
     <Compile Include="MimeUtilities.cs" />
     <Compile Include="Models\AccessLevel.cs" />
+    <Compile Include="Models\BreadCrumbTrail.cs" />
     <Compile Include="Models\CreateRepoRequest.cs" />
     <Compile Include="Models\DiffInfo.cs" />
     <Compile Include="Models\LogEntry.cs" />
