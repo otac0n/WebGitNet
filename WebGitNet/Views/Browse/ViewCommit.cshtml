@@ -17,8 +17,6 @@
     </script>
 }
 
-<h2>@ViewBag.Title</h2>
-
 @Html.Partial("LogEntry", commitLogEntry, new ViewDataDictionary { { "Details", true } })
 
 @foreach (var diff in Model)

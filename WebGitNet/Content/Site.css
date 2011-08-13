@@ -1,6 +1,6 @@
 ﻿body
 {
-    background-color: #5c87b2;
+    background: #fff url(logo.png) no-repeat;
     font-size: 75%;
     font-family: Verdana, Tahoma, Arial, "Helvetica Neue", Helvetica, Sans-Serif;
     margin: 0;
@@ -12,22 +12,6 @@ a:link
 {
     color: #034af3;
     text-decoration: underline;
-}
-
-a:visited
-{
-    color: #505abc;
-}
-
-a:hover
-{
-    color: #1d60ff;
-    text-decoration: none;
-}
-
-a:active
-{
-    color: #12eb87;
 }
 
 p, ul
@@ -74,13 +58,6 @@ h5, h6
     margin-top: 0;
 }
 
-.page
-{
-    width: 1000px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 #header
 {
     position: relative;
@@ -91,13 +68,15 @@ h5, h6
 
 #header h1
 {
-    font-weight: bold;
+    font-weight: 500;
     padding: 5px 0;
-    margin: 0;
-    color: #fff;
+    margin: 0 0 0 190px;
+    color: #000;
+    float: left;    
     border: none;
-    line-height: 2em;
-    font-size: 32px !important;
+    font-family: Segoe UI, Verdana, inherit;
+    line-height: 36px;
+    font-size: 28px !important;
 }
 
 #main
@@ -118,7 +97,7 @@ h5, h6
 
 ul#menu
 {
-    border-bottom: 1px #5C87B2 solid;
+    border-bottom: 1px #999 solid;
     padding: 0 0 2px;
     position: relative;
     margin: 0;
@@ -136,7 +115,7 @@ ul#menu li#greeting
     padding: 10px 20px;
     font-weight: bold;
     text-decoration: none;
-    line-height: 2.8em;
+    line-height: 30px;
     color: #fff;
 }
 
@@ -145,14 +124,15 @@ ul#menu li a
     padding: 10px 20px;
     font-weight: bold;
     text-decoration: none;
-    line-height: 2.8em;
-    background-color: #e8eef4;
-    color: #034af3;
+    line-height: 47px;
+    margin: 10px 10px 10px 0;
+    background-color: #f7f7f7;
+    color: #333;
 }
 
 ul#menu li a:hover
 {
-    background-color: #fff;
+    background-color: #eee;
     text-decoration: none;
 }
 
@@ -202,6 +182,7 @@ table
 {
   border: solid 1px #e8eef4;
   border-collapse: collapse;
+  width: 100%;
 }
 
 table td
@@ -214,8 +195,8 @@ table th
 {
   padding: 6px 5px;
   text-align: left;
-  background-color: #e8eef4;
-  border: solid 1px #e8eef4;
+  background-color: #eee;
+  border: solid 1px #eee;
 }
 
 .clear
@@ -230,8 +211,7 @@ table th
 
 #menucontainer
 {
-    margin-top:40px;
-    position : absolute;
+    position : relative;
     right: 0;
     bottom : 0;
 }
@@ -319,4 +299,30 @@ div#title
 .tri-state
 {
     width: 6em;
+}
+
+ul 
+{
+    margin: 0px;
+    padding-left: 20px;
+}
+
+#breadcrumber
+{
+    height: 24px;
+    border-bottom: 1px solid #999;
+    background: url(breadcrumber_bg.png);
+    line-height: 24px;
+    padding: 0 8px;
+}
+
+#breadcrumber a
+{
+    color: #000;
+    text-decoration: none;
+}
+
+#breadcrumber a:hover
+{
+    text-decoration: underline;
 }
