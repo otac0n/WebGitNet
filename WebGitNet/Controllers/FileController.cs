@@ -8,7 +8,6 @@
 namespace WebGitNet.Controllers
 {
     using System.IO;
-    using System.Web.Configuration;
     using System.Web.Mvc;
     using WebGitNet.ActionResults;
     using WebGitNet.Models;
@@ -17,6 +16,7 @@ namespace WebGitNet.Controllers
     {
         public FileController()
         {
+            this.BreadCrumbs.Append("File", "Fetch", "Direct Access", new { url = string.Empty });
         }
 
         public ActionResult Fetch(string url)
@@ -33,6 +33,8 @@ namespace WebGitNet.Controllers
             {
                 return File(resourceInfo.FullPath, "application/octet-stream");
             }
+
+            this.BreadCrumbs.Append("File", "Fetch", BreadCrumbTrail.EnumeratePath(url), p => p.Key, p => new { url = p.Value });
 
             return View("List", resourceInfo);
         }
