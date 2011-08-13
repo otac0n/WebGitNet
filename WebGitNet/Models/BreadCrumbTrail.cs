@@ -15,24 +15,24 @@ namespace WebGitNet.Models
     {
         private readonly LinkedList<BreadCrumb> breadCrumbs = new LinkedList<BreadCrumb>();
 
-        public void Append(string name, object routeValues)
+        public void Append(string controller, string action, string name, object routeValues = null)
         {
-            this.breadCrumbs.AddLast(new BreadCrumb(name, routeValues));
+            this.breadCrumbs.AddLast(new BreadCrumb(name, controller, action, routeValues));
         }
 
-        public void Append<TSource>(IEnumerable<TSource> crumbSource, Func<TSource, string> nameSelector, Func<TSource, object> routeValuesSelector)
+        public void Append<TSource>(string controller, string action, IEnumerable<TSource> crumbSource, Func<TSource, string> nameSelector, Func<TSource, object> routeValuesSelector)
         {
-            this.Append(crumbSource, nameSelector, (item, name) => routeValuesSelector(item));
+            this.Append(controller, action, crumbSource, nameSelector, (item, name) => routeValuesSelector(item));
         }
 
-        public void Append<TSource>(IEnumerable<TSource> crumbSource, Func<TSource, string> nameSelector, Func<TSource, string, object> routeValuesSelector)
+        public void Append<TSource>(string controller, string action, IEnumerable<TSource> crumbSource, Func<TSource, string> nameSelector, Func<TSource, string, object> routeValuesSelector)
         {
             foreach (var crumb in crumbSource)
             {
                 var name = nameSelector(crumb);
                 var routeValues = routeValuesSelector(crumb, name);
 
-                this.Append(name, routeValues);
+                this.Append(controller, action, name, routeValues);
             }
         }
 
@@ -49,9 +49,11 @@ namespace WebGitNet.Models
         public sealed class BreadCrumb
         {
             private readonly string name;
+            private readonly string controller;
+            private readonly string action;
             private readonly object routeValues;
 
-            public BreadCrumb(string name, object routeValues)
+            public BreadCrumb(string name, string controller, string action, object routeValues)
             {
                 if (string.IsNullOrEmpty(name))
                 {
@@ -60,10 +62,19 @@ namespace WebGitNet.Models
 
                 this.name = name;
 
-                if (routeValues == null)
+                if (string.IsNullOrEmpty(controller))
                 {
-                    throw new ArgumentNullException("routeValues");
+                    throw new ArgumentNullException("controller");
                 }
+
+                this.controller = controller;
+
+                if (string.IsNullOrEmpty(action))
+                {
+                    throw new ArgumentNullException("action");
+                }
+
+                this.action = action;
 
                 this.routeValues = routeValues;
             }
@@ -73,6 +84,22 @@ namespace WebGitNet.Models
                 get
                 {
                     return this.name;
+                }
+            }
+
+            public string Controller
+            {
+                get
+                {
+                    return this.controller;
+                }
+            }
+
+            public string Action
+            {
+                get
+                {
+                    return this.action;
                 }
             }
 
