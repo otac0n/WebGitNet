@@ -14,12 +14,16 @@ namespace WebGitNet.Controllers
     public abstract class SharedControllerBase : Controller
     {
         private readonly FileManager fileManager;
+        private readonly BreadCrumbTrail breadCrumbs;
 
         public SharedControllerBase()
         {
             var reposPath = WebConfigurationManager.AppSettings["RepositoriesPath"];
 
             this.fileManager = new FileManager(reposPath);
+
+            this.breadCrumbs = new BreadCrumbTrail();
+            ViewBag.BreadCrumbs = this.breadCrumbs;
         }
 
         public FileManager FileManager
@@ -27,6 +31,14 @@ namespace WebGitNet.Controllers
             get
             {
                 return this.fileManager;
+            }
+        }
+
+        public BreadCrumbTrail BreadCrumbs
+        {
+            get
+            {
+                return this.breadCrumbs;
             }
         }
     }
