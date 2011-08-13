@@ -48,7 +48,6 @@ namespace WebGitNet.ActionResults
 
             response.ContentType = "application/git-" + this.action + "-result";
             response.ContentEncoding = GitUtilities.DefaultEncoding;
-            response.Flush();
 
             using (var git = GitUtilities.Start(string.Format(this.commandFormat, this.action), this.repoPath, redirectInput: true))
             {
@@ -72,11 +71,16 @@ namespace WebGitNet.ActionResults
                 while ((writeCount = git.StandardOutput.ReadBlock(writeBuffer, 0, writeBuffer.Length)) > 0)
                 {
                     response.Write(writeBuffer, 0, writeCount);
-                    response.Flush();
                 }
 
                 readThread.Join();
                 git.WaitForExit();
+
+                if (git.ExitCode != 0)
+                {
+                    response.StatusCode = 500;
+                    response.SubStatusCode = git.ExitCode;
+                }
             }
         }
     }
