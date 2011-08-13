@@ -95,12 +95,14 @@ namespace WebGitNet
                                     let match = Regex.Match(changeLine, @"^ \d+ files changed, (?<insertions>\d+) insertions\(\+\), (?<deletions>\d+) deletions\(-\)$")
                                     let insertions = match.Success ? int.Parse(match.Groups["insertions"].Value) : 0
                                     let deletions = match.Success ? int.Parse(match.Groups["deletions"].Value) : 0
+                                    let impact = Math.Max(insertions, deletions)
                                     select new UserImpact
                                     {
                                         Author = lines[0],
                                         Commits = 1,
                                         Insertions = insertions,
                                         Deletions = deletions,
+                                        Impact = impact,
                                     };
 
             return
@@ -112,6 +114,7 @@ namespace WebGitNet
                     Commits = g.Sum(ui => ui.Commits),
                     Insertions = g.Sum(ui => ui.Insertions),
                     Deletions = g.Sum(ui => ui.Deletions),
+                    Impact = g.Sum(ui => ui.Impact),
                 })
                 .ToList();
         }

@@ -16,39 +16,25 @@
 
 <div class="impact-graphs">
     @PieChart("Commits", Model.ToDictionary(k => k.Author, k => k.Commits), width: 400, height: 200)
-    @PieChart("Impact", Model.ToDictionary(k => k.Author, k => k.Insertions + k.Deletions), width: 400, height: 200)
+    @PieChart("Impact", Model.ToDictionary(k => k.Author, k => k.Impact), width: 400, height: 200)
 </div>
 
 <table>
     <tr>
-        <th>
-            Author
-        </th>
-        <th>
-            Commits
-        </th>
-        <th>
-            Insertions
-        </th>
-        <th>
-            Deletions
-        </th>
+        <th>Author</th>
+        <th>Commits</th>
+        <th>Insertions</th>
+        <th>Deletions</th>
+        <th>Impact</th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Author)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Commits)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Insertions)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Deletions)
-        </td>
+        <td>@Html.DisplayFor(modelItem => item.Author)</td>
+        <td>@Html.DisplayFor(modelItem => item.Commits)</td>
+        <td>@Html.DisplayFor(modelItem => item.Insertions)</td>
+        <td>@Html.DisplayFor(modelItem => item.Deletions)</td>
+        <td>@Html.DisplayFor(modelItem => item.Impact)</td>
     </tr>
 }
 

@@ -16,5 +16,7 @@ namespace WebGitNet.Models
         public int Insertions { get; set; }
 
         public int Deletions { get; set; }
+
+        public int Impact { get; set; }
     }
 }
