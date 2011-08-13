@@ -7,6 +7,7 @@
 
 namespace WebGitNet.Controllers
 {
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -14,6 +15,7 @@ namespace WebGitNet.Controllers
     using System.Web.Mvc;
     using WebGitNet.ActionResults;
     using WebGitNet.Models;
+    using io = System.IO;
 
     public class BrowseController : Controller
     {
@@ -58,7 +60,18 @@ namespace WebGitNet.Controllers
                 return HttpNotFound();
             }
 
-            var userImpacts = GitUtilities.GetUserImpacts(resourceInfo.FullPath);
+            Dictionary<string, string> renames = null;
+
+            var renamesFile = Path.Combine(resourceInfo.FullPath, "renames.txt");
+            if (io::File.Exists(renamesFile))
+            {
+                renames = (from l in io::File.ReadAllLines(renamesFile)
+                           where !string.IsNullOrWhiteSpace(l)
+                           let parts = l.Split("=".ToArray(), 2)
+                           select new KeyValuePair<string, string>(parts[0], parts[1])).ToDictionary(i => i.Key, i => i.Value);
+            }
+
+            var userImpacts = GitUtilities.GetUserImpacts(resourceInfo.FullPath, renames);
 
             return View(userImpacts);
         }

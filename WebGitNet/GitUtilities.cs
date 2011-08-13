@@ -81,8 +81,10 @@ namespace WebGitNet
                     select parseResults(r)).ToList();
         }
 
-        public static List<UserImpact> GetUserImpacts(string repoPath)
+        public static List<UserImpact> GetUserImpacts(string repoPath, Dictionary<string, string> renames = null)
         {
+            renames = renames ?? new Dictionary<string, string>();
+
             string impactData;
             using (var git = Start("log -z --format=format:%an --shortstat", repoPath, outputEncoding: Encoding.UTF8))
             {
@@ -93,12 +95,13 @@ namespace WebGitNet
                                     let lines = imp.Split("\n".ToArray(), StringSplitOptions.RemoveEmptyEntries)
                                     let changeLine = lines.Length > 1 ? lines[1] : ""
                                     let match = Regex.Match(changeLine, @"^ \d+ files changed, (?<insertions>\d+) insertions\(\+\), (?<deletions>\d+) deletions\(-\)$")
+                                    let author = renames.ContainsKey(lines[0]) ? renames[lines[0]] : lines[0]
                                     let insertions = match.Success ? int.Parse(match.Groups["insertions"].Value) : 0
                                     let deletions = match.Success ? int.Parse(match.Groups["deletions"].Value) : 0
                                     let impact = Math.Max(insertions, deletions)
                                     select new UserImpact
                                     {
-                                        Author = lines[0],
+                                        Author = author,
                                         Commits = 1,
                                         Insertions = insertions,
                                         Deletions = deletions,
