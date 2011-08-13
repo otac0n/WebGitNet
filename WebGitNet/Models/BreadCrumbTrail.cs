@@ -10,10 +10,39 @@ namespace WebGitNet.Models
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
+
+    public enum TrailingSlashBehavior
+    {
+        NoTrailingSlashes,
+        AllTrailingSlashes,
+        LeaveOffLastTrailingSlash,
+    }
 
     public class BreadCrumbTrail : IEnumerable<BreadCrumbTrail.BreadCrumb>
     {
         private readonly LinkedList<BreadCrumb> breadCrumbs = new LinkedList<BreadCrumb>();
+
+        public static IEnumerable<KeyValuePair<string, string>> EnumeratePath(string url, TrailingSlashBehavior slashBehavior = TrailingSlashBehavior.AllTrailingSlashes)
+        {
+            url = (url ?? string.Empty).Trim('/');
+
+            var parts = url.Split("/".ToArray(), StringSplitOptions.RemoveEmptyEntries);
+
+            for (int i = 0; i < parts.Length; i++)
+            {
+                var name = parts[i];
+                var path = string.Join("/", parts.Take(i + 1));
+
+                if (slashBehavior == TrailingSlashBehavior.AllTrailingSlashes ||
+                    (slashBehavior == TrailingSlashBehavior.LeaveOffLastTrailingSlash && i < parts.Length - 1))
+                {
+                    path = path + "/";
+                }
+
+                yield return new KeyValuePair<string, string>(name, path);
+            }
+        }
 
         public void Append(string controller, string action, string name, object routeValues = null)
         {
