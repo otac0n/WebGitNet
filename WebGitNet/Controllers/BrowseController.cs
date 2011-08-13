@@ -10,24 +10,19 @@ namespace WebGitNet.Controllers
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using System.Web.Configuration;
     using System.Web.Mvc;
     using WebGitNet.ActionResults;
     using WebGitNet.Models;
 
-    public class BrowseController : Controller
+    public class BrowseController : SharedControllerBase
     {
-        private readonly FileManager fileManager;
-
         public BrowseController()
         {
-            var reposPath = WebConfigurationManager.AppSettings["RepositoriesPath"];
-            this.fileManager = new FileManager(reposPath);
         }
 
         public ActionResult Index()
         {
-            var directory = this.fileManager.DirectoryInfo;
+            var directory = this.FileManager.DirectoryInfo;
 
             var repos = (from dir in directory.EnumerateDirectories()
                          select dir.Name).ToList();
@@ -37,7 +32,7 @@ namespace WebGitNet.Controllers
 
         public ActionResult ViewRepo(string repo)
         {
-            var resourceInfo = this.fileManager.GetResourceInfo(repo);
+            var resourceInfo = this.FileManager.GetResourceInfo(repo);
             if (resourceInfo.Type != ResourceType.Directory)
             {
                 return HttpNotFound();
@@ -52,7 +47,7 @@ namespace WebGitNet.Controllers
 
         public ActionResult ViewRepoImpact(string repo)
         {
-            var resourceInfo = this.fileManager.GetResourceInfo(repo);
+            var resourceInfo = this.FileManager.GetResourceInfo(repo);
             if (resourceInfo.Type != ResourceType.Directory)
             {
                 return HttpNotFound();
@@ -65,7 +60,7 @@ namespace WebGitNet.Controllers
 
         public ActionResult ViewCommit(string repo, string @object)
         {
-            var resourceInfo = this.fileManager.GetResourceInfo(repo);
+            var resourceInfo = this.FileManager.GetResourceInfo(repo);
             if (resourceInfo.Type != ResourceType.Directory)
             {
                 return HttpNotFound();
@@ -87,7 +82,7 @@ namespace WebGitNet.Controllers
 
         public ActionResult ViewCommits(string repo)
         {
-            var resourceInfo = this.fileManager.GetResourceInfo(repo);
+            var resourceInfo = this.FileManager.GetResourceInfo(repo);
             if (resourceInfo.Type != ResourceType.Directory)
             {
                 return HttpNotFound();
@@ -102,7 +97,7 @@ namespace WebGitNet.Controllers
 
         public ActionResult ViewTree(string repo, string @object, string path)
         {
-            var resourceInfo = this.fileManager.GetResourceInfo(repo);
+            var resourceInfo = this.FileManager.GetResourceInfo(repo);
             if (resourceInfo.Type != ResourceType.Directory)
             {
                 return HttpNotFound();
@@ -118,7 +113,7 @@ namespace WebGitNet.Controllers
 
         public ActionResult ViewBlob(string repo, string @object, string path, bool raw = false)
         {
-            var resourceInfo = this.fileManager.GetResourceInfo(repo);
+            var resourceInfo = this.FileManager.GetResourceInfo(repo);
             if (resourceInfo.Type != ResourceType.Directory || string.IsNullOrEmpty(path))
             {
                 return HttpNotFound();

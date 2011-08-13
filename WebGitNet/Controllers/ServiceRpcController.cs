@@ -8,21 +8,11 @@
 namespace WebGitNet.Controllers
 {
     using System.IO;
-    using System.Web.Configuration;
     using System.Web.Mvc;
     using WebGitNet.ActionResults;
-    using WebGitNet.Models;
 
-    public class ServiceRpcController : Controller
+    public class ServiceRpcController : SharedControllerBase
     {
-        private readonly FileManager fileManager;
-
-        public ServiceRpcController()
-        {
-            var reposPath = WebConfigurationManager.AppSettings["RepositoriesPath"];
-            this.fileManager = new FileManager(reposPath);
-        }
-
         [HttpPost]
         public ActionResult UploadPack(string url)
         {
@@ -37,7 +27,7 @@ namespace WebGitNet.Controllers
 
         private ActionResult ServiceRpc(string url, string action)
         {
-            var resourceInfo = this.fileManager.GetResourceInfo(url);
+            var resourceInfo = this.FileManager.GetResourceInfo(url);
             if (resourceInfo.FileSystemInfo == null)
             {
                 return HttpNotFound();
