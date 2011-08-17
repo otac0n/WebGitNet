@@ -23,11 +23,6 @@ namespace WebGitNet
             return new MvcHtmlString("<img alt=\"" + html.AttributeEncode(name) + "\" src=\"" + html.AttributeEncode(imgUrl) + "\" />");
         }
 
-        public static MvcHtmlString HilightCode(this HtmlHelper html, string code, string filename)
-        {
-            return new MvcHtmlString(PygmentsSyntaxHilighter.HilightFile(filename, code));
-        }
-
         private static string HashString(string value)
         {
             byte[] data = Encoding.UTF8.GetBytes(value.Trim().ToLowerInvariant());

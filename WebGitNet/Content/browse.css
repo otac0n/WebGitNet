@@ -113,6 +113,16 @@
     overflow: auto;
 }
 
+.preview-contents pre
+{
+    text-align: left;
+    font-family: Consolas, Courier New, Monospace;
+    font-size: 10pt;
+    background: #fff;
+    color: #000;
+    padding: 1em;
+}
+
 .preview-unavailable
 {
     color: #fff;
