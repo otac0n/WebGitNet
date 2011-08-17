@@ -41,7 +41,7 @@
     else
     {
     <div class="text-preview">
-<pre class="sh_@(System.IO.Path.GetExtension(fileName).TrimStart('.'))">@Model</pre>
+<pre class="sh_@(MimeUtilities.GetLanguage(contentType))">@Model</pre>
     </div>
     }
 }

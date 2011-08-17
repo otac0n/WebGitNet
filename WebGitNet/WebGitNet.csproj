@@ -149,6 +149,9 @@
     <Content Include="Scripts\shjs\sh_tcl.min.js" />
     <Content Include="Scripts\shjs\sh_xml.min.js" />
     <Content Include="Scripts\shjs\sh_xorg.min.js" />
+    <None Include="shjs-languages.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
