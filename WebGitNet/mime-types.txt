@@ -8,6 +8,7 @@ MAKEFILE:text/x-makefile
 .ashx:application/xml
 .asm:text/plain
 .asmx:application/xml
+.asp:application/xml
 .aspx:application/xml
 .bmml:application/xml
 .bmp:image/bmp
@@ -126,6 +127,7 @@ MAKEFILE:text/x-makefile
 .sol:text/plain
 .sor:text/plain
 .SourceAnalysis:text/xml
+.sql:text/x-sql-source
 .srf:text/plain
 .SSISDeploymentManifest:text/xml
 .StyleCop:text/xml
