@@ -8,6 +8,8 @@
 namespace WebGitNet.ActionResults
 {
     using System;
+    using System.IO;
+    using System.IO.Compression;
     using System.Threading;
     using System.Web.Mvc;
 
@@ -56,10 +58,26 @@ namespace WebGitNet.ActionResults
                     var readBuffer = new byte[524288];
                     int readCount;
 
-                    var input = request.InputStream;
-                    while ((readCount = input.Read(readBuffer, 0, readBuffer.Length)) > 0)
+                    Stream wrapperStream = null;
+                    try
                     {
-                        git.StandardInput.BaseStream.Write(readBuffer, 0, readCount);
+                        var input = request.InputStream;
+                        if (request.Headers["Content-Encoding"] == "gzip")
+                        {
+                            input = wrapperStream = new GZipStream(input, CompressionMode.Decompress);
+                        }
+
+                        while ((readCount = input.Read(readBuffer, 0, readBuffer.Length)) > 0)
+                        {
+                            git.StandardInput.BaseStream.Write(readBuffer, 0, readCount);
+                        }
+                    }
+                    finally
+                    {
+                        if (wrapperStream != null)
+                        {
+                            wrapperStream.Dispose();
+                        }
                     }
 
                     git.StandardInput.Close();

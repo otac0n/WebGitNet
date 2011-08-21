@@ -21,12 +21,6 @@
     </script>
 }
 
-@section breadcrumber
-{
-        <div id="breadcrumber">
-            @Html.ActionLink(Html.ViewContext.RouteData.Values["controller"].ToString(), "Index") <strong>&gt;</strong> @Html.ActionLink(Html.ViewContext.RouteData.Values["repo"].ToString(), "ViewRepo", "Browse") <strong>&gt;</strong> HEAD
-        </div>
-}
 <div class="repo-info">
   <table class="clone-info">
     <tr><th>Clone URL:</th><td>@Html.TextBox("clone-url", repoUrl)</td></tr>

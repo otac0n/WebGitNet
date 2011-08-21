@@ -9,19 +9,14 @@ namespace WebGitNet.Controllers
 {
     using System.IO;
     using System.Linq;
-    using System.Web.Configuration;
     using System.Web.Mvc;
     using WebGitNet.Models;
     using io = System.IO;
 
-    public class ManageController : Controller
+    public class ManageController : SharedControllerBase
     {
-        private readonly FileManager fileManager;
-
         public ManageController()
         {
-            var reposPath = WebConfigurationManager.AppSettings["RepositoriesPath"];
-            this.fileManager = new FileManager(reposPath);
         }
 
         public ActionResult Create()
@@ -38,7 +33,7 @@ namespace WebGitNet.Controllers
                 ModelState.AddModelError("RepoName", "Repository name must be a valid folder name.");
             }
 
-            var resourceInfo = this.fileManager.GetResourceInfo(request.RepoName);
+            var resourceInfo = this.FileManager.GetResourceInfo(request.RepoName);
             if (resourceInfo.FileSystemInfo == null)
             {
                 ModelState.AddModelError("RepoName", "You do not have permission to create this repository.");

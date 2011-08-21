@@ -16,7 +16,25 @@
                 <li>@Html.ActionLink("Create Repo", "Create", "Manage")</li>
             </ul>
         </div>
-        @RenderSection("breadcrumber", required: false)
+        @if (ViewBag.BreadCrumbs != null)
+        {
+            <div id="breadcrumber">
+            @{
+                bool first = true;
+                foreach (var breadCrumb in (BreadCrumbTrail)ViewBag.BreadCrumbs)
+                {
+                    if (!first)
+                    {
+                        <span>&gt;</span>
+                    }
+
+                    @Html.ActionLink(breadCrumb.Name, breadCrumb.Action, breadCrumb.Controller, breadCrumb.RouteValues, null);
+
+                    first = false;
+                }
+            }
+            </div>
+        }
     </div>
 
     <div id="main">

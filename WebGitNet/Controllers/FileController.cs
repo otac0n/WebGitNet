@@ -8,25 +8,21 @@
 namespace WebGitNet.Controllers
 {
     using System.IO;
-    using System.Web.Configuration;
     using System.Web.Mvc;
     using WebGitNet.ActionResults;
     using WebGitNet.Models;
 
-    public class FileController : Controller
+    public class FileController : SharedControllerBase
     {
-        private readonly FileManager fileManager;
-
         public FileController()
         {
-            var reposPath = WebConfigurationManager.AppSettings["RepositoriesPath"];
-            this.fileManager = new FileManager(reposPath);
+            this.BreadCrumbs.Append("File", "Fetch", "Direct Access", new { url = string.Empty });
         }
 
         public ActionResult Fetch(string url)
         {
             url = url ?? string.Empty;
-            var resourceInfo = this.fileManager.GetResourceInfo(url);
+            var resourceInfo = this.FileManager.GetResourceInfo(url);
 
             if (resourceInfo.Type == ResourceType.NotFound)
             {
@@ -38,13 +34,15 @@ namespace WebGitNet.Controllers
                 return File(resourceInfo.FullPath, "application/octet-stream");
             }
 
+            this.BreadCrumbs.Append("File", "Fetch", BreadCrumbTrail.EnumeratePath(url), p => p.Key, p => new { url = p.Value });
+
             return View("List", resourceInfo);
         }
 
         public ActionResult GetInfoRefs(string url)
         {
             var service = this.GetService();
-            var resourceInfo = this.fileManager.GetResourceInfo(url);
+            var resourceInfo = this.FileManager.GetResourceInfo(url);
 
             if (service == null || resourceInfo.Type == ResourceType.Directory)
             {

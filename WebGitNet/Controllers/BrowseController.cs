@@ -11,25 +11,26 @@ namespace WebGitNet.Controllers
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using System.Web.Configuration;
     using System.Web.Mvc;
     using WebGitNet.ActionResults;
     using WebGitNet.Models;
     using io = System.IO;
 
-    public class BrowseController : Controller
+    public class BrowseController : SharedControllerBase
     {
-        private readonly FileManager fileManager;
-
         public BrowseController()
         {
-            var reposPath = WebConfigurationManager.AppSettings["RepositoriesPath"];
-            this.fileManager = new FileManager(reposPath);
+            this.BreadCrumbs.Append("Browse", "Index", "Browse");
+        }
+
+        private void AddRepoBreadCrumb(string repo)
+        {
+            this.BreadCrumbs.Append("Browse", "ViewRepo", repo, new { repo });
         }
 
         public ActionResult Index()
         {
-            var directory = this.fileManager.DirectoryInfo;
+            var directory = this.FileManager.DirectoryInfo;
 
             var repos = (from dir in directory.EnumerateDirectories()
                          select dir.Name).ToList();
@@ -39,11 +40,13 @@ namespace WebGitNet.Controllers
 
         public ActionResult ViewRepo(string repo)
         {
-            var resourceInfo = this.fileManager.GetResourceInfo(repo);
+            var resourceInfo = this.FileManager.GetResourceInfo(repo);
             if (resourceInfo.Type != ResourceType.Directory)
             {
                 return HttpNotFound();
             }
+
+            AddRepoBreadCrumb(repo);
 
             ViewBag.RepoName = resourceInfo.Name;
             ViewBag.LastCommit = GitUtilities.GetLogEntries(resourceInfo.FullPath, 1).FirstOrDefault();
@@ -54,11 +57,14 @@ namespace WebGitNet.Controllers
 
         public ActionResult ViewRepoImpact(string repo)
         {
-            var resourceInfo = this.fileManager.GetResourceInfo(repo);
+            var resourceInfo = this.FileManager.GetResourceInfo(repo);
             if (resourceInfo.Type != ResourceType.Directory)
             {
                 return HttpNotFound();
             }
+
+            AddRepoBreadCrumb(repo);
+            this.BreadCrumbs.Append("Browse", "ViewRepoImpact", "Impact", new { repo });
 
             Dictionary<string, string> renames = null;
 
@@ -78,11 +84,14 @@ namespace WebGitNet.Controllers
 
         public ActionResult ViewCommit(string repo, string @object)
         {
-            var resourceInfo = this.fileManager.GetResourceInfo(repo);
+            var resourceInfo = this.FileManager.GetResourceInfo(repo);
             if (resourceInfo.Type != ResourceType.Directory)
             {
                 return HttpNotFound();
             }
+
+            AddRepoBreadCrumb(repo);
+            this.BreadCrumbs.Append("Browse", "ViewCommit", @object, new { repo, @object });
 
             var commit = GitUtilities.GetLogEntries(resourceInfo.FullPath, 1, @object).FirstOrDefault();
             if (commit == null)
@@ -100,11 +109,14 @@ namespace WebGitNet.Controllers
 
         public ActionResult ViewCommits(string repo)
         {
-            var resourceInfo = this.fileManager.GetResourceInfo(repo);
+            var resourceInfo = this.FileManager.GetResourceInfo(repo);
             if (resourceInfo.Type != ResourceType.Directory)
             {
                 return HttpNotFound();
             }
+
+            AddRepoBreadCrumb(repo);
+            this.BreadCrumbs.Append("Browse", "ViewCommits", "Recent Commits", new { repo });
 
             var commits = GitUtilities.GetLogEntries(resourceInfo.FullPath, 20);
 
@@ -115,11 +127,15 @@ namespace WebGitNet.Controllers
 
         public ActionResult ViewTree(string repo, string @object, string path)
         {
-            var resourceInfo = this.fileManager.GetResourceInfo(repo);
+            var resourceInfo = this.FileManager.GetResourceInfo(repo);
             if (resourceInfo.Type != ResourceType.Directory)
             {
                 return HttpNotFound();
             }
+
+            AddRepoBreadCrumb(repo);
+            this.BreadCrumbs.Append("Browse", "ViewTree", @object, new { repo, @object, path = string.Empty });
+            this.BreadCrumbs.Append("Browse", "ViewTree", BreadCrumbTrail.EnumeratePath(path), p => p.Key, p => new { repo, @object, path = p.Value });
 
             var items = GitUtilities.GetTreeInfo(resourceInfo.FullPath, @object, path);
             ViewBag.RepoName = resourceInfo.Name;
@@ -131,7 +147,7 @@ namespace WebGitNet.Controllers
 
         public ActionResult ViewBlob(string repo, string @object, string path, bool raw = false)
         {
-            var resourceInfo = this.fileManager.GetResourceInfo(repo);
+            var resourceInfo = this.FileManager.GetResourceInfo(repo);
             if (resourceInfo.Type != ResourceType.Directory || string.IsNullOrEmpty(path))
             {
                 return HttpNotFound();
@@ -144,6 +160,12 @@ namespace WebGitNet.Controllers
             {
                 return new GitFileResult(resourceInfo.FullPath, @object, path, contentType);
             }
+
+            AddRepoBreadCrumb(repo);
+            this.BreadCrumbs.Append("Browse", "ViewTree", @object, new { repo, @object, path = string.Empty });
+            var paths = BreadCrumbTrail.EnumeratePath(path, TrailingSlashBehavior.LeaveOffLastTrailingSlash).ToList();
+            this.BreadCrumbs.Append("Browse", "ViewTree", paths.Take(paths.Count() - 1), p => p.Key, p => new { repo, @object, path = p.Value });
+            this.BreadCrumbs.Append("Browse", "ViewBlob", paths.Last().Key, new { repo, @object, path = paths.Last().Value });
 
             ViewBag.RepoName = resourceInfo.Name;
             ViewBag.Tree = @object;

@@ -13,26 +13,18 @@
 {
     <script src="@Url.Content("~/Scripts/jquery.background-position.min.js")"></script>
     <link href="@Url.Content("~/Content/browse.css")" rel="stylesheet" type="text/css" />
-    <link href="@Url.Content("~/Content/code.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/sh_typical.min.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/shjs/sh_main.min.js")"></script>
     <script>
         $(function () {
             (function animate_background() {
                 $('.image-preview').css('backgroundPosition', '0px 0px').animate({ backgroundPosition: '32px 16px' }, 2000, 'linear', animate_background);
             })();
+
+            sh_highlightDocument('@Url.Content("~/Scripts/shjs/")', '.min.js');
         });
     </script>
 }
-
-@section breadcrumber
-{
-        <div id="breadcrumber">
-            @Html.ActionLink(Html.ViewContext.RouteData.Values["controller"].ToString(), "Index") <strong>&gt;</strong> @Html.ActionLink(Html.ViewContext.RouteData.Values["repo"].ToString(), "ViewRepo", "Browse") <strong>&gt;</strong> @tree <strong>&gt;</strong> @path
-        </div>
-}
-
-<div>
-@tree / @path
-</div>
 
 <div class="blob-preview">
   <div class="preview-header">
@@ -49,7 +41,7 @@
     else
     {
     <div class="text-preview">
-        @Html.HilightCode(Model, (string)ViewBag.FileName)
+<pre class="sh_@(MimeUtilities.GetLanguage(contentType))">@Model</pre>
     </div>
     }
 }
