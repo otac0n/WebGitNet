@@ -14,7 +14,6 @@ namespace WebGitNet.Controllers
     using System.Web.Mvc;
     using WebGitNet.ActionResults;
     using WebGitNet.Models;
-    using io = System.IO;
 
     public class BrowseController : SharedControllerBase
     {
@@ -66,18 +65,7 @@ namespace WebGitNet.Controllers
             AddRepoBreadCrumb(repo);
             this.BreadCrumbs.Append("Browse", "ViewRepoImpact", "Impact", new { repo });
 
-            Dictionary<string, string> renames = null;
-
-            var renamesFile = Path.Combine(resourceInfo.FullPath, "info", "webgit.net", "renames");
-            if (io::File.Exists(renamesFile))
-            {
-                renames = (from l in io::File.ReadAllLines(renamesFile)
-                           where !string.IsNullOrWhiteSpace(l)
-                           let parts = l.Split("=".ToArray(), 2)
-                           select new KeyValuePair<string, string>(parts[0], parts[1])).ToDictionary(i => i.Key, i => i.Value);
-            }
-
-            var userImpacts = GitUtilities.GetUserImpacts(resourceInfo.FullPath, renames);
+            var userImpacts = GitUtilities.GetUserImpacts(resourceInfo.FullPath);
 
             return View(userImpacts);
         }

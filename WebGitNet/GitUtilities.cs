@@ -81,9 +81,22 @@ namespace WebGitNet
                     select parseResults(r)).ToList();
         }
 
-        public static List<UserImpact> GetUserImpacts(string repoPath, Dictionary<string, string> renames = null)
+        public static List<UserImpact> GetUserImpacts(string repoPath)
         {
-            renames = renames ?? new Dictionary<string, string>();
+            Dictionary<string, string> renames;
+
+            var renamesFile = Path.Combine(repoPath, "info", "webgit.net", "renames");
+            if (File.Exists(renamesFile))
+            {
+                renames = (from l in File.ReadAllLines(renamesFile)
+                           where !string.IsNullOrWhiteSpace(l)
+                           let parts = l.Split("=".ToArray(), 2)
+                           select new KeyValuePair<string, string>(parts[0], parts[1])).ToDictionary(i => i.Key, i => i.Value);
+            }
+            else
+            {
+                renames = new Dictionary<string, string>();
+            }
 
             string impactData;
             using (var git = Start("log -z --format=format:%an --shortstat", repoPath, outputEncoding: Encoding.UTF8))
