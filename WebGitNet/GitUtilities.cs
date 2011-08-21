@@ -119,6 +119,7 @@ namespace WebGitNet
                     Deletions = g.Sum(ui => ui.Deletions),
                     Impact = g.Sum(ui => ui.Impact),
                 })
+                .OrderByDescending(i => i.Commits)
                 .ToList();
         }
 
