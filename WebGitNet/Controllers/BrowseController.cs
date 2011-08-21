@@ -68,7 +68,7 @@ namespace WebGitNet.Controllers
 
             Dictionary<string, string> renames = null;
 
-            var renamesFile = Path.Combine(resourceInfo.FullPath, "renames.txt");
+            var renamesFile = Path.Combine(resourceInfo.FullPath, "info", "webgit.net", "renames");
             if (io::File.Exists(renamesFile))
             {
                 renames = (from l in io::File.ReadAllLines(renamesFile)
