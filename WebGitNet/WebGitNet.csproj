@@ -106,6 +106,12 @@
     <None Include="mime-types.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="Scripts\g.raphael\g.bar-min.js" />
+    <Content Include="Scripts\g.raphael\g.dot-min.js" />
+    <Content Include="Scripts\g.raphael\g.line-min.js" />
+    <Content Include="Scripts\g.raphael\g.pie-min.js" />
+    <Content Include="Scripts\g.raphael\g.raphael-min.js" />
+    <Content Include="Scripts\g.raphael\raphael-min.js" />
     <Content Include="Scripts\jquery.background-position.min.js" />
     <Content Include="Scripts\jquery.tablesorter.min.js" />
     <Content Include="Scripts\jquery.timeago.min.js" />
