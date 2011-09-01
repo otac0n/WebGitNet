@@ -4,10 +4,22 @@
     ViewBag.Title = "Repository Impact";
 }
 
+@section intellisense
+{
+    <script src="~/Scripts/jquery-1.4.4-vsdoc.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery.tablesorter.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/g.raphael/raphael-min.js" type="text/javascript"></script>
+    <script src="~/Scripts/g.raphael/g.raphael-min.js" type="text/javascript"></script>
+    <script src="~/Scripts/g.raphael/g.pie-min.js" type="text/javascript"></script>
+}
+
 @section headers
 {
     <link href="@Url.Content("~/Content/tablesort.css")" rel="stylesheet" type="text/css" />
     <script src="@Url.Content("~/Scripts/jquery.tablesorter.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/g.raphael/raphael-min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/g.raphael/g.raphael-min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/g.raphael/g.pie-min.js")" type="text/javascript"></script>
     <script type="text/javascript">
         $(function () {
             $(".tablesorter").tablesorter();
