@@ -68,6 +68,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ServiceRpcController.cs" />
     <Compile Include="Controllers\SharedControllerBase.cs" />
+    <Compile Include="FileManager.cs" />
     <Compile Include="GitUtilities.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -79,7 +80,6 @@
     <Compile Include="Models\CreateRepoRequest.cs" />
     <Compile Include="Models\DiffInfo.cs" />
     <Compile Include="Models\LogEntry.cs" />
-    <Compile Include="Models\FileManager.cs" />
     <Compile Include="Models\ObjectInfo.cs" />
     <Compile Include="Models\ObjectType.cs" />
     <Compile Include="Models\ResourceInfo.cs" />
