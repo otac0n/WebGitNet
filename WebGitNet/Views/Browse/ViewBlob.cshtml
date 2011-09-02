@@ -40,8 +40,9 @@
     }
     else
     {
+        var language = MimeUtilities.GetLanguage(contentType);
     <div class="text-preview">
-<pre class="sh_@(MimeUtilities.GetLanguage(contentType))">@Model</pre>
+<pre class="@(string.IsNullOrEmpty(language) ? "" : "sh_" + language)">@Model</pre>
     </div>
     }
 }
