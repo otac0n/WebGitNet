@@ -55,10 +55,20 @@ namespace WebGitNet
             Execute("update-server-info", repoPath);
         }
 
-        public static List<LogEntry> GetLogEntries(string repoPath, int count, string @object = null)
+        public static List<LogEntry> GetLogEntries(string repoPath, int count, int skip = 0, string @object = null)
         {
+            if (count < 0)
+            {
+                throw new ArgumentOutOfRangeException("count");
+            }
+
+            if (skip < 0)
+            {
+                throw new ArgumentOutOfRangeException("skip");
+            }
+
             @object = @object ?? "HEAD";
-            var results = Execute(string.Format("log -n {0} --encoding=UTF-8 -z --format=\"format:commit %H%ntree %T%nparent %P%nauthor %an%nauthor mail %ae%nauthor date %aD%ncommitter %cn%ncommitter mail %ce%ncommitter date %cD%nsubject %s%n%b%x00\" {1}", count, @object), repoPath, Encoding.UTF8);
+            var results = Execute(string.Format("log -n {0} --encoding=UTF-8 -z --format=\"format:commit %H%ntree %T%nparent %P%nauthor %an%nauthor mail %ae%nauthor date %aD%ncommitter %cn%ncommitter mail %ce%ncommitter date %cD%nsubject %s%n%b%x00\" {1}", count + skip, @object), repoPath, Encoding.UTF8);
 
             Func<string, LogEntry> parseResults = result =>
             {
@@ -77,7 +87,7 @@ namespace WebGitNet
                 return new LogEntry(commit, tree, parent, author, authorEmail, authorDate, committer, committerEmail, committerDate, subject, body);
             };
 
-            return (from r in results.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries)
+            return (from r in results.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries).Skip(skip)
                     select parseResults(r)).ToList();
         }
 
