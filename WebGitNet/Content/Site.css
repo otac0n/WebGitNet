@@ -326,3 +326,30 @@ ul
 {
     text-decoration: underline;
 }
+
+.pager
+{
+    margin: 15px 0;
+}
+
+.pager a
+{
+    background: #f7f7f7;
+    color: #aaa;
+    margin: 0 3px;
+    padding: 5px 10px;
+    text-decoration: none;
+    cursor: default;
+}
+
+.pager a:link, .pager a:visited
+{
+    color: #333;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.pager a:hover
+{
+    background: #eee;
+}
