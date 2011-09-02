@@ -5,9 +5,10 @@
 // <author>John Gietzen</author>
 //-----------------------------------------------------------------------
 
-namespace WebGitNet.Models
+namespace WebGitNet
 {
     using System.IO;
+    using WebGitNet.Models;
 
     public class FileManager
     {
