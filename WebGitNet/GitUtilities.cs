@@ -55,6 +55,15 @@ namespace WebGitNet
             Execute("update-server-info", repoPath);
         }
 
+        public static int CountCommits(string repoPath, string @object = null)
+        {
+            @object = @object ?? "HEAD";
+            var results = Execute(string.Format("shortlog -s {0}", @object), repoPath);
+            return (from r in results.Split("\n".ToArray(), StringSplitOptions.RemoveEmptyEntries)
+                    let count = r.Split("\t".ToArray(), StringSplitOptions.RemoveEmptyEntries)[0]
+                    select int.Parse(count.Trim())).Sum();
+        }
+
         public static List<LogEntry> GetLogEntries(string repoPath, int count, int skip = 0, string @object = null)
         {
             if (count < 0)
