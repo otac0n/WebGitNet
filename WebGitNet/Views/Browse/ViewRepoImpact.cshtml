@@ -28,8 +28,14 @@
             };
 
             var rows = $("#stats-table tbody tr");
-            var names = $.map(rows, function (item) { return $($(item).find("td")[getIndex("Author")]).text(); })
-            var values = $.map(rows, function (item) { return +$($(item).find("td")[getIndex(column)]).text(); })
+            var getValues = function (headerText, normalize) {
+                normalize = normalize || function (a) { return a; };
+                var colIndex = getIndex(headerText);
+                return $.map(rows, function (item) { return normalize($($(item).find("td")[colIndex]).text()); });
+            };
+
+            var names = getValues("Author");
+            var values = getValues(column, function (a) { return +a; });
 
             var r = Raphael(div);
             r.g.text(250, 20, column).attr({ "font-size": 20 });
