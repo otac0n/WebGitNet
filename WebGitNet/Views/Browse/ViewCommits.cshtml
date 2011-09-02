@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<LogEntry>
 
 @{
-    ViewBag.Title = "View Commits";
+    ViewBag.Title = "Commit Log";
 }
 
 @section headers
@@ -15,7 +15,15 @@
     </script>
 }
 
+<div class="pager">
+    @Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Browse", "ViewCommits", new { repo = ViewBag.RepoName })
+</div>
+
 @foreach (var entry in Model)
 {
     @Html.Partial("LogEntry", entry)
 }
+
+<div class="pager">
+    @Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Browse", "ViewCommits", new { repo = ViewBag.RepoName })
+</div>

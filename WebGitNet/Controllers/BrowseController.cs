@@ -103,13 +103,21 @@ namespace WebGitNet.Controllers
             }
 
             const int pageSize = 20;
+            int skip = pageSize * (page - 1);
+            var count = GitUtilities.CountCommits(resourceInfo.FullPath);
+
+            if (skip >= count)
+            {
+                return HttpNotFound();
+            }
 
             AddRepoBreadCrumb(repo);
-            this.BreadCrumbs.Append("Browse", "ViewCommits", "Recent Commits", new { repo });
+            this.BreadCrumbs.Append("Browse", "ViewCommits", "Commit Log", new { repo });
 
-            var commits = GitUtilities.GetLogEntries(resourceInfo.FullPath, pageSize, skip: pageSize * (page - 1));
+            var commits = GitUtilities.GetLogEntries(resourceInfo.FullPath, pageSize, skip);
 
             ViewBag.Page = page;
+            ViewBag.PageCount = (count / pageSize) + (count % pageSize > 0 ? 1 : 0);
             ViewBag.RepoName = resourceInfo.Name;
 
             return View(commits);
