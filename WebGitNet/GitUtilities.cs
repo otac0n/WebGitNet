@@ -26,11 +26,14 @@ namespace WebGitNet
 
         public static string Execute(string command, string workingDir, Encoding outputEncoding = null)
         {
-            using (var git = Start(command, workingDir, redirectInput: false, outputEncoding: outputEncoding))
+            using (MvcMiniProfiler.MiniProfiler.StepStatic("Run: git " + command))
             {
-                var result = git.StandardOutput.ReadToEnd();
-                git.WaitForExit();
-                return result;
+                using (var git = Start(command, workingDir, redirectInput: false, outputEncoding: outputEncoding))
+                {
+                    var result = git.StandardOutput.ReadToEnd();
+                    git.WaitForExit();
+                    return result;
+                }
             }
         }
 

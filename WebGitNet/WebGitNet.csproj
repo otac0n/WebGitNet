@@ -37,6 +37,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MvcMiniProfiler">
+      <HintPath>..\packages\MiniProfiler.1.4\lib\MvcMiniProfiler.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.WebPages" />
     <Reference Include="System.Web.Helpers" />
@@ -68,9 +71,15 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ServiceRpcController.cs" />
     <Compile Include="Controllers\SharedControllerBase.cs" />
+    <Compile Include="Controllers\SharedControllerBase.profiling.cs">
+      <DependentUpon>SharedControllerBase.cs</DependentUpon>
+    </Compile>
     <Compile Include="FileManager.cs" />
     <Compile Include="GitUtilities.cs" />
     <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Global.asax.profiling.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="HtmlHelpers.cs" />
@@ -155,6 +164,7 @@
     <Content Include="Scripts\shjs\sh_tcl.min.js" />
     <Content Include="Scripts\shjs\sh_xml.min.js" />
     <Content Include="Scripts\shjs\sh_xorg.min.js" />
+    <Content Include="packages.config" />
     <None Include="shjs-languages.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

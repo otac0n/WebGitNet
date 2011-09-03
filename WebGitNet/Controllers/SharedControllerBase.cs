@@ -11,7 +11,7 @@ namespace WebGitNet.Controllers
     using System.Web.Mvc;
     using WebGitNet.Models;
 
-    public abstract class SharedControllerBase : Controller
+    public abstract partial class SharedControllerBase : Controller
     {
         private readonly FileManager fileManager;
         private readonly BreadCrumbTrail breadCrumbs;
