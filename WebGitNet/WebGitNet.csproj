@@ -112,6 +112,7 @@
     <Content Include="Content\tablesort.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="browse.cshtml" />
     <None Include="mime-types.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
