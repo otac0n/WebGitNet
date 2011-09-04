@@ -6,6 +6,7 @@
 .commit-subject, .commit-body
 {
     white-space : pre-wrap;
+    color: #000;
 }
 
 .commit-body
@@ -17,14 +18,10 @@
 {
     position : relative;
 
-    background: #E8EEF4;
-    border: solid 1px #696969;
+    background: #e6e6e6;
+    border: solid 1px #aaa;
     margin: 4px 0;
     padding: 1em;
-
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
 }
 
 .commit-person
@@ -56,14 +53,11 @@
 
 .diff-container
 {
-    background: #F4EEE8;
-    border: 1px solid black;
+    border: 1px solid #ddd;
+    background: #f8f8f8;
+    color: #000;
     overflow: auto;
     padding: 1em;
-
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
 }
 
 .diff
