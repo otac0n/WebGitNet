@@ -58,6 +58,14 @@ namespace WebGitNet
             Execute("update-server-info", repoPath);
         }
 
+        public static List<GitRef> GetAllRefs(string repoPath)
+        {
+            var result = Execute("show-ref", repoPath);
+            return (from l in result.Split("\n".ToArray(), StringSplitOptions.RemoveEmptyEntries)
+                    let parts = l.Split(' ')
+                    select new GitRef(parts[0], parts[1])).ToList();
+        }
+
         public static int CountCommits(string repoPath, string @object = null)
         {
             @object = @object ?? "HEAD";
