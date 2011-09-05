@@ -136,6 +136,11 @@
     border: 1px solid white;
 }
 
+#ref-list
+{
+    padding-left: 12px;
+}
+
 #ref-list li
 {
     list-style-type: none;

@@ -46,7 +46,7 @@ else
 <div class="page-section">
   Branches / Tags:
   <ul id="ref-list">
-  @foreach(var r in refs.Where(r => r.RefType != RefType.RemoteBranch))
+  @foreach(var r in refs.Where(r => r.RefType != RefType.RemoteBranch).OrderBy(r => r.Name))
   {
     <li><span class="git-icon @(r.RefType == RefType.Tag ? "git-icon-tag" : "git-icon-branch")"></span> @r.Name</li>
   }
