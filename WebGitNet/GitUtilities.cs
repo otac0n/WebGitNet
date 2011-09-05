@@ -24,6 +24,33 @@ namespace WebGitNet
             get { return Encoding.GetEncoding(28591); }
         }
 
+        /// <summary>
+        /// Quotes and Escapes a command-line argument for Git and Bash.
+        /// </summary>
+        private static string Q(string argument)
+        {
+            var result = new StringBuilder(argument.Length + 10);
+            result.Append("\"");
+            for (int i = 0; i < argument.Length; i++)
+            {
+                var ch = argument[i];
+                switch (ch)
+                {
+                    case '\\':
+                    case '\"':
+                        result.Append('\\');
+                        result.Append(ch);
+                        break;
+
+                    default:
+                        result.Append(ch);
+                        break;
+                }
+            }
+            result.Append("\"");
+            return result.ToString();
+        }
+
         public static string Execute(string command, string workingDir, Encoding outputEncoding = null)
         {
             using (MvcMiniProfiler.MiniProfiler.StepStatic("Run: git " + command))
@@ -69,7 +96,7 @@ namespace WebGitNet
         public static int CountCommits(string repoPath, string @object = null)
         {
             @object = @object ?? "HEAD";
-            var results = Execute(string.Format("shortlog -s {0}", @object), repoPath);
+            var results = Execute(string.Format("shortlog -s {0}", Q(@object)), repoPath);
             return (from r in results.Split("\n".ToArray(), StringSplitOptions.RemoveEmptyEntries)
                     let count = r.Split("\t".ToArray(), StringSplitOptions.RemoveEmptyEntries)[0]
                     select int.Parse(count.Trim())).Sum();
@@ -88,7 +115,7 @@ namespace WebGitNet
             }
 
             @object = @object ?? "HEAD";
-            var results = Execute(string.Format("log -n {0} --encoding=UTF-8 -z --format=\"format:commit %H%ntree %T%nparent %P%nauthor %an%nauthor mail %ae%nauthor date %aD%ncommitter %cn%ncommitter mail %ce%ncommitter date %cD%nsubject %s%n%b%x00\" {1}", count + skip, @object), repoPath, Encoding.UTF8);
+            var results = Execute(string.Format("log -n {0} --encoding=UTF-8 -z --format=\"format:commit %H%ntree %T%nparent %P%nauthor %an%nauthor mail %ae%nauthor date %aD%ncommitter %cn%ncommitter mail %ce%ncommitter date %cD%nsubject %s%n%b%x00\" {1}", count + skip, Q(@object)), repoPath, Encoding.UTF8);
 
             Func<string, LogEntry> parseResults = result =>
             {
@@ -162,7 +189,7 @@ namespace WebGitNet
                 }
             };
 
-            using (var git = Start(string.Format("diff-tree -p -c -r {0}", commit), repoPath))
+            using (var git = Start(string.Format("diff-tree -p -c -r {0}", Q(commit)), repoPath))
             {
                 while (!git.StandardOutput.EndOfStream)
                 {
@@ -203,8 +230,7 @@ namespace WebGitNet
             }
 
             path = path ?? string.Empty;
-            path = path.Replace("\\", "\\\\").Replace("\"", "\\\"");
-            var results = Execute(string.Format("ls-tree -l -z {0}:\"{1}\"", tree, path), repoPath, Encoding.UTF8);
+            var results = Execute(string.Format("ls-tree -l -z {0}:{1}", Q(tree), Q(path)), repoPath, Encoding.UTF8);
 
             if (results.StartsWith("fatal: "))
             {
@@ -248,8 +274,7 @@ namespace WebGitNet
                 throw new ArgumentOutOfRangeException("tree", "tree mush be the id of a tree-ish object.");
             }
 
-            path = path.Replace("\\", "\\\\").Replace("\"", "\\\"");
-            return Start(string.Format("show {0}:\"{1}\"", tree, path), repoPath, redirectInput: false);
+            return Start(string.Format("show {0}:{1}", Q(tree), Q(path)), repoPath, redirectInput: false);
         }
 
         public static MemoryStream GetBlob(string repoPath, string tree, string path)
@@ -286,8 +311,7 @@ namespace WebGitNet
         public static void CreateRepo(string repoPath)
         {
             var workingDir = Path.GetDirectoryName(repoPath);
-            var newPath = repoPath.Replace("\\", "\\\\").Replace("\"", "\\\"");
-            var results = Execute(string.Format("init --bare \"{0}\"", newPath), workingDir);
+            var results = Execute(string.Format("init --bare {0}", Q(repoPath)), workingDir);
 
             var errorLines = results.Split('\n').Where(l => l.StartsWith("fatal:")).ToList();
             if (errorLines.Count > 0)
@@ -325,7 +349,7 @@ namespace WebGitNet
             }
 
             // Prepare to start sh.exe like: `sh.exe -- "C:\Path\To\Hook-Script"`.
-            var startInfo = new ProcessStartInfo(sh, string.Format("-- \"{0}\"", hookFile.FullName.Replace("\\", "\\\\").Replace("\"", "\\\"")))
+            var startInfo = new ProcessStartInfo(sh, string.Format("-- {0}", Q(hookFile.FullName)))
             {
                 WorkingDirectory = repoPath,
                 UseShellExecute = false,
