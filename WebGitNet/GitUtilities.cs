@@ -17,6 +17,13 @@ namespace WebGitNet
     using System.Web.Configuration;
     using WebGitNet.Models;
 
+    public enum RefValidationResult
+    {
+        Valid,
+        Invalid,
+        Ambiguous,
+    }
+
     public static class GitUtilities
     {
         public static Encoding DefaultEncoding
@@ -91,6 +98,41 @@ namespace WebGitNet
             return (from l in result.Split("\n".ToArray(), StringSplitOptions.RemoveEmptyEntries)
                     let parts = l.Split(' ')
                     select new GitRef(parts[0], parts[1])).ToList();
+        }
+
+        public static RefValidationResult ValidateRef(string repoPath, string refName)
+        {
+            if (refName == "HEAD")
+            {
+                return RefValidationResult.Valid;
+            }
+
+            if (string.IsNullOrWhiteSpace(refName))
+            {
+                return RefValidationResult.Invalid;
+            }
+
+            String results;
+            int exitCode;
+
+            using (var git = Start(string.Format("show-ref --heads --tags -- {0}", Q(refName)), repoPath))
+            {
+                results = git.StandardOutput.ReadToEnd();
+                git.WaitForExit();
+                exitCode = git.ExitCode;
+            }
+
+            if (exitCode != 0)
+            {
+                return RefValidationResult.Invalid;
+            }
+
+            if (results.TrimEnd('\n').IndexOf('\n') >= 0)
+            {
+                return RefValidationResult.Ambiguous;
+            }
+
+            return RefValidationResult.Valid;
         }
 
         public static int CountCommits(string repoPath, string @object = null)
