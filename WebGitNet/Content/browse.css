@@ -70,6 +70,10 @@
     white-space: pre;
 }
 
+.diff-line-add { background: #afa; }
+.diff-line-remove { background: #faa; }
+.diff-line-info { background: #ddd; }
+
 .clone-info input 
 {
     width : 600px;

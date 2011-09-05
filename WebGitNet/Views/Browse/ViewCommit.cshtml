@@ -3,6 +3,21 @@
 @{
     LogEntry commitLogEntry = ViewBag.CommitLogEntry;
 
+    Func<char, string> diffLineStyle = c =>
+    {
+        switch (c)
+        {
+            case '+':
+                return "diff-line-add";
+            case '-':
+                return "diff-line-remove";
+            case ' ':
+                return "diff-line-context";
+            default:
+                return "diff-line-info";
+        }
+    };
+
     ViewBag.Title = "View Commit";
 }
 
@@ -25,7 +40,7 @@
   <div class="diff">
     @foreach (var line in diff.Lines)
     {
-    <span class="diff-line">@Html.Raw(Html.Encode(line).Replace(" ", "&nbsp;"))</span><br />
+    <span class="diff-line @diffLineStyle(line[0])">@Html.Raw(Html.Encode(line).Replace(" ", "&nbsp;"))</span><br />
     }
   </div>
 </div>
