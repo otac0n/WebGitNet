@@ -23,6 +23,7 @@ MAKEFILE:text/x-makefile
 .csdproj:application/xml
 .csproj:application/xml
 .css:text/css
+.cshtml:text/html
 .csv:text/plain
 .cur:text/plain
 .cxx:text/plain

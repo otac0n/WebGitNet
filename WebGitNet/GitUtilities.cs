@@ -26,11 +26,14 @@ namespace WebGitNet
 
         public static string Execute(string command, string workingDir, Encoding outputEncoding = null)
         {
-            using (var git = Start(command, workingDir, redirectInput: false, outputEncoding: outputEncoding))
+            using (MvcMiniProfiler.MiniProfiler.StepStatic("Run: git " + command))
             {
-                var result = git.StandardOutput.ReadToEnd();
-                git.WaitForExit();
-                return result;
+                using (var git = Start(command, workingDir, redirectInput: false, outputEncoding: outputEncoding))
+                {
+                    var result = git.StandardOutput.ReadToEnd();
+                    git.WaitForExit();
+                    return result;
+                }
             }
         }
 
@@ -55,10 +58,37 @@ namespace WebGitNet
             Execute("update-server-info", repoPath);
         }
 
-        public static List<LogEntry> GetLogEntries(string repoPath, int count, string @object = null)
+        public static List<GitRef> GetAllRefs(string repoPath)
+        {
+            var result = Execute("show-ref", repoPath);
+            return (from l in result.Split("\n".ToArray(), StringSplitOptions.RemoveEmptyEntries)
+                    let parts = l.Split(' ')
+                    select new GitRef(parts[0], parts[1])).ToList();
+        }
+
+        public static int CountCommits(string repoPath, string @object = null)
         {
             @object = @object ?? "HEAD";
-            var results = Execute(string.Format("log -n {0} --encoding=UTF-8 -z --format=\"format:commit %H%ntree %T%nparent %P%nauthor %an%nauthor mail %ae%nauthor date %aD%ncommitter %cn%ncommitter mail %ce%ncommitter date %cD%nsubject %s%n%b%x00\" {1}", count, @object), repoPath, Encoding.UTF8);
+            var results = Execute(string.Format("shortlog -s {0}", @object), repoPath);
+            return (from r in results.Split("\n".ToArray(), StringSplitOptions.RemoveEmptyEntries)
+                    let count = r.Split("\t".ToArray(), StringSplitOptions.RemoveEmptyEntries)[0]
+                    select int.Parse(count.Trim())).Sum();
+        }
+
+        public static List<LogEntry> GetLogEntries(string repoPath, int count, int skip = 0, string @object = null)
+        {
+            if (count < 0)
+            {
+                throw new ArgumentOutOfRangeException("count");
+            }
+
+            if (skip < 0)
+            {
+                throw new ArgumentOutOfRangeException("skip");
+            }
+
+            @object = @object ?? "HEAD";
+            var results = Execute(string.Format("log -n {0} --encoding=UTF-8 -z --format=\"format:commit %H%ntree %T%nparent %P%nauthor %an%nauthor mail %ae%nauthor date %aD%ncommitter %cn%ncommitter mail %ce%ncommitter date %cD%nsubject %s%n%b%x00\" {1}", count + skip, @object), repoPath, Encoding.UTF8);
 
             Func<string, LogEntry> parseResults = result =>
             {
@@ -77,7 +107,7 @@ namespace WebGitNet
                 return new LogEntry(commit, tree, parent, author, authorEmail, authorDate, committer, committerEmail, committerDate, subject, body);
             };
 
-            return (from r in results.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries)
+            return (from r in results.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries).Skip(skip)
                     select parseResults(r)).ToList();
         }
 

@@ -10,7 +10,7 @@ namespace WebGitNet
     using System.Web.Mvc;
     using System.Web.Routing;
 
-    public class WebGitNetApplication : System.Web.HttpApplication
+    public partial class WebGitNetApplication : System.Web.HttpApplication
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {

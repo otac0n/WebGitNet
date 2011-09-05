@@ -50,6 +50,7 @@ namespace WebGitNet.Controllers
             ViewBag.RepoName = resourceInfo.Name;
             ViewBag.LastCommit = GitUtilities.GetLogEntries(resourceInfo.FullPath, 1).FirstOrDefault();
             ViewBag.CurrentTree = GitUtilities.GetTreeInfo(resourceInfo.FullPath, "HEAD");
+            ViewBag.Refs = GitUtilities.GetAllRefs(resourceInfo.FullPath);
 
             return View();
         }
@@ -81,7 +82,7 @@ namespace WebGitNet.Controllers
             AddRepoBreadCrumb(repo);
             this.BreadCrumbs.Append("Browse", "ViewCommit", @object, new { repo, @object });
 
-            var commit = GitUtilities.GetLogEntries(resourceInfo.FullPath, 1, @object).FirstOrDefault();
+            var commit = GitUtilities.GetLogEntries(resourceInfo.FullPath, 1, 0, @object).FirstOrDefault();
             if (commit == null)
             {
                 return HttpNotFound();
@@ -95,19 +96,30 @@ namespace WebGitNet.Controllers
             return View(diffs);
         }
 
-        public ActionResult ViewCommits(string repo)
+        public ActionResult ViewCommits(string repo, int page = 1)
         {
             var resourceInfo = this.FileManager.GetResourceInfo(repo);
-            if (resourceInfo.Type != ResourceType.Directory)
+            if (resourceInfo.Type != ResourceType.Directory || page < 1)
+            {
+                return HttpNotFound();
+            }
+
+            const int pageSize = 20;
+            int skip = pageSize * (page - 1);
+            var count = GitUtilities.CountCommits(resourceInfo.FullPath);
+
+            if (skip >= count)
             {
                 return HttpNotFound();
             }
 
             AddRepoBreadCrumb(repo);
-            this.BreadCrumbs.Append("Browse", "ViewCommits", "Recent Commits", new { repo });
+            this.BreadCrumbs.Append("Browse", "ViewCommits", "Commit Log", new { repo });
 
-            var commits = GitUtilities.GetLogEntries(resourceInfo.FullPath, 20);
+            var commits = GitUtilities.GetLogEntries(resourceInfo.FullPath, pageSize, skip);
 
+            ViewBag.Page = page;
+            ViewBag.PageCount = (count / pageSize) + (count % pageSize > 0 ? 1 : 0);
             ViewBag.RepoName = resourceInfo.Name;
 
             return View(commits);

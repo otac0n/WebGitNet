@@ -2,6 +2,7 @@
     string repoName = ViewBag.RepoName;
     LogEntry lastCommit = ViewBag.LastCommit;
     TreeView currentTree = ViewBag.CurrentTree;
+    List<GitRef> refs = ViewBag.Refs;
 
     ViewBag.Title = repoName;
 
@@ -37,12 +38,25 @@ else
 {
 <text>Last Commit:
 @Html.Partial("LogEntry", lastCommit)
-@Html.ActionLink("View Recent Commits", "ViewCommits")
+@Html.ActionLink("View Commit Log", "ViewCommits")
 @Html.ActionLink("View User Impact", "ViewRepoImpact")</text>
 }
 </div>
 
-<div id="page-section">
+@if (refs.Any())
+{
+<div class="page-section">
+  Branches / Tags:
+  <ul id="ref-list">
+  @foreach (var r in refs.Where(r => r.RefType != RefType.RemoteBranch).OrderBy(r => r.Name))
+  {
+    <li><span class="git-icon @(r.RefType == RefType.Tag ? "git-icon-tag" : "git-icon-branch")"></span> @r.Name</li>
+  }
+  </ul>
+</div>
+}
+
+<div class="page-section">
 @if (currentTree == null || currentTree.Objects.Count == 0)
 {
     <span class="empty-tree">There are no files being tracked in this repository.</span>
