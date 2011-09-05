@@ -266,7 +266,7 @@ namespace WebGitNet
                 throw new ArgumentNullException("tree");
             }
 
-            if (!Regex.IsMatch(tree, "^[-a-zA-Z0-9]+$"))
+            if (!Regex.IsMatch(tree, "^[-.a-zA-Z0-9]+$"))
             {
                 throw new ArgumentOutOfRangeException("tree", "tree mush be the id of a tree-ish object.");
             }
