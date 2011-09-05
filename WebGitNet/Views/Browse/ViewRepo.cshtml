@@ -2,6 +2,7 @@
     string repoName = ViewBag.RepoName;
     LogEntry lastCommit = ViewBag.LastCommit;
     TreeView currentTree = ViewBag.CurrentTree;
+    List<GitRef> refs = ViewBag.Refs;
 
     ViewBag.Title = repoName;
 
@@ -40,6 +41,16 @@ else
 @Html.ActionLink("View Commit Log", "ViewCommits")
 @Html.ActionLink("View User Impact", "ViewRepoImpact")</text>
 }
+</div>
+
+<div class="page-section">
+  Branches / Tags:
+  <ul id="ref-list">
+  @foreach(var r in refs.Where(r => r.RefType != RefType.RemoteBranch))
+  {
+    <li><span class="git-icon @(r.RefType == RefType.Tag ? "git-icon-tag" : "git-icon-branch")"></span> @r.Name</li>
+  }
+  </ul>
 </div>
 
 <div class="page-section">

@@ -135,3 +135,33 @@
     vertical-align: top;
     border: 1px solid white;
 }
+
+#ref-list li
+{
+    list-style-type: none;
+    vertical-align: middle;
+}
+
+.git-icon
+{
+    width: 12px;
+    height: 12px;
+    display: inline-block !important;
+    display: block;
+    vertical-align: middle;
+}
+
+.git-icon-branch
+{
+    background-image: url(branch.png);
+}
+
+.git-icon-merge
+{
+    background-image: url(merge.png);
+}
+
+.git-icon-tag
+{
+    background-image: url(tag.png);
+}
