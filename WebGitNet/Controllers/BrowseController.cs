@@ -162,6 +162,23 @@ namespace WebGitNet.Controllers
             }
 
             var fileName = Path.GetFileName(path);
+            var containingPath = path.Substring(0, path.Length - fileName.Length);
+
+            TreeView items;
+            try
+            {
+                items = GitUtilities.GetTreeInfo(resourceInfo.FullPath, @object, containingPath);
+            }
+            catch (GitErrorException ex)
+            {
+                return HttpNotFound(ex.ErrorOutput);
+            }
+
+            if (!items.Objects.Any(o => o.Name == fileName))
+            {
+                return HttpNotFound();
+            }
+
             var contentType = MimeUtilities.GetMimeType(fileName);
 
             if (raw)
