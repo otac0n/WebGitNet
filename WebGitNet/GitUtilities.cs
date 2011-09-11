@@ -16,6 +16,7 @@ namespace WebGitNet
     using System.Text.RegularExpressions;
     using System.Web.Configuration;
     using WebGitNet.Models;
+    using System.Threading;
 
     public enum RefValidationResult
     {
@@ -58,20 +59,35 @@ namespace WebGitNet
             return result.ToString();
         }
 
-        public static string Execute(string command, string workingDir, Encoding outputEncoding = null)
+        public static string Execute(string command, string workingDir, Encoding outputEncoding = null, bool trustErrorCode = false)
         {
             using (MvcMiniProfiler.MiniProfiler.StepStatic("Run: git " + command))
             {
-                using (var git = Start(command, workingDir, redirectInput: false, outputEncoding: outputEncoding))
+                using (var git = Start(command, workingDir, redirectInput: false, redirectError: trustErrorCode, outputEncoding: outputEncoding))
                 {
+                    string error = null;
+                    Thread errorThread = null;
+                    if (trustErrorCode)
+                    {
+                        errorThread = new Thread(() => { error = git.StandardError.ReadToEnd(); });
+                        errorThread.Start();
+                    }
+
                     var result = git.StandardOutput.ReadToEnd();
                     git.WaitForExit();
+
+                    if (trustErrorCode && git.ExitCode != 0)
+                    {
+                        errorThread.Join();
+                        throw new GitErrorException(command, git.ExitCode, error);
+                    }
+
                     return result;
                 }
             }
         }
 
-        public static Process Start(string command, string workingDir, bool redirectInput = false, Encoding outputEncoding = null)
+        public static Process Start(string command, string workingDir, bool redirectInput = false, bool redirectError = false, Encoding outputEncoding = null)
         {
             var git = WebConfigurationManager.AppSettings["GitCommand"];
             var startInfo = new ProcessStartInfo(git, command)
@@ -79,6 +95,7 @@ namespace WebGitNet
                 WorkingDirectory = workingDir,
                 RedirectStandardInput = redirectInput,
                 RedirectStandardOutput = true,
+                RedirectStandardError = redirectError,
                 StandardOutputEncoding = outputEncoding ?? DefaultEncoding,
                 UseShellExecute = false,
                 CreateNoWindow = true,
