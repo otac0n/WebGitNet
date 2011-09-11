@@ -289,7 +289,7 @@ namespace WebGitNet
             }
 
             path = path ?? string.Empty;
-            var results = Execute(string.Format("ls-tree -l -z {0}:{1}", Q(tree), Q(path)), repoPath, Encoding.UTF8);
+            var results = Execute(string.Format("ls-tree -l -z {0}:{1}", Q(tree), Q(path)), repoPath, Encoding.UTF8, trustErrorCode: true);
 
             if (results.StartsWith("fatal: "))
             {

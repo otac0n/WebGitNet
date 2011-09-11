@@ -132,11 +132,20 @@ namespace WebGitNet.Controllers
                 return HttpNotFound();
             }
 
+            TreeView items;
+            try
+            {
+                items = GitUtilities.GetTreeInfo(resourceInfo.FullPath, @object, path);
+            }
+            catch (GitErrorException ex)
+            {
+                return HttpNotFound(ex.ErrorOutput);
+            }
+
             AddRepoBreadCrumb(repo);
             this.BreadCrumbs.Append("Browse", "ViewTree", @object, new { repo, @object, path = string.Empty });
             this.BreadCrumbs.Append("Browse", "ViewTree", BreadCrumbTrail.EnumeratePath(path), p => p.Key, p => new { repo, @object, path = p.Value });
 
-            var items = GitUtilities.GetTreeInfo(resourceInfo.FullPath, @object, path);
             ViewBag.RepoName = resourceInfo.Name;
             ViewBag.Tree = @object;
             ViewBag.Path = path ?? string.Empty;
