@@ -139,9 +139,9 @@ namespace WebGitNet.Controllers
             {
                 items = GitUtilities.GetTreeInfo(resourceInfo.FullPath, @object, path);
             }
-            catch (GitErrorException ex)
+            catch (GitErrorException)
             {
-                return HttpNotFound(ex.ErrorOutput);
+                return HttpNotFound();
             }
 
             AddRepoBreadCrumb(repo);
@@ -171,9 +171,9 @@ namespace WebGitNet.Controllers
             {
                 items = GitUtilities.GetTreeInfo(resourceInfo.FullPath, @object, containingPath);
             }
-            catch (GitErrorException ex)
+            catch (GitErrorException)
             {
-                return HttpNotFound(ex.ErrorOutput);
+                return HttpNotFound();
             }
 
             if (!items.Objects.Any(o => o.Name == fileName))
