@@ -12,7 +12,7 @@
         private readonly string errorOutput;
 
         public GitErrorException(string command, int exitCode, string errorOutput)
-            : base("Fatal error executing git command.")
+            : base("Fatal error executing git command." + Environment.NewLine + errorOutput)
         {
             this.command = command;
             this.exitCode = exitCode;

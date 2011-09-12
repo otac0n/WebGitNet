@@ -291,11 +291,6 @@ namespace WebGitNet
             path = path ?? string.Empty;
             var results = Execute(string.Format("ls-tree -l -z {0}:{1}", Q(tree), Q(path)), repoPath, Encoding.UTF8, trustErrorCode: true);
 
-            if (results.StartsWith("fatal: "))
-            {
-                throw new Exception(results);
-            }
-
             Func<string, ObjectInfo> parseResults = result =>
             {
                 var mode = ParseTreePart(result, "[ ]+", out result);
@@ -370,13 +365,7 @@ namespace WebGitNet
         public static void CreateRepo(string repoPath)
         {
             var workingDir = Path.GetDirectoryName(repoPath);
-            var results = Execute(string.Format("init --bare {0}", Q(repoPath)), workingDir);
-
-            var errorLines = results.Split('\n').Where(l => l.StartsWith("fatal:")).ToList();
-            if (errorLines.Count > 0)
-            {
-                throw new CreateRepoFailedException(string.Join(results, Environment.NewLine));
-            }
+            var results = Execute(string.Format("init --bare {0}", Q(repoPath)), workingDir, trustErrorCode: true);
         }
 
         public static void ExecutePostCreateHook(string repoPath)
@@ -444,29 +433,6 @@ namespace WebGitNet
             {
                 rest = result.Substring(match.Index + match.Length);
                 return result.Substring(0, match.Index);
-            }
-        }
-
-        [global::System.Serializable]
-        public class CreateRepoFailedException : Exception
-        {
-            public CreateRepoFailedException()
-            {
-            }
-
-            public CreateRepoFailedException(string message)
-                : base(message)
-            {
-            }
-
-            public CreateRepoFailedException(string message, Exception inner)
-                : base(message, inner)
-            {
-            }
-
-            protected CreateRepoFailedException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-                : base(info, context)
-            {
             }
         }
     }

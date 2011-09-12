@@ -46,9 +46,11 @@ namespace WebGitNet.Controllers
 
             AddRepoBreadCrumb(repo);
 
+            var lastCommit = GitUtilities.GetLogEntries(resourceInfo.FullPath, 1).FirstOrDefault();
+
             ViewBag.RepoName = resourceInfo.Name;
-            ViewBag.LastCommit = GitUtilities.GetLogEntries(resourceInfo.FullPath, 1).FirstOrDefault();
-            ViewBag.CurrentTree = GitUtilities.GetTreeInfo(resourceInfo.FullPath, "HEAD");
+            ViewBag.LastCommit = lastCommit;
+            ViewBag.CurrentTree = lastCommit != null ? GitUtilities.GetTreeInfo(resourceInfo.FullPath, "HEAD") : null;
             ViewBag.Refs = GitUtilities.GetAllRefs(resourceInfo.FullPath);
 
             return View();
