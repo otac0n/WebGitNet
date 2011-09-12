@@ -17,6 +17,7 @@ namespace WebGitNet
     using System.Web.Configuration;
     using WebGitNet.Models;
     using System.Threading;
+    using System.Net.Mail;
 
     public enum RefValidationResult
     {
@@ -197,10 +198,91 @@ namespace WebGitNet
                     select parseResults(r)).ToList();
         }
 
+        private class Author
+        {
+            public string Name { get; set; }
+            public string Email { get; set; }
+        }
+
+        private static Author Rename(Author author, List<RenameEntry> entries)
+        {
+            Func<RenameField, Author, string> getField = (f, a) =>
+            {
+                if (f == RenameField.Name) return a.Name;
+                if (f == RenameField.Email) return a.Email;
+                return null;
+            };
+
+            Action<RenameField, Author, string> setField = (f, a, v) =>
+            {
+                if (f == RenameField.Name) a.Name = v;
+                if (f == RenameField.Email) a.Email = v;
+                return;
+            };
+
+            author = new Author { Name = author.Name, Email = author.Email };
+
+            foreach (var entry in entries)
+            {
+                switch (entry.RenameStyle)
+                {
+                    case RenameStyle.Exact:
+                        if (getField(entry.SourceField, author) == entry.Match)
+                        {
+                            foreach (var dest in entry.Destinations)
+                            {
+                                setField(dest.Field, author, dest.Replacement);
+                            }
+                        }
+                        break;
+
+                    case RenameStyle.CaseInsensitive:
+                        if (entry.Match.Equals(getField(entry.SourceField, author), StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            foreach (var dest in entry.Destinations)
+                            {
+                                setField(dest.Field, author, dest.Replacement);
+                            }
+                        }
+                        break;
+
+                    case RenameStyle.Regex:
+                        if (Regex.IsMatch(getField(entry.SourceField, author), entry.Match))
+                        {
+                            var newAuthor = new Author { Name = author.Name, Email = author.Email };
+                            foreach (var dest in entry.Destinations)
+                            {
+                                setField(dest.Field, newAuthor, Regex.Replace(getField(entry.SourceField, author), entry.Match, dest.Replacement));
+                            }
+                            author = newAuthor;
+                        }
+                        break;
+                }
+            }
+
+            return author;
+        }
+
         public static List<UserImpact> GetUserImpacts(string repoPath)
         {
+            List<RenameEntry> renames = new List<RenameEntry>();
+
+            var parentRenames = Path.Combine(new DirectoryInfo(repoPath).Parent.FullName, "renames");
+            var renamesFile = Path.Combine(repoPath, "info", "webgit.net", "renames");
+
+            Action<string> readRenames = (file) =>
+            {
+                if (File.Exists(file))
+                {
+                    renames.AddRange(RenameFileParser.Parse(File.ReadAllLines(file)));
+                }
+            };
+
+            readRenames(parentRenames);
+            readRenames(renamesFile);
+
             string impactData;
-            using (var git = Start("log -z --format=format:%an --shortstat", repoPath, outputEncoding: Encoding.UTF8))
+            using (var git = Start("log -z --format=format:%an%x01%ae --shortstat", repoPath, outputEncoding: Encoding.UTF8))
             {
                 impactData = git.StandardOutput.ReadToEnd();
             }
@@ -209,12 +291,14 @@ namespace WebGitNet
                                     let lines = imp.Split("\n".ToArray(), StringSplitOptions.RemoveEmptyEntries)
                                     let changeLine = lines.Length > 1 ? lines[1] : ""
                                     let match = Regex.Match(changeLine, @"^ \d+ files changed, (?<insertions>\d+) insertions\(\+\), (?<deletions>\d+) deletions\(-\)$")
+                                    let authorParts = lines[0].Split('\x01')
+                                    let author = Rename(new Author { Name = authorParts[0], Email = authorParts[1] }, renames)
                                     let insertions = match.Success ? int.Parse(match.Groups["insertions"].Value) : 0
                                     let deletions = match.Success ? int.Parse(match.Groups["deletions"].Value) : 0
                                     let impact = Math.Max(insertions, deletions)
                                     select new UserImpact
                                     {
-                                        Author = lines[0],
+                                        Author = author.Name,
                                         Commits = 1,
                                         Insertions = insertions,
                                         Deletions = deletions,
@@ -232,6 +316,7 @@ namespace WebGitNet
                     Deletions = g.Sum(ui => ui.Deletions),
                     Impact = g.Sum(ui => ui.Impact),
                 })
+                .OrderByDescending(i => i.Commits)
                 .ToList();
         }
 

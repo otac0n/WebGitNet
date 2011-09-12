@@ -98,6 +98,9 @@
     <Compile Include="Models\TreeView.cs" />
     <Compile Include="Models\UserImpact.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RenameEntry.cs" />
+    <Compile Include="RenameFileParser.cs" />
+    <Compile Include="RenameFileSyntaxException.cs" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
