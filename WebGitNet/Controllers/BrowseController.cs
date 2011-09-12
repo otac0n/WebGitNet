@@ -47,9 +47,11 @@ namespace WebGitNet.Controllers
 
             AddRepoBreadCrumb(repo);
 
+            var lastCommit = GitUtilities.GetLogEntries(resourceInfo.FullPath, 1).FirstOrDefault();
+
             ViewBag.RepoName = resourceInfo.Name;
-            ViewBag.LastCommit = GitUtilities.GetLogEntries(resourceInfo.FullPath, 1).FirstOrDefault();
-            ViewBag.CurrentTree = GitUtilities.GetTreeInfo(resourceInfo.FullPath, "HEAD");
+            ViewBag.LastCommit = lastCommit;
+            ViewBag.CurrentTree = lastCommit != null ? GitUtilities.GetTreeInfo(resourceInfo.FullPath, "HEAD") : null;
             ViewBag.Refs = GitUtilities.GetAllRefs(resourceInfo.FullPath);
 
             return View();
@@ -133,11 +135,20 @@ namespace WebGitNet.Controllers
                 return HttpNotFound();
             }
 
+            TreeView items;
+            try
+            {
+                items = GitUtilities.GetTreeInfo(resourceInfo.FullPath, @object, path);
+            }
+            catch (GitErrorException)
+            {
+                return HttpNotFound();
+            }
+
             AddRepoBreadCrumb(repo);
             this.BreadCrumbs.Append("Browse", "ViewTree", @object, new { repo, @object, path = string.Empty });
             this.BreadCrumbs.Append("Browse", "ViewTree", BreadCrumbTrail.EnumeratePath(path), p => p.Key, p => new { repo, @object, path = p.Value });
 
-            var items = GitUtilities.GetTreeInfo(resourceInfo.FullPath, @object, path);
             ViewBag.RepoName = resourceInfo.Name;
             ViewBag.Tree = @object;
             ViewBag.Path = path ?? string.Empty;
@@ -154,6 +165,23 @@ namespace WebGitNet.Controllers
             }
 
             var fileName = Path.GetFileName(path);
+            var containingPath = path.Substring(0, path.Length - fileName.Length);
+
+            TreeView items;
+            try
+            {
+                items = GitUtilities.GetTreeInfo(resourceInfo.FullPath, @object, containingPath);
+            }
+            catch (GitErrorException)
+            {
+                return HttpNotFound();
+            }
+
+            if (!items.Objects.Any(o => o.Name == fileName))
+            {
+                return HttpNotFound();
+            }
+
             var contentType = MimeUtilities.GetMimeType(fileName);
 
             if (raw)

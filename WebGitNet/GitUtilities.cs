@@ -16,6 +16,14 @@ namespace WebGitNet
     using System.Text.RegularExpressions;
     using System.Web.Configuration;
     using WebGitNet.Models;
+    using System.Threading;
+
+    public enum RefValidationResult
+    {
+        Valid,
+        Invalid,
+        Ambiguous,
+    }
 
     public static class GitUtilities
     {
@@ -24,20 +32,62 @@ namespace WebGitNet
             get { return Encoding.GetEncoding(28591); }
         }
 
-        public static string Execute(string command, string workingDir, Encoding outputEncoding = null)
+        /// <summary>
+        /// Quotes and Escapes a command-line argument for Git and Bash.
+        /// </summary>
+        private static string Q(string argument)
+        {
+            var result = new StringBuilder(argument.Length + 10);
+            result.Append("\"");
+            for (int i = 0; i < argument.Length; i++)
+            {
+                var ch = argument[i];
+                switch (ch)
+                {
+                    case '\\':
+                    case '\"':
+                        result.Append('\\');
+                        result.Append(ch);
+                        break;
+
+                    default:
+                        result.Append(ch);
+                        break;
+                }
+            }
+            result.Append("\"");
+            return result.ToString();
+        }
+
+        public static string Execute(string command, string workingDir, Encoding outputEncoding = null, bool trustErrorCode = false)
         {
             using (MvcMiniProfiler.MiniProfiler.StepStatic("Run: git " + command))
             {
-                using (var git = Start(command, workingDir, redirectInput: false, outputEncoding: outputEncoding))
+                using (var git = Start(command, workingDir, redirectInput: false, redirectError: trustErrorCode, outputEncoding: outputEncoding))
                 {
+                    string error = null;
+                    Thread errorThread = null;
+                    if (trustErrorCode)
+                    {
+                        errorThread = new Thread(() => { error = git.StandardError.ReadToEnd(); });
+                        errorThread.Start();
+                    }
+
                     var result = git.StandardOutput.ReadToEnd();
                     git.WaitForExit();
+
+                    if (trustErrorCode && git.ExitCode != 0)
+                    {
+                        errorThread.Join();
+                        throw new GitErrorException(command, git.ExitCode, error);
+                    }
+
                     return result;
                 }
             }
         }
 
-        public static Process Start(string command, string workingDir, bool redirectInput = false, Encoding outputEncoding = null)
+        public static Process Start(string command, string workingDir, bool redirectInput = false, bool redirectError = false, Encoding outputEncoding = null)
         {
             var git = WebConfigurationManager.AppSettings["GitCommand"];
             var startInfo = new ProcessStartInfo(git, command)
@@ -45,6 +95,7 @@ namespace WebGitNet
                 WorkingDirectory = workingDir,
                 RedirectStandardInput = redirectInput,
                 RedirectStandardOutput = true,
+                RedirectStandardError = redirectError,
                 StandardOutputEncoding = outputEncoding ?? DefaultEncoding,
                 UseShellExecute = false,
                 CreateNoWindow = true,
@@ -66,10 +117,45 @@ namespace WebGitNet
                     select new GitRef(parts[0], parts[1])).ToList();
         }
 
+        public static RefValidationResult ValidateRef(string repoPath, string refName)
+        {
+            if (refName == "HEAD")
+            {
+                return RefValidationResult.Valid;
+            }
+
+            if (string.IsNullOrWhiteSpace(refName))
+            {
+                return RefValidationResult.Invalid;
+            }
+
+            String results;
+            int exitCode;
+
+            using (var git = Start(string.Format("show-ref --heads --tags -- {0}", Q(refName)), repoPath))
+            {
+                results = git.StandardOutput.ReadToEnd();
+                git.WaitForExit();
+                exitCode = git.ExitCode;
+            }
+
+            if (exitCode != 0)
+            {
+                return RefValidationResult.Invalid;
+            }
+
+            if (results.TrimEnd('\n').IndexOf('\n') >= 0)
+            {
+                return RefValidationResult.Ambiguous;
+            }
+
+            return RefValidationResult.Valid;
+        }
+
         public static int CountCommits(string repoPath, string @object = null)
         {
             @object = @object ?? "HEAD";
-            var results = Execute(string.Format("shortlog -s {0}", @object), repoPath);
+            var results = Execute(string.Format("shortlog -s {0}", Q(@object)), repoPath);
             return (from r in results.Split("\n".ToArray(), StringSplitOptions.RemoveEmptyEntries)
                     let count = r.Split("\t".ToArray(), StringSplitOptions.RemoveEmptyEntries)[0]
                     select int.Parse(count.Trim())).Sum();
@@ -88,7 +174,7 @@ namespace WebGitNet
             }
 
             @object = @object ?? "HEAD";
-            var results = Execute(string.Format("log -n {0} --encoding=UTF-8 -z --format=\"format:commit %H%ntree %T%nparent %P%nauthor %an%nauthor mail %ae%nauthor date %aD%ncommitter %cn%ncommitter mail %ce%ncommitter date %cD%nsubject %s%n%b%x00\" {1}", count + skip, @object), repoPath, Encoding.UTF8);
+            var results = Execute(string.Format("log -n {0} --encoding=UTF-8 -z --format=\"format:commit %H%ntree %T%nparent %P%nauthor %an%nauthor mail %ae%nauthor date %aD%ncommitter %cn%ncommitter mail %ce%ncommitter date %cD%nsubject %s%n%b%x00\" {1}", count + skip, Q(@object)), repoPath, Encoding.UTF8);
 
             Func<string, LogEntry> parseResults = result =>
             {
@@ -179,7 +265,7 @@ namespace WebGitNet
                 }
             };
 
-            using (var git = Start(string.Format("diff-tree -p -c -r {0}", commit), repoPath))
+            using (var git = Start(string.Format("diff-tree -p -c -r {0}", Q(commit)), repoPath))
             {
                 while (!git.StandardOutput.EndOfStream)
                 {
@@ -214,19 +300,13 @@ namespace WebGitNet
                 throw new ArgumentNullException("tree");
             }
 
-            if (!Regex.IsMatch(tree, "^[-a-zA-Z0-9]+$"))
+            if (!Regex.IsMatch(tree, "^[-.a-zA-Z0-9]+$"))
             {
                 throw new ArgumentOutOfRangeException("tree", "tree mush be the id of a tree-ish object.");
             }
 
             path = path ?? string.Empty;
-            path = path.Replace("\\", "\\\\").Replace("\"", "\\\"");
-            var results = Execute(string.Format("ls-tree -l -z {0}:\"{1}\"", tree, path), repoPath, Encoding.UTF8);
-
-            if (results.StartsWith("fatal: "))
-            {
-                throw new Exception(results);
-            }
+            var results = Execute(string.Format("ls-tree -l -z {0}:{1}", Q(tree), Q(path)), repoPath, Encoding.UTF8, trustErrorCode: true);
 
             Func<string, ObjectInfo> parseResults = result =>
             {
@@ -265,8 +345,7 @@ namespace WebGitNet
                 throw new ArgumentOutOfRangeException("tree", "tree mush be the id of a tree-ish object.");
             }
 
-            path = path.Replace("\\", "\\\\").Replace("\"", "\\\"");
-            return Start(string.Format("show {0}:\"{1}\"", tree, path), repoPath, redirectInput: false);
+            return Start(string.Format("show {0}:{1}", Q(tree), Q(path)), repoPath, redirectInput: false);
         }
 
         public static MemoryStream GetBlob(string repoPath, string tree, string path)
@@ -303,14 +382,7 @@ namespace WebGitNet
         public static void CreateRepo(string repoPath)
         {
             var workingDir = Path.GetDirectoryName(repoPath);
-            var newPath = repoPath.Replace("\\", "\\\\").Replace("\"", "\\\"");
-            var results = Execute(string.Format("init --bare \"{0}\"", newPath), workingDir);
-
-            var errorLines = results.Split('\n').Where(l => l.StartsWith("fatal:")).ToList();
-            if (errorLines.Count > 0)
-            {
-                throw new CreateRepoFailedException(string.Join(results, Environment.NewLine));
-            }
+            var results = Execute(string.Format("init --bare {0}", Q(repoPath)), workingDir, trustErrorCode: true);
         }
 
         public static void ExecutePostCreateHook(string repoPath)
@@ -342,7 +414,7 @@ namespace WebGitNet
             }
 
             // Prepare to start sh.exe like: `sh.exe -- "C:\Path\To\Hook-Script"`.
-            var startInfo = new ProcessStartInfo(sh, string.Format("-- \"{0}\"", hookFile.FullName.Replace("\\", "\\\\").Replace("\"", "\\\"")))
+            var startInfo = new ProcessStartInfo(sh, string.Format("-- {0}", Q(hookFile.FullName)))
             {
                 WorkingDirectory = repoPath,
                 UseShellExecute = false,
@@ -378,29 +450,6 @@ namespace WebGitNet
             {
                 rest = result.Substring(match.Index + match.Length);
                 return result.Substring(0, match.Index);
-            }
-        }
-
-        [global::System.Serializable]
-        public class CreateRepoFailedException : Exception
-        {
-            public CreateRepoFailedException()
-            {
-            }
-
-            public CreateRepoFailedException(string message)
-                : base(message)
-            {
-            }
-
-            public CreateRepoFailedException(string message, Exception inner)
-                : base(message, inner)
-            {
-            }
-
-            protected CreateRepoFailedException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-                : base(info, context)
-            {
             }
         }
     }

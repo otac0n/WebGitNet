@@ -55,7 +55,7 @@ namespace WebGitNet.Controllers
             {
                 GitUtilities.CreateRepo(repoPath);
             }
-            catch (GitUtilities.CreateRepoFailedException ex)
+            catch (GitErrorException ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
                 return View(request);
