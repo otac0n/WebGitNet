@@ -282,28 +282,13 @@ namespace WebGitNet
             readRenames(renamesFile);
 
             string impactData;
-            using (var git = Start("log -z --format=format:%an%x01%ae --shortstat", repoPath, outputEncoding: Encoding.UTF8))
+            using (var git = Start("log -z --format=%x01%H%x1e%ae%x1e%an%x02 --numstat", repoPath, outputEncoding: Encoding.UTF8))
             {
                 impactData = git.StandardOutput.ReadToEnd();
             }
 
-            var individualImpacts = from imp in impactData.Split('\0')
-                                    let lines = imp.Split("\n".ToArray(), StringSplitOptions.RemoveEmptyEntries)
-                                    let changeLine = lines.Length > 1 ? lines[1] : ""
-                                    let match = Regex.Match(changeLine, @"^ \d+ files changed, (?<insertions>\d+) insertions\(\+\), (?<deletions>\d+) deletions\(-\)$")
-                                    let authorParts = lines[0].Split('\x01')
-                                    let author = Rename(new Author { Name = authorParts[0], Email = authorParts[1] }, renames)
-                                    let insertions = match.Success ? int.Parse(match.Groups["insertions"].Value) : 0
-                                    let deletions = match.Success ? int.Parse(match.Groups["deletions"].Value) : 0
-                                    let impact = Math.Max(insertions, deletions)
-                                    select new UserImpact
-                                    {
-                                        Author = author.Name,
-                                        Commits = 1,
-                                        Insertions = insertions,
-                                        Deletions = deletions,
-                                        Impact = impact,
-                                    };
+            var individualImpacts = from imp in impactData.Split("\x01".ToArray(), StringSplitOptions.RemoveEmptyEntries)
+                                    select ParseUserImpact(imp, renames);
 
             return
                 individualImpacts
@@ -318,6 +303,49 @@ namespace WebGitNet
                 })
                 .OrderByDescending(i => i.Commits)
                 .ToList();
+        }
+
+        private static UserImpact ParseUserImpact(string impactData, List<RenameEntry> renames)
+        {
+            var impactParts = impactData.Split("\x02".ToArray(), 2);
+            var header = impactParts[0];
+            var body = impactParts[1].TrimStart('\n');
+
+            var headerParts = header.Split("\x1e".ToArray(), 3);
+            var hash = headerParts[0];
+            var email = headerParts[1];
+            var name = headerParts[2];
+
+            var author = Rename(new Author { Name = name, Email = email }, renames);
+
+            var insertions = 0;
+            var deletions = 0;
+
+            var entries = body.Split("\0".ToArray(), StringSplitOptions.RemoveEmptyEntries);
+            foreach (var entry in entries)
+            {
+                var entryParts = entry.Split("\t".ToArray(), 3);
+
+                int ins, del;
+                if (!int.TryParse(entryParts[0], out ins) || !int.TryParse(entryParts[1], out del))
+                {
+                    continue;
+                }
+
+                var path = entryParts[2];
+
+                insertions += ins;
+                deletions += del;
+            }
+
+            return new UserImpact
+            {
+                Author = author.Name,
+                Commits = 1,
+                Insertions = insertions,
+                Deletions = deletions,
+                Impact = Math.Max(insertions, deletions),
+            };
         }
 
         public static List<DiffInfo> GetDiffInfo(string repoPath, string commit)
