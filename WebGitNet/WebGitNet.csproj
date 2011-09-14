@@ -74,6 +74,7 @@
     <Compile Include="Controllers\SharedControllerBase.profiling.cs">
       <DependentUpon>SharedControllerBase.cs</DependentUpon>
     </Compile>
+    <Compile Include="ConvertGlobFailedException.cs" />
     <Compile Include="FileManager.cs" />
     <Compile Include="GitErrorException.cs" />
     <Compile Include="GitUtilities.cs" />
