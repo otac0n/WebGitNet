@@ -99,7 +99,7 @@ namespace WebGitNet.Controllers
                                                 }).OrderByDescending(i => i.Commits).ToList()
                                  }).OrderBy(wk => wk.Week);
 
-            return View(allTimeImpacts);
+            return View(new RepoImpact { AllTime = allTimeImpacts, Weekly = weeklyImpacts });
         }
 
         public ActionResult ViewCommit(string repo, string @object)

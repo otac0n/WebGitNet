@@ -93,6 +93,7 @@
     <Compile Include="Models\CreateRepoRequest.cs" />
     <Compile Include="Models\DiffInfo.cs" />
     <Compile Include="Models\GitRef.cs" />
+    <Compile Include="Models\RepoImpact.cs" />
     <Compile Include="Models\ImpactWeek.cs" />
     <Compile Include="Models\LogEntry.cs" />
     <Compile Include="Models\ObjectInfo.cs" />
@@ -133,6 +134,7 @@
     <Content Include="Scripts\g.raphael\g.line-min.js" />
     <Content Include="Scripts\g.raphael\g.pie-min.js" />
     <Content Include="Scripts\g.raphael\g.raphael-min.js" />
+    <Content Include="Scripts\g.raphael\g.impact.js" />
     <Content Include="Scripts\g.raphael\raphael-min.js" />
     <Content Include="Scripts\jquery.background-position.min.js" />
     <Content Include="Scripts\jquery.tablesorter.min.js" />
