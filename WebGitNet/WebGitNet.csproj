@@ -85,6 +85,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="HtmlHelpers.cs" />
+    <Compile Include="IgnoreEntry.cs" />
+    <Compile Include="IgnoreFileParser.cs" />
     <Compile Include="MimeUtilities.cs" />
     <Compile Include="Models\AccessLevel.cs" />
     <Compile Include="Models\BreadCrumbTrail.cs" />
