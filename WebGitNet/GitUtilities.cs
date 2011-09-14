@@ -10,15 +10,13 @@ namespace WebGitNet
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
+    using System.Threading;
     using System.Web.Configuration;
     using WebGitNet.Models;
-    using System.Threading;
-    using System.Net.Mail;
 
     public enum RefValidationResult
     {
@@ -298,19 +296,7 @@ namespace WebGitNet
             var individualImpacts = from imp in impactData.Split("\x01".ToArray(), StringSplitOptions.RemoveEmptyEntries)
                                     select ParseUserImpact(imp, renames, ignores);
 
-            return
-                individualImpacts
-                .GroupBy(i => i.Author, StringComparer.InvariantCultureIgnoreCase)
-                .Select(g => new UserImpact
-                {
-                    Author = g.Key,
-                    Commits = g.Sum(ui => ui.Commits),
-                    Insertions = g.Sum(ui => ui.Insertions),
-                    Deletions = g.Sum(ui => ui.Deletions),
-                    Impact = g.Sum(ui => ui.Impact),
-                })
-                .OrderByDescending(i => i.Commits)
-                .ToList();
+            return individualImpacts.ToList();
         }
 
         private static UserImpact ParseUserImpact(string impactData, IList<RenameEntry> renames, IList<IgnoreEntry> ignores)
@@ -363,8 +349,6 @@ namespace WebGitNet
             }
 
             var commitDay = DateTimeOffset.Parse(date).ToUniversalTime().Date;
-            var dayOffset = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek - commitDay.DayOfWeek;
-            var commitWeek = commitDay.AddDays(dayOffset + (dayOffset > 0 ? -7 : 0));
 
             return new UserImpact
             {
@@ -373,7 +357,7 @@ namespace WebGitNet
                 Insertions = insertions,
                 Deletions = deletions,
                 Impact = Math.Max(insertions, deletions),
-                Week = commitWeek,
+                Date = commitDay,
             };
         }
 

@@ -7,6 +7,8 @@
 
 namespace WebGitNet.Models
 {
+    using System;
+
     public class UserImpact
     {
         public string Author { get; set; }
@@ -19,6 +21,6 @@ namespace WebGitNet.Models
 
         public int Impact { get; set; }
 
-        public System.DateTime Week { get; set; }
+        public DateTime Date { get; set; }
     }
 }

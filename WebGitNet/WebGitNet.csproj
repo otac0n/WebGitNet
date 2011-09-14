@@ -93,6 +93,7 @@
     <Compile Include="Models\CreateRepoRequest.cs" />
     <Compile Include="Models\DiffInfo.cs" />
     <Compile Include="Models\GitRef.cs" />
+    <Compile Include="Models\ImpactWeek.cs" />
     <Compile Include="Models\LogEntry.cs" />
     <Compile Include="Models\ObjectInfo.cs" />
     <Compile Include="Models\ObjectType.cs" />
