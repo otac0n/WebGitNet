@@ -10,6 +10,7 @@ namespace WebGitNet
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -289,7 +290,7 @@ namespace WebGitNet
             }
 
             string impactData;
-            using (var git = Start("log -z --format=%x01%H%x1e%ae%x1e%an%x02 --numstat", repoPath, outputEncoding: Encoding.UTF8))
+            using (var git = Start("log -z --format=%x01%H%x1e%ai%x1e%ae%x1e%an%x02 --numstat", repoPath, outputEncoding: Encoding.UTF8))
             {
                 impactData = git.StandardOutput.ReadToEnd();
             }
@@ -318,10 +319,11 @@ namespace WebGitNet
             var header = impactParts[0];
             var body = impactParts[1].TrimStart('\n');
 
-            var headerParts = header.Split("\x1e".ToArray(), 3);
+            var headerParts = header.Split("\x1e".ToArray(), 4);
             var hash = headerParts[0];
-            var email = headerParts[1];
-            var name = headerParts[2];
+            var date = headerParts[1];
+            var email = headerParts[2];
+            var name = headerParts[3];
 
             var author = Rename(new Author { Name = name, Email = email }, renames);
 
@@ -360,6 +362,10 @@ namespace WebGitNet
                 }
             }
 
+            var commitDay = DateTimeOffset.Parse(date).ToUniversalTime().Date;
+            var dayOffset = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek - commitDay.DayOfWeek;
+            var commitWeek = commitDay.AddDays(dayOffset + (dayOffset > 0 ? -7 : 0));
+
             return new UserImpact
             {
                 Author = author.Name,
@@ -367,6 +373,7 @@ namespace WebGitNet
                 Insertions = insertions,
                 Deletions = deletions,
                 Impact = Math.Max(insertions, deletions),
+                Week = commitWeek,
             };
         }
 

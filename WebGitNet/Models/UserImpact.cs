@@ -18,5 +18,7 @@ namespace WebGitNet.Models
         public int Deletions { get; set; }
 
         public int Impact { get; set; }
+
+        public System.DateTime Week { get; set; }
     }
 }
