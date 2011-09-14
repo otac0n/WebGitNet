@@ -58,7 +58,7 @@ namespace WebGitNet
             {
                 foreach (var line in File.ReadAllLines(Path.Combine(assemblyPath, "shjs-languages.txt")))
                 {
-                    if (string.IsNullOrWhiteSpace(line))
+                    if (string.IsNullOrWhiteSpace(line) || line.TrimStart().StartsWith("#"))
                     {
                         continue;
                     }
