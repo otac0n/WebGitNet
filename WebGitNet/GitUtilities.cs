@@ -266,9 +266,11 @@ namespace WebGitNet
         public static List<UserImpact> GetUserImpacts(string repoPath)
         {
             List<RenameEntry> renames = new List<RenameEntry>();
+            List<IgnoreEntry> ignores = new List<IgnoreEntry>();
 
             var parentRenames = Path.Combine(new DirectoryInfo(repoPath).Parent.FullName, "renames");
             var renamesFile = Path.Combine(repoPath, "info", "webgit.net", "renames");
+            var ignoresFile = Path.Combine(repoPath, "info", "webgit.net", "ignore");
 
             Action<string> readRenames = (file) =>
             {
@@ -281,6 +283,11 @@ namespace WebGitNet
             readRenames(parentRenames);
             readRenames(renamesFile);
 
+            if (File.Exists(ignoresFile))
+            {
+                ignores.AddRange(IgnoreFileParser.Parse(File.ReadAllLines(ignoresFile)));
+            }
+
             string impactData;
             using (var git = Start("log -z --format=%x01%H%x1e%ae%x1e%an%x02 --numstat", repoPath, outputEncoding: Encoding.UTF8))
             {
@@ -288,7 +295,7 @@ namespace WebGitNet
             }
 
             var individualImpacts = from imp in impactData.Split("\x01".ToArray(), StringSplitOptions.RemoveEmptyEntries)
-                                    select ParseUserImpact(imp, renames);
+                                    select ParseUserImpact(imp, renames, ignores);
 
             return
                 individualImpacts
@@ -305,7 +312,7 @@ namespace WebGitNet
                 .ToList();
         }
 
-        private static UserImpact ParseUserImpact(string impactData, IList<RenameEntry> renames)
+        private static UserImpact ParseUserImpact(string impactData, IList<RenameEntry> renames, IList<IgnoreEntry> ignores)
         {
             var impactParts = impactData.Split("\x02".ToArray(), 2);
             var header = impactParts[0];
@@ -334,8 +341,23 @@ namespace WebGitNet
 
                 var path = entryParts[2];
 
-                insertions += ins;
-                deletions += del;
+                bool keepPath = true;
+
+                for (int i = ignores.Count - 1; i >= 0; i--)
+                {
+                    var ignore = ignores[i];
+                    if (hash.StartsWith(ignore.CommitHash) && ignore.IsMatch(path))
+                    {
+                        keepPath = ignore.Negated;
+                        break;
+                    }
+                }
+
+                if (keepPath)
+                {
+                    insertions += ins;
+                    deletions += del;
+                }
             }
 
             return new UserImpact
