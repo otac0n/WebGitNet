@@ -351,7 +351,7 @@ namespace WebGitNet
         public static Regex GlobToRegex(string glob)
         {
             var tokenized = Regex.Matches(glob, @"\G(?:(?<literal>[^?*[]+)|(?<wildcard>[*?])|(?<class>\[!?\]?([^][]|\[(:[^]:]*:|\.[^].]*\.|=[^]=]*=)\])*\]))");
-            var text = new StringBuilder(glob.Length * 2);
+            var text = new StringBuilder(glob.Length * 2).Append(@"\A");
 
             if (tokenized.Count == 0)
             {
@@ -441,7 +441,7 @@ namespace WebGitNet
                 }
             }
 
-            return new Regex(text.ToString(), RegexOptions.Compiled);
+            return new Regex(text.Append(@"\z").ToString(), RegexOptions.Compiled);
         }
 
         public static List<DiffInfo> GetDiffInfo(string repoPath, string commit)
