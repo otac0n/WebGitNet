@@ -204,7 +204,7 @@ namespace WebGitNet
             public string Email { get; set; }
         }
 
-        private static Author Rename(Author author, List<RenameEntry> entries)
+        private static Author Rename(Author author, IList<RenameEntry> entries)
         {
             Func<RenameField, Author, string> getField = (f, a) =>
             {
@@ -305,7 +305,7 @@ namespace WebGitNet
                 .ToList();
         }
 
-        private static UserImpact ParseUserImpact(string impactData, List<RenameEntry> renames)
+        private static UserImpact ParseUserImpact(string impactData, IList<RenameEntry> renames)
         {
             var impactParts = impactData.Split("\x02".ToArray(), 2);
             var header = impactParts[0];
