@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Text.RegularExpressions;
 
 namespace WebGitNet
@@ -75,6 +74,7 @@ namespace WebGitNet
             Accept(Terminal.Whitespace, ref line);
             if (Accept(Terminal.Seperator, ref line) != null)
             {
+                Accept(Terminal.Whitespace, ref line);
                 destinationField2 = (RenameField)Enum.Parse(typeof(RenameField), Require(Terminal.Field, ref line), true);
                 Accept(Terminal.Whitespace, ref line);
                 Require(Terminal.Assignment, ref line);
@@ -126,7 +126,7 @@ namespace WebGitNet
         {
             var regex = terminals[terminal];
 
-            var match = Regex.Match(subject, "^" + regex, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            var match = Regex.Match(subject, "^" + regex, RegexOptions.IgnoreCase);
             if (match.Success)
             {
                 subject = subject.Substring(match.Length);
