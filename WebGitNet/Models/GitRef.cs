@@ -16,7 +16,8 @@ namespace WebGitNet.Models
     {
         Branch,
         Tag,
-        RemoteBranch
+        RemoteBranch,
+        Stash,
     }
 
     public class GitRef
@@ -41,6 +42,13 @@ namespace WebGitNet.Models
                     this.RefType = prefix.Key;
                     return;
                 }
+            }
+
+            if (refPath == "refs/stash")
+            {
+                this.Name = "stash";
+                this.RefType = RefType.Stash;
+                return;
             }
 
             throw new ArgumentException("The ref path specified is not recognized.", "refPath");
