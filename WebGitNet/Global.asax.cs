@@ -9,9 +9,13 @@ namespace WebGitNet
 {
     using System.Web.Mvc;
     using System.Web.Routing;
+    using Castle.Windsor;
+    using Castle.Windsor.Installer;
 
     public partial class WebGitNetApplication : System.Web.HttpApplication
     {
+        private static IWindsorContainer container;
+
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
@@ -91,6 +95,20 @@ namespace WebGitNet
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+            Bootstrap();
+        }
+
+        protected void Application_End()
+        {
+            container.Dispose();
+        }
+
+        private static void Bootstrap()
+        {
+            container = new WindsorContainer()
+                        .Install(FromAssembly.This());
+            var controllerFactory = new WindsorControllerFactory(container.Kernel);
+            ControllerBuilder.Current.SetControllerFactory(controllerFactory);
         }
     }
 }

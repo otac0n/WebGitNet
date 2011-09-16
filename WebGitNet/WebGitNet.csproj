@@ -96,6 +96,7 @@
     <Compile Include="HtmlHelpers.cs" />
     <Compile Include="IgnoreEntry.cs" />
     <Compile Include="IgnoreFileParser.cs" />
+    <Compile Include="Installers\ControllersInstaller.cs" />
     <Compile Include="MimeUtilities.cs" />
     <Compile Include="Models\AccessLevel.cs" />
     <Compile Include="Models\BreadCrumbTrail.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="RenameEntry.cs" />
     <Compile Include="RenameFileParser.cs" />
     <Compile Include="RenameFileSyntaxException.cs" />
+    <Compile Include="WindsorControllerFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
