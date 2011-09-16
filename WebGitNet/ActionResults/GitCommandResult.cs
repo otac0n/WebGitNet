@@ -56,7 +56,7 @@ namespace WebGitNet.ActionResults
 
         private static string PacketFormat(string packet)
         {
-            return (packet.Length + 4).ToString("X").PadLeft(4, '0') + packet;
+            return (packet.Length + 4).ToString("X").ToLower().PadLeft(4, '0') + packet;
         }
 
         private static string PacketFlush()
