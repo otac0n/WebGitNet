@@ -100,17 +100,18 @@
         });
     </script>
     <style>
-        .impact-graphs div
+        #commit-graph, #impact-graph
         {
             width: 500px;
             height: 220px;
             float: left;
         }
 
-        .weekly-stats
+        #weekly-graph
         {
-            clear: both;
-            overflow: scroll;
+            clear: left;
+            overflow: auto;
+            width: 100%;
         }
     </style>
 }
@@ -119,9 +120,7 @@
     <div id="commit-graph"></div>
     <div id="impact-graph"></div>
 </div>
-<div class="weekly-stats">
-    <div id="weekly-graph"></div>
-</div>
+<div id="weekly-graph"></div>
 
 <table class="tablesorter" id="stats-table">
   <thead>
