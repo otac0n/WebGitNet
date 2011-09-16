@@ -1,11 +1,13 @@
 ﻿var impact = function (div, json, settings) {
     settings = settings || {};
     var width = (+settings.width) || 100;
+    var datefont = settings.datefont || { "font": '9px "Arial"', stroke: "none", fill: "#fff" };
+    var labelfont = settings.labelfont || { "font": '9px "Arial"', stroke: "none", fill: "#aaa" };
+    var dateformatter = settings.dateformatter || function (dt) { return dt.getDate() + " " + ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"][dt.getMonth()] + " " + dt.getFullYear() };
 
     var x = 0,
         r = Raphael(div, width * json.buckets.length),
         labels = {},
-        textattr = { "font": '9px "Arial"', stroke: "none", fill: "#fff" },
         pathes = {};
 
     function isIn(a, b) {
@@ -52,8 +54,8 @@
                 h += 2;
             }
             var dt = new Date(json.buckets[j].d * 1000);
-            var dtext = dt.getDate() + " " + ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"][dt.getMonth()] + " " + dt.getFullYear();
-            r.text(x + (width * 0.25), h + 10, dtext).attr({ "font": '9px "Arial"', stroke: "none", fill: "#aaa" });
+            var dtext = dateformatter(dt);
+            r.text(x + (width * 0.25), h + 10, dtext).attr(labelfont);
             x += width;
         }
         var c = 0;
@@ -63,7 +65,7 @@
             pathes[i].p = r.path().attr({ fill: clr, stroke: clr });
             var path = "M".concat(pathes[i].f[0][0], ",", pathes[i].f[0][1], "L", pathes[i].f[0][0] + (width * 0.5), ",", pathes[i].f[0][1]);
             var th = Math.round(pathes[i].f[0][1] + (pathes[i].b[pathes[i].b.length - 1][1] - pathes[i].f[0][1]) / 2 + 3);
-            labels[i].push(r.text(pathes[i].f[0][0] + (width * 0.25), th, pathes[i].f[0][2]).attr(textattr));
+            labels[i].push(r.text(pathes[i].f[0][0] + (width * 0.25), th, pathes[i].f[0][2]).attr(datefont));
             var X = pathes[i].f[0][0] + (width * 0.5),
                 Y = pathes[i].f[0][1];
             for (var j = 1, jj = pathes[i].f.length; j < jj; j++) {
@@ -73,7 +75,7 @@
                 path = path.concat(X - (width * 0.2), ",", Y, ",", X, ",", Y, "L", X += (width * 0.5), ",", Y);
                 th = Math.round(Y + (pathes[i].b[pathes[i].b.length - 1 - j][1] - Y) / 2 + 3);
                 if (th - 9 > Y) {
-                    labels[i].push(r.text(X - (width * 0.25), th, pathes[i].f[j][2]).attr(textattr));
+                    labels[i].push(r.text(X - (width * 0.25), th, pathes[i].f[j][2]).attr(datefont));
                 }
             }
             path = path.concat("L", pathes[i].b[0][0] + (width * 0.5), ",", pathes[i].b[0][1], ",", pathes[i].b[0][0], ",", pathes[i].b[0][1]);
@@ -92,9 +94,7 @@
                     labels[i].show();
                     pathes[i].p.toFront();
                     labels[i].toFront();
-                    if (typeof settings.mouseover == "function") {
-                        settings.mouseover(json.authors[i]);
-                    }
+                    settings.mouseover(json.authors[i]);
                 });
             })(i);
         }
