@@ -1,12 +1,12 @@
 ﻿var impact = function (div, json, settings) {
     settings = settings || {};
     var width = (+settings.width) || 100;
+    var height = (+settings.height) || 35;
+    var heightfunc = settings.heightfunc || Math.log;
     var datefont = settings.datefont || { "font": '9px "Arial"', stroke: "none", fill: "#fff" };
     var labelfont = settings.labelfont || { "font": '9px "Arial"', stroke: "none", fill: "#aaa" };
     var dateformatter = settings.dateformatter || function (dt) { return dt.getDate() + " " + ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"][dt.getMonth()] + " " + dt.getFullYear() };
-
     var x = 0,
-        r = Raphael(div, width * json.buckets.length),
         labels = {},
         pathes = {};
 
@@ -38,9 +38,40 @@
         }
     }
 
-    function block() {
+    function measure() {
+        var len = json.buckets.length;
+
+        var maxItem = 1;
+        for (var b = 0; b < len; b++) {
+            var bucket = json.buckets[b];
+            var items = bucket.i.length;
+
+            for (var i = 0; i < items; i++) {
+                maxItem = Math.max(maxItem, heightfunc(bucket.i[i][1]));
+            }
+        }
+
+        var s = 35 / maxItem;
+
+        var maxHeight = 0;
+        for (var b = 0; b < len; b++) {
+            var bucket = json.buckets[b];
+            var items = bucket.i.length;
+
+            var h = items - 1;
+            for (var i = 0; i < items; i++) {
+                h += Math.max(Math.round(heightfunc(bucket.i[i][1]) * s), 1);
+            }
+            h += 20;
+
+            maxHeight = Math.max(maxHeight, h);
+        }
+
+        return { width: width * len, height: maxHeight, scale: s };
+    }
+
+    function build(scale) {
         var p, h;
-        fillIn();
         for (var j = 0, jj = json.buckets.length; j < jj; j++) {
             var users = json.buckets[j].i;
             h = 0;
@@ -50,7 +81,7 @@
                     p = pathes[users[i][0]] = { f: [], b: [] };
                 }
                 p.f.push([x, h, users[i][1]]);
-                p.b.unshift([x, h += Math.max(Math.round(Math.log(users[i][1]) * 5), 1)]);
+                p.b.unshift([x, h += Math.max(Math.round(heightfunc(users[i][1]) * scale), 1)]);
                 h += 2;
             }
             var dt = new Date(json.buckets[j].d * 1000);
@@ -99,5 +130,9 @@
             })(i);
         }
     }
-    block();
+
+    fillIn();
+    var m = measure();
+    var r = Raphael(div, m.width, m.height);
+    build(m.scale);
 };
