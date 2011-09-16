@@ -79,6 +79,19 @@ namespace WebGitNet.Controllers
                                       Insertions = g.Sum(ui => ui.Insertions),
                                       Deletions = g.Sum(ui => ui.Deletions),
                                       Impact = g.Sum(ui => ui.Impact),
+                                      Languages = (from ui in g
+                                                   from l in ui.Languages
+                                                   group l.Value by l.Key into lg
+                                                   select new
+                                                   {
+                                                       Key = lg.Key,
+                                                       Value = new LanguageImpact
+                                                               {
+                                                                   Insertions = lg.Sum(li => li.Insertions),
+                                                                   Deletions = lg.Sum(li => li.Deletions),
+                                                                   Gain = lg.Sum(li => li.Gain),
+                                                               },
+                                                   }).ToDictionary(lg => lg.Key, lg => lg.Value)
                                   }).OrderByDescending(i => i.Commits);
 
             var weeklyImpacts = (from u in userImpacts

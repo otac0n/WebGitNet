@@ -131,6 +131,7 @@
         <th>Insertions</th>
         <th>Deletions</th>
         <th>Impact</th>
+        <th>Languages</th>
     </tr>
   </thead>
   <tbody>
@@ -142,6 +143,15 @@
         <td>@Html.DisplayFor(modelItem => item.Insertions)</td>
         <td>@Html.DisplayFor(modelItem => item.Deletions)</td>
         <td>@Html.DisplayFor(modelItem => item.Impact)</td>
+        <td>
+            @{
+                var max = item.Languages.Max(l => l.Value.Gain);
+            }
+            @foreach (var lang in item.Languages.OrderByDescending(l => l.Value.Gain))
+            {
+                <div style="width: @(200.0 * lang.Value.Gain / max)px; color: black; background: #f00; white-space: pre;">@(lang.Key)</div>
+            }
+        </td>
     </tr>
 }
   </tbody>

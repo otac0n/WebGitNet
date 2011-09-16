@@ -8,6 +8,7 @@
 namespace WebGitNet.Models
 {
     using System;
+    using System.Collections.Generic;
 
     public class UserImpact
     {
@@ -22,5 +23,7 @@ namespace WebGitNet.Models
         public int Impact { get; set; }
 
         public DateTime Date { get; set; }
+
+        public Dictionary<string, LanguageImpact> Languages { get; set; }
     }
 }

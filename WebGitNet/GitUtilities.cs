@@ -316,6 +316,27 @@ namespace WebGitNet
             var insertions = 0;
             var deletions = 0;
 
+            var languages = new Dictionary<string, LanguageImpact>();
+
+            Action<string, int, int> add = (path, ins, del) =>
+            {
+                insertions += ins;
+                deletions += del;
+
+                var mime = MimeUtilities.GetMimeType(path);
+
+                LanguageImpact l;
+                if (!languages.TryGetValue(mime, out l))
+                {
+                    l = new LanguageImpact { ContentType = mime };
+                    languages.Add(mime, l);
+                }
+
+                l.Insertions += ins;
+                l.Deletions += del;
+                l.Gain = Math.Max(l.Insertions - l.Deletions, 0);
+            };
+
             var entries = body.Split("\0".ToArray(), StringSplitOptions.RemoveEmptyEntries);
             foreach (var entry in entries)
             {
@@ -343,8 +364,7 @@ namespace WebGitNet
 
                 if (keepPath)
                 {
-                    insertions += ins;
-                    deletions += del;
+                    add(path, ins, del);
                 }
             }
 
@@ -358,6 +378,7 @@ namespace WebGitNet
                 Deletions = deletions,
                 Impact = Math.Max(insertions, deletions),
                 Date = commitDay,
+                Languages = languages,
             };
         }
 
