@@ -48,7 +48,7 @@ namespace WebGitNet.ActionResults
             var response = context.HttpContext.Response;
             var request = context.HttpContext.Request;
 
-            response.ContentType = "application/git-" + this.action + "-result";
+            response.ContentType = "application/x-git-" + this.action + "-result";
 
             using (var git = GitUtilities.Start(string.Format(this.commandFormat, this.action), this.repoPath, redirectInput: true))
             {
