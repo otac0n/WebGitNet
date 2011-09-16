@@ -6,6 +6,7 @@
     var datefont = settings.datefont || { "font": '9px "Arial"', stroke: "none", fill: "#fff" };
     var labelfont = settings.labelfont || { "font": '9px "Arial"', stroke: "none", fill: "#aaa" };
     var dateformatter = settings.dateformatter || function (dt) { return dt.getDate() + " " + ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"][dt.getMonth()] + " " + dt.getFullYear() };
+    var mouseover = settings.mouseover || function () { };
     var x = 0,
         labels = {},
         pathes = {};
@@ -125,7 +126,7 @@
                     labels[i].show();
                     pathes[i].p.toFront();
                     labels[i].toFront();
-                    settings.mouseover(json.authors[i]);
+                    mouseover(json.authors[i]);
                 });
             })(i);
         }
