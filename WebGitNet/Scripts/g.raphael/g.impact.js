@@ -5,43 +5,38 @@
         textattr = { "font": '9px "Arial"', stroke: "none", fill: "#fff" },
         pathes = {};
     settings = settings || {};
-    function finishes() {
+
+    function isIn(a, b) {
+        var bucket = json.buckets[b];
+        var len = bucket.i.length;
+        for (var i = 0, len; i < len; i++) {
+            if (bucket.i[i][0] == a) return true;
+        }
+        return false;
+    }
+
+    function findFirst(a, s, e, p) {
+        for (var i = s; i != e; i += p) {
+            if (isIn(a, i)) return i;
+        }
+    }
+
+    function fillIn() {
         for (var i in json.authors) {
-            var start, end;
-            for (var j = json.buckets.length - 1; j >= 0; j--) {
-                var isin = false;
-                for (var k = 0, kk = json.buckets[j].i.length; k < kk; k++) {
-                    isin = isin || (json.buckets[j].i[k][0] == i);
-                }
-                if (isin) {
-                    end = j;
-                    break;
-                }
-            }
-            for (var j = 0, jj = json.buckets.length; j < jj; j++) {
-                var isin = false;
-                for (var k = 0, kk = json.buckets[j].i.length; k < kk; k++) {
-                    isin = isin || (json.buckets[j].i[k][0] == i);
-                };
-                if (isin) {
-                    start = j;
-                    break;
-                }
-            }
+            var start = findFirst(i, 0, json.buckets.length - 1, 1);
+            var end = findFirst(i, json.buckets.length - 1, 0, -1);
+
             for (var j = start, jj = end; j < jj; j++) {
-                var isin = false;
-                for (var k = 0, kk = json.buckets[j].i.length; k < kk; k++) {
-                    isin = isin || (json.buckets[j].i[k][0] == i);
-                }
-                if (!isin) {
+                if (!isIn(i, j)) {
                     json.buckets[j].i.push([i, 0]);
                 }
             }
         }
     }
+
     function block() {
         var p, h;
-        finishes();
+        fillIn();
         for (var j = 0, jj = json.buckets.length; j < jj; j++) {
             var users = json.buckets[j].i;
             h = 0;
