@@ -28,10 +28,11 @@
         return id;
     };
 
+    var epoch = new DateTime(1970, 1, 1);
     var buckets = (from w in Model.Weekly
                    select new
                    {
-                       d = w.Week,
+                       d = (w.Week - epoch).TotalSeconds,
                        i = (from i in w.Impacts
                             let user = getUser(i.Author)
                             select new[] { user, i.Impact }).ToArray(),
