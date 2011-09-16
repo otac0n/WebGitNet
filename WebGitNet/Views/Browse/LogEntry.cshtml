@@ -17,10 +17,10 @@
     </div>
   }
   </div>
-  <div class="commit-subject">@Model.Subject</div>
+  <div class="commit-subject">@Html.Markdown(Model.Subject)</div>
 @if (showDetails == true)
 {
-  <div class="commit-body">@Model.Body</div>
+  <div class="commit-body">@Html.Markdown(Model.Body)</div>
 }
   <div class="commit-author commit-person">
       <div class="avatar">@Html.Gravatar(Model.AuthorEmail, Model.Author, 24)</div>

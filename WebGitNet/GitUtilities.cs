@@ -14,10 +14,9 @@ namespace WebGitNet
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
+    using System.Threading;
     using System.Web.Configuration;
     using WebGitNet.Models;
-    using System.Threading;
-    using System.Net.Mail;
 
     public enum RefValidationResult
     {
@@ -289,7 +288,7 @@ namespace WebGitNet
             }
 
             string impactData;
-            using (var git = Start("log -z --format=%x01%H%x1e%ae%x1e%an%x02 --numstat", repoPath, outputEncoding: Encoding.UTF8))
+            using (var git = Start("log -z --format=%x01%H%x1e%ai%x1e%ae%x1e%an%x02 --numstat", repoPath, outputEncoding: Encoding.UTF8))
             {
                 impactData = git.StandardOutput.ReadToEnd();
             }
@@ -297,19 +296,7 @@ namespace WebGitNet
             var individualImpacts = from imp in impactData.Split("\x01".ToArray(), StringSplitOptions.RemoveEmptyEntries)
                                     select ParseUserImpact(imp, renames, ignores);
 
-            return
-                individualImpacts
-                .GroupBy(i => i.Author, StringComparer.InvariantCultureIgnoreCase)
-                .Select(g => new UserImpact
-                {
-                    Author = g.Key,
-                    Commits = g.Sum(ui => ui.Commits),
-                    Insertions = g.Sum(ui => ui.Insertions),
-                    Deletions = g.Sum(ui => ui.Deletions),
-                    Impact = g.Sum(ui => ui.Impact),
-                })
-                .OrderByDescending(i => i.Commits)
-                .ToList();
+            return individualImpacts.ToList();
         }
 
         private static UserImpact ParseUserImpact(string impactData, IList<RenameEntry> renames, IList<IgnoreEntry> ignores)
@@ -318,10 +305,11 @@ namespace WebGitNet
             var header = impactParts[0];
             var body = impactParts[1].TrimStart('\n');
 
-            var headerParts = header.Split("\x1e".ToArray(), 3);
+            var headerParts = header.Split("\x1e".ToArray(), 4);
             var hash = headerParts[0];
-            var email = headerParts[1];
-            var name = headerParts[2];
+            var date = headerParts[1];
+            var email = headerParts[2];
+            var name = headerParts[3];
 
             var author = Rename(new Author { Name = name, Email = email }, renames);
 
@@ -360,6 +348,8 @@ namespace WebGitNet
                 }
             }
 
+            var commitDay = DateTimeOffset.Parse(date).ToUniversalTime().Date;
+
             return new UserImpact
             {
                 Author = author.Name,
@@ -367,6 +357,7 @@ namespace WebGitNet
                 Insertions = insertions,
                 Deletions = deletions,
                 Impact = Math.Max(insertions, deletions),
+                Date = commitDay,
             };
         }
 

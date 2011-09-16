@@ -58,7 +58,7 @@ namespace WebGitNet
             {
                 foreach (var line in File.ReadAllLines(Path.Combine(assemblyPath, "shjs-languages.txt")))
                 {
-                    if (string.IsNullOrWhiteSpace(line))
+                    if (string.IsNullOrWhiteSpace(line) || line.TrimStart().StartsWith("#"))
                     {
                         continue;
                     }
@@ -84,7 +84,7 @@ namespace WebGitNet
                     }
                     else if (op == '%')
                     {
-                        regexLangMatches.Add(new KeyValuePair<string, Regex>(lang, new Regex(rest)));
+                        regexLangMatches.Add(new KeyValuePair<string, Regex>(lang, new Regex(rest, RegexOptions.IgnoreCase)));
                     }
                 }
             }
@@ -140,7 +140,7 @@ namespace WebGitNet
         public static string GetLanguage(string mimeType)
         {
             var lang = (from m in exactLangMatches
-                        where m.Value == mimeType
+                        where m.Value.Equals(mimeType, StringComparison.InvariantCultureIgnoreCase)
                         select m.Key).FirstOrDefault();
 
             if (lang != null)

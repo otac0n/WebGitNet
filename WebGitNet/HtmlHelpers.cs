@@ -13,9 +13,17 @@ namespace WebGitNet
     using System.Web.Mvc;
     using System.Web.Mvc.Html;
     using System.Web.Routing;
+    using MarkdownSharp;
 
     public static class HtmlHelpers
     {
+        public static MvcHtmlString Markdown(this HtmlHelper html, string markdown)
+        {
+            var markdownParser = new Markdown(true);
+
+            return new MvcHtmlString(markdownParser.Transform(markdown));
+        }
+
         public static MvcHtmlString Gravatar(this HtmlHelper html, string email, string name, int size = 72)
         {
             var imgUrl = string.Format(

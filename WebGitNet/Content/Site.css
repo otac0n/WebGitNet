@@ -16,8 +16,24 @@ a:link
 
 p, ul
 {
-    margin-bottom: 20px;
     line-height: 1.6em;
+}
+
+p 
+{
+    margin: 0px;
+}
+
+code
+{
+    font-family: Consolas, Courier;
+    font-size: 10pt;
+    color: #52595D;
+    background-color: #F9F9F9;
+    border: 1px solid #CCC;
+    border-radius: 3px;
+    white-space: nowrap;
+    padding: 0 3px;
 }
 
 h1, h2, h3, h4, h5, h6

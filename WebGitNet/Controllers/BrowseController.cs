@@ -7,7 +7,8 @@
 
 namespace WebGitNet.Controllers
 {
-    using System.Collections.Generic;
+    using System;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -70,7 +71,35 @@ namespace WebGitNet.Controllers
 
             var userImpacts = GitUtilities.GetUserImpacts(resourceInfo.FullPath);
 
-            return View(userImpacts);
+            var allTimeImpacts = (from g in userImpacts.GroupBy(u => u.Author, StringComparer.InvariantCultureIgnoreCase)
+                                  select new UserImpact
+                                  {
+                                      Author = g.Key,
+                                      Commits = g.Sum(ui => ui.Commits),
+                                      Insertions = g.Sum(ui => ui.Insertions),
+                                      Deletions = g.Sum(ui => ui.Deletions),
+                                      Impact = g.Sum(ui => ui.Impact),
+                                  }).OrderByDescending(i => i.Commits);
+
+            var weeklyImpacts = (from u in userImpacts
+                                 let dayOffset = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek - u.Date.DayOfWeek
+                                 let commitWeek = u.Date.Date.AddDays(dayOffset + (dayOffset > 0 ? -7 : 0))
+                                 group u by commitWeek into wk
+                                 select new ImpactWeek
+                                 {
+                                     Week = wk.Key,
+                                     Impacts = (from g in wk.GroupBy(u => u.Author, StringComparer.InvariantCultureIgnoreCase)
+                                                select new UserImpact
+                                                {
+                                                    Author = g.Key,
+                                                    Commits = g.Sum(ui => ui.Commits),
+                                                    Insertions = g.Sum(ui => ui.Insertions),
+                                                    Deletions = g.Sum(ui => ui.Deletions),
+                                                    Impact = g.Sum(ui => ui.Impact),
+                                                }).OrderByDescending(i => i.Commits).ToList()
+                                 }).OrderBy(wk => wk.Week);
+
+            return View(new RepoImpact { AllTime = allTimeImpacts, Weekly = weeklyImpacts });
         }
 
         public ActionResult ViewCommit(string repo, string @object)
