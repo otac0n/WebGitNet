@@ -17,8 +17,9 @@ namespace WebGitNet
 
         public FileManager(string path)
         {
+            path = Path.GetDirectoryName(Path.Combine(path, "slug"));
             this.dirInfo = new DirectoryInfo(path);
-            this.rootPath = this.dirInfo.FullName + Path.DirectorySeparatorChar;
+            this.rootPath = path + Path.DirectorySeparatorChar;
         }
 
         public DirectoryInfo DirectoryInfo
@@ -68,9 +69,7 @@ namespace WebGitNet
         private string FindFullPath(string url)
         {
             var path = Path.Combine(this.rootPath, url);
-            var info = new FileInfo(path);
-
-            return info.FullName;
+            return Path.GetFullPath(path);
         }
     }
 }
