@@ -31,7 +31,6 @@ namespace WebGitNet.ActionResults
 
             response.ContentType = this.contentType;
             response.AddHeader("Content-disposition", "attachment");
-            response.ContentEncoding = GitUtilities.DefaultEncoding;
             response.Buffer = false;
             response.BufferOutput = false;
 
@@ -41,7 +40,8 @@ namespace WebGitNet.ActionResults
                 int writeCount;
                 while ((writeCount = git.StandardOutput.ReadBlock(writeBuffer, 0, writeBuffer.Length)) > 0)
                 {
-                    response.Write(writeBuffer, 0, writeCount);
+                    var bytes = GitUtilities.DefaultEncoding.GetBytes(writeBuffer, 0, writeCount);
+                    response.BinaryWrite(bytes);
                 }
 
                 git.WaitForExit();

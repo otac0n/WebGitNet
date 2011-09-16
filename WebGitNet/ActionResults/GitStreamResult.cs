@@ -49,7 +49,6 @@ namespace WebGitNet.ActionResults
             var request = context.HttpContext.Request;
 
             response.ContentType = "application/git-" + this.action + "-result";
-            response.ContentEncoding = GitUtilities.DefaultEncoding;
 
             using (var git = GitUtilities.Start(string.Format(this.commandFormat, this.action), this.repoPath, redirectInput: true))
             {
@@ -88,7 +87,8 @@ namespace WebGitNet.ActionResults
                 int writeCount;
                 while ((writeCount = git.StandardOutput.ReadBlock(writeBuffer, 0, writeBuffer.Length)) > 0)
                 {
-                    response.Write(writeBuffer, 0, writeCount);
+                    var bytes = GitUtilities.DefaultEncoding.GetBytes(writeBuffer, 0, writeCount);
+                    response.BinaryWrite(bytes);
                 }
 
                 readThread.Join();

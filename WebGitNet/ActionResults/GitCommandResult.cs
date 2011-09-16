@@ -45,23 +45,23 @@ namespace WebGitNet.ActionResults
             var response = context.HttpContext.Response;
 
             var commandResult = GitUtilities.Execute(string.Format(this.commandFormat, this.service), this.workingDir);
+            var commandData = GitUtilities.DefaultEncoding.GetBytes(commandResult);
 
             response.StatusCode = 200;
             response.ContentType = "application/x-git-" + this.service + "-advertisement";
-            response.ContentEncoding = GitUtilities.DefaultEncoding;
-            response.Write(PacketFormat(string.Format("# service=git-{0}\n", this.service)));
-            response.Write(PacketFlush());
-            response.Write(commandResult);
+            response.BinaryWrite(PacketFormat(string.Format("# service=git-{0}\n", this.service)));
+            response.BinaryWrite(PacketFlush());
+            response.BinaryWrite(commandData);
         }
 
-        private static string PacketFormat(string packet)
+        private static byte[] PacketFormat(string packet)
         {
-            return (packet.Length + 4).ToString("X").ToLower().PadLeft(4, '0') + packet;
+            return GitUtilities.DefaultEncoding.GetBytes((packet.Length + 4).ToString("X").ToLower().PadLeft(4, '0') + packet);
         }
 
-        private static string PacketFlush()
+        private static byte[] PacketFlush()
         {
-            return "0000";
+            return new[] { (byte)'0', (byte)'0', (byte)'0', (byte)'0' };
         }
     }
 }
