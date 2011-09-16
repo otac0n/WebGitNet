@@ -1,16 +1,10 @@
-﻿var impact = function (div, json) {
+﻿var impact = function (div, json, settings) {
     var x = 0,
         r = Raphael(div),
         labels = {},
         textattr = { "font": '9px "Arial"', stroke: "none", fill: "#fff" },
-        pathes = {},
-        nmhldr = $("#name")[0],
-        nmhldr2 = $("#name2")[0],
-        lgnd = $("#legend")[0],
-        usrnm = $("#username")[0],
-        lgnd2 = $("#legend2")[0],
-        usrnm2 = $("#username2")[0],
-        plchldr = $("#placeholder")[0];
+        pathes = {};
+    settings = settings || {};
     function finishes() {
         for (var i in json.authors) {
             var start, end;
@@ -101,10 +95,9 @@
                     labels[i].show();
                     pathes[i].p.toFront();
                     labels[i].toFront();
-                    usrnm2.innerHTML = json.authors[i].n + " <em>(" + json.authors[i].c + " commits, " + json.authors[i].a + " additions, " + json.authors[i].d + " deletions)</em>";
-                    lgnd2.style.backgroundColor = pathes[i].p.attr("fill");
-                    nmhldr2.className = "";
-                    plchldr.className = "hidden";
+                    if (typeof settings.mouseover == "function") {
+                        settings.mouseover(json.authors[i]);
+                    }
                 });
             })(i);
         }
