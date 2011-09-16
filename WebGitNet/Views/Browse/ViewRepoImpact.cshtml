@@ -35,6 +35,7 @@
                        d = (w.Week - epoch).TotalSeconds,
                        i = (from i in w.Impacts
                             let user = getUser(i.Author)
+                            orderby i.Impact descending
                             select new[] { user, i.Impact }).ToArray(),
                    }).ToArray();
 
@@ -96,7 +97,7 @@
             buildGraph("impact-graph", "Impact");
 
             var data = @Html.Raw(serializer.Serialize(json));
-            impact("weekly-graph", data);
+            impact("weekly-graph", data, { heightfunc: Math.sqrt });
         });
     </script>
     <style>
