@@ -264,28 +264,8 @@ namespace WebGitNet
 
         public static List<UserImpact> GetUserImpacts(string repoPath)
         {
-            List<RenameEntry> renames = new List<RenameEntry>();
-            List<IgnoreEntry> ignores = new List<IgnoreEntry>();
-
-            var parentRenames = Path.Combine(new DirectoryInfo(repoPath).Parent.FullName, "renames");
-            var renamesFile = Path.Combine(repoPath, "info", "webgit.net", "renames");
-            var ignoresFile = Path.Combine(repoPath, "info", "webgit.net", "ignore");
-
-            Action<string> readRenames = (file) =>
-            {
-                if (File.Exists(file))
-                {
-                    renames.AddRange(RenameFileParser.Parse(File.ReadAllLines(file)));
-                }
-            };
-
-            readRenames(parentRenames);
-            readRenames(renamesFile);
-
-            if (File.Exists(ignoresFile))
-            {
-                ignores.AddRange(IgnoreFileParser.Parse(File.ReadAllLines(ignoresFile)));
-            }
+            var renames = LoadRenames(repoPath);
+            var ignores = LoadIgnores(repoPath);
 
             string impactData;
             using (var git = Start("log -z --format=%x01%H%x1e%ai%x1e%ae%x1e%an%x02 --numstat", repoPath, outputEncoding: Encoding.UTF8))
@@ -329,17 +309,7 @@ namespace WebGitNet
 
                 var path = entryParts[2];
 
-                bool keepPath = true;
-
-                for (int i = ignores.Count - 1; i >= 0; i--)
-                {
-                    var ignore = ignores[i];
-                    if (hash.StartsWith(ignore.CommitHash) && ignore.IsMatch(path))
-                    {
-                        keepPath = ignore.Negated;
-                        break;
-                    }
-                }
+                bool keepPath = ProcessIgnores(ignores, hash, path);
 
                 if (keepPath)
                 {
@@ -359,6 +329,54 @@ namespace WebGitNet
                 Impact = Math.Max(insertions, deletions),
                 Date = commitDay,
             };
+        }
+
+        private static List<RenameEntry> LoadRenames(string repoPath)
+        {
+            var renames = new List<RenameEntry>();
+
+            var parentRenames = Path.Combine(new DirectoryInfo(repoPath).Parent.FullName, "renames");
+            var renamesFile = Path.Combine(repoPath, "info", "webgit.net", "renames");
+
+            Action<string> readRenames = (file) =>
+            {
+                if (File.Exists(file))
+                {
+                    renames.AddRange(RenameFileParser.Parse(File.ReadAllLines(file)));
+                }
+            };
+
+            readRenames(parentRenames);
+            readRenames(renamesFile);
+
+            return renames;
+        }
+
+        private static List<IgnoreEntry> LoadIgnores(string repoPath)
+        {
+            var ignoresFile = Path.Combine(repoPath, "info", "webgit.net", "ignore");
+
+            var ignores = new List<IgnoreEntry>();
+            if (File.Exists(ignoresFile))
+            {
+                ignores.AddRange(IgnoreFileParser.Parse(File.ReadAllLines(ignoresFile)));
+            }
+
+            return ignores;
+        }
+
+        private static bool ProcessIgnores(IList<IgnoreEntry> ignores, string hash, string path)
+        {
+            for (int i = ignores.Count - 1; i >= 0; i--)
+            {
+                var ignore = ignores[i];
+                if (hash.StartsWith(ignore.CommitHash) && ignore.IsMatch(path))
+                {
+                    return ignore.Negated;
+                }
+            }
+
+            return true;
         }
 
         public static Regex GlobToRegex(string glob)
