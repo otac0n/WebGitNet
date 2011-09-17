@@ -55,6 +55,7 @@
     <script src="@Url.Content("~/Scripts/g.raphael/g.impact.js")" type="text/javascript"></script>
     <script type="text/javascript">
         $(function () {
+            $(".tabs").tabs();
             $(".tablesorter").tablesorter();
 
             buildGraph("commit-graph", "Commits");
@@ -70,7 +71,7 @@
         {
             width: 500px;
             height: 220px;
-            float: left;
+            display: inline-block;
         }
 
         #weekly-graph
@@ -82,12 +83,18 @@
     </style>
 }
 
-<div class="impact-graphs">
+<div class="tabs">
+<ul>
+    <li><a href="#impact-graphs">Dashboard</a></li>
+    <li><a href="#users-details">Details</a></li>
+    <li><a href="#weekly-graph">Weekly Impact</a></li>
+</ul>
+<div id="impact-graphs">
     <div id="commit-graph"></div>
     <div id="impact-graph"></div>
 </div>
 <div id="weekly-graph"></div>
-
+<div id="users-details">
 <table class="tablesorter" id="stats-table">
   <thead>
     <tr>
@@ -111,3 +118,5 @@
 }
   </tbody>
 </table>
+</div>
+</div>
