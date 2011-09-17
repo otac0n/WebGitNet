@@ -54,46 +54,30 @@
     <script src="@Url.Content("~/Scripts/g.raphael/g.pie-min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/g.raphael/g.impact.js")" type="text/javascript"></script>
     <script type="text/javascript">
+        var data = @Html.Raw(serializer.Serialize(json));
+
         $(function () {
             $(".tabs").tabs();
             $(".tablesorter").tablesorter();
-
-            buildGraph("commit-graph", "Commits");
-            buildGraph("impact-graph", "Impact");
-
-            var data = @Html.Raw(serializer.Serialize(json));
-            impact("weekly-graph", data, { heightfunc: Math.sqrt });
         });
     </script>
     <script src="@Url.Content("~/Scripts/repo-impact.js")" type="text/javascript"></script>
     <style>
-        #commit-graph, #impact-graph
-        {
-            width: 500px;
-            height: 220px;
-            display: inline-block;
-        }
-
         #weekly-graph
         {
-            clear: left;
             overflow: auto;
-            width: 100%;
+            min-height: 400px;
         }
     </style>
 }
 
 <div class="tabs">
 <ul>
-    <li><a href="#impact-graphs">Dashboard</a></li>
+    <li><a href="#users-dashboard">Dashboard</a></li>
     <li><a href="#users-details">Details</a></li>
     <li><a href="#weekly-graph">Weekly Impact</a></li>
 </ul>
-<div id="impact-graphs">
-    <div id="commit-graph"></div>
-    <div id="impact-graph"></div>
-</div>
-<div id="weekly-graph"></div>
+<div id="users-dashboard"></div>
 <div id="users-details">
 <table class="tablesorter" id="stats-table">
   <thead>
@@ -119,4 +103,5 @@
   </tbody>
 </table>
 </div>
+<div id="weekly-graph"></div>
 </div>
