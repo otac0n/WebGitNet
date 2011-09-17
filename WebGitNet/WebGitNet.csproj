@@ -142,6 +142,7 @@
     <Content Include="Scripts\jquery.background-position.min.js" />
     <Content Include="Scripts\jquery.tablesorter.min.js" />
     <Content Include="Scripts\jquery.timeago.min.js" />
+    <Content Include="Scripts\repo-impact.js" />
     <Content Include="Scripts\shjs\sh_bison.min.js" />
     <Content Include="Scripts\shjs\sh_c.min.js" />
     <Content Include="Scripts\shjs\sh_caml.min.js" />
