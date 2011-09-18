@@ -126,9 +126,9 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="browse.cshtml" />
-    <Content Include="mime-types.txt">
+    <None Include="mime-types.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
     <Content Include="Scripts\g.raphael\g.bar-min.js" />
     <Content Include="Scripts\g.raphael\g.dot-min.js" />
     <Content Include="Scripts\g.raphael\g.line-min.js" />
@@ -181,9 +181,9 @@
     <Content Include="Scripts\shjs\sh_xml.min.js" />
     <Content Include="Scripts\shjs\sh_xorg.min.js" />
     <None Include="packages.config" />
-    <Content Include="shjs-languages.txt">
+    <None Include="shjs-languages.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
