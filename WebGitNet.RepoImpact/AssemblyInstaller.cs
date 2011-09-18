@@ -10,6 +10,8 @@
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
             container.Register(AllTypes.FromThisAssembly()
+                                       .BasedOn<IRouteRegisterer>());
+            container.Register(AllTypes.FromThisAssembly()
                                        .BasedOn<IController>()
                                        .Configure(c => c.LifeStyle.Transient));
         }

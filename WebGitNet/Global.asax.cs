@@ -28,6 +28,12 @@ namespace WebGitNet
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            var routeRegisterers = container.ResolveAll<IRouteRegisterer>();
+            foreach (var registerer in routeRegisterers)
+            {
+                registerer.RegisterRoutes(routes);
+            }
+
             routes.MapRoute(
                 "Browse Index",
                 "browse",
@@ -94,11 +100,12 @@ namespace WebGitNet
 
         protected void Application_Start()
         {
+            Bootstrap();
+
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
-            Bootstrap();
         }
 
         protected void Application_End()
@@ -113,6 +120,7 @@ namespace WebGitNet
             container = new WindsorContainer()
                         .Install(new AssemblyInstaller())
                         .Install(FromAssembly.InDirectory(directoryFilter));
+
             var controllerFactory = new WindsorControllerFactory(container.Kernel);
             ControllerBuilder.Current.SetControllerFactory(controllerFactory);
         }
@@ -121,6 +129,8 @@ namespace WebGitNet
         {
             public void Install(IWindsorContainer container, IConfigurationStore configurationStore)
             {
+                container.Register(AllTypes.FromThisAssembly()
+                                           .BasedOn<IRouteRegisterer>());
                 container.Register(AllTypes.FromThisAssembly()
                                            .BasedOn<IController>()
                                            .Configure(c => c.LifeStyle.Transient));

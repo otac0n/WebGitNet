@@ -48,6 +48,7 @@
     <Compile Include="GitUtilities.cs" />
     <Compile Include="IgnoreEntry.cs" />
     <Compile Include="IgnoreFileParser.cs" />
+    <Compile Include="IRouteRegisterer.cs" />
     <Compile Include="LogEntry.cs" />
     <Compile Include="MimeUtilities.cs" />
     <Compile Include="ObjectInfo.cs" />
