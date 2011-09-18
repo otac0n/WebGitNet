@@ -91,7 +91,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="HtmlHelpers.cs" />
-    <Compile Include="Installers\ControllersInstaller.cs" />
     <Compile Include="Models\AccessLevel.cs" />
     <Compile Include="Models\BreadCrumbTrail.cs" />
     <Compile Include="Models\CreateRepoRequest.cs" />
@@ -230,6 +229,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Plugins\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

@@ -7,10 +7,13 @@
 
 namespace WebGitNet
 {
+    using System.Web.Hosting;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using Castle.MicroKernel.Registration;
     using Castle.Windsor;
     using Castle.Windsor.Installer;
+    using Castle.MicroKernel.SubSystems.Configuration;
 
     public partial class WebGitNetApplication : System.Web.HttpApplication
     {
@@ -105,10 +108,23 @@ namespace WebGitNet
 
         private static void Bootstrap()
         {
+            var directoryFilter = new AssemblyFilter(HostingEnvironment.MapPath("~/Plugins"));
+
             container = new WindsorContainer()
-                        .Install(FromAssembly.This());
+                        .Install(new AssemblyInstaller())
+                        .Install(FromAssembly.InDirectory(directoryFilter));
             var controllerFactory = new WindsorControllerFactory(container.Kernel);
             ControllerBuilder.Current.SetControllerFactory(controllerFactory);
+        }
+
+        private class AssemblyInstaller : IWindsorInstaller
+        {
+            public void Install(IWindsorContainer container, IConfigurationStore configurationStore)
+            {
+                container.Register(AllTypes.FromThisAssembly()
+                                           .BasedOn<IController>()
+                                           .Configure(c => c.LifeStyle.Transient));
+            }
         }
     }
 }

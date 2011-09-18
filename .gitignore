@@ -1,4 +1,3 @@
-
 [Bb]in/
 [Oo]bj/
 *.user
@@ -7,3 +6,5 @@
 *.docstates
 Thumbs.db
 *.Publish.xml
+
+/WebGitNet/Plugins/
