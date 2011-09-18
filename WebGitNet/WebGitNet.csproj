@@ -93,7 +93,6 @@
     </Compile>
     <Compile Include="HtmlHelpers.cs" />
     <Compile Include="Installers\ControllersInstaller.cs" />
-    <Compile Include="MimeUtilities.cs" />
     <Compile Include="Models\AccessLevel.cs" />
     <Compile Include="Models\BreadCrumbTrail.cs" />
     <Compile Include="Models\CreateRepoRequest.cs" />
@@ -126,9 +125,6 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="browse.cshtml" />
-    <None Include="mime-types.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Content Include="Scripts\g.raphael\g.bar-min.js" />
     <Content Include="Scripts\g.raphael\g.dot-min.js" />
     <Content Include="Scripts\g.raphael\g.line-min.js" />
@@ -181,9 +177,6 @@
     <Content Include="Scripts\shjs\sh_xml.min.js" />
     <Content Include="Scripts\shjs\sh_xorg.min.js" />
     <None Include="packages.config" />
-    <None Include="shjs-languages.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

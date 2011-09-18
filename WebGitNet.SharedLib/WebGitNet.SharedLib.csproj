@@ -47,6 +47,7 @@
     <Compile Include="IgnoreEntry.cs" />
     <Compile Include="IgnoreFileParser.cs" />
     <Compile Include="LogEntry.cs" />
+    <Compile Include="MimeUtilities.cs" />
     <Compile Include="ObjectInfo.cs" />
     <Compile Include="ObjectType.cs" />
     <Compile Include="PathUtilities.cs" />
@@ -59,6 +60,14 @@
     <Compile Include="RenameFileSyntaxException.cs" />
     <Compile Include="TreeView.cs" />
     <Compile Include="UserImpact.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="mime-types.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shjs-languages.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
