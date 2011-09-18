@@ -5,7 +5,7 @@
 // <author>John Gietzen</author>
 //-----------------------------------------------------------------------
 
-namespace WebGitNet.Models
+namespace WebGitNet
 {
     public enum ObjectType
     {

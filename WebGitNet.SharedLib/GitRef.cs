@@ -1,11 +1,11 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="DiffInfo.cs" company="(none)">
+// <copyright file="GitRef.cs" company="(none)">
 //  Copyright © 2011 John Gietzen. All rights reserved.
 // </copyright>
 // <author>John Gietzen</author>
 //-----------------------------------------------------------------------
 
-namespace WebGitNet.Models
+namespace WebGitNet
 {
     using System;
     using System.Collections.Generic;

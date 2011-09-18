@@ -1,4 +1,11 @@
-﻿namespace WebGitNet
+﻿//-----------------------------------------------------------------------
+// <copyright file="IgnoreEntry.cs" company="(none)">
+//  Copyright © 2011 John Gietzen. All rights reserved.
+// </copyright>
+// <author>John Gietzen</author>
+//-----------------------------------------------------------------------
+
+namespace WebGitNet
 {
     using System;
     using System.Collections.Generic;
@@ -31,7 +38,7 @@
                 if (this.pathRegexes == null && this.pathGlobs != null)
                 {
                     this.pathRegexes = (from glob in this.pathGlobs.Split('/')
-                                        select GitUtilities.GlobToRegex(glob)).ToList().AsReadOnly();
+                                        select PathUtilities.GlobToRegex(glob)).ToList().AsReadOnly();
                 }
 
                 return this.pathRegexes;

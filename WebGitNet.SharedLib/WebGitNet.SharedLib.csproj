@@ -40,10 +40,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConvertGlobFailedException.cs" />
+    <Compile Include="DiffInfo.cs" />
+    <Compile Include="GitErrorException.cs" />
+    <Compile Include="GitRef.cs" />
+    <Compile Include="IgnoreEntry.cs" />
+    <Compile Include="IgnoreFileParser.cs" />
+    <Compile Include="LogEntry.cs" />
+    <Compile Include="ObjectInfo.cs" />
+    <Compile Include="ObjectType.cs" />
+    <Compile Include="PathUtilities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="RenameEntry.cs" />
+    <Compile Include="RenameFileParser.cs" />
+    <Compile Include="RenameFileSyntaxException.cs" />
+    <Compile Include="TreeView.cs" />
+    <Compile Include="UserImpact.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

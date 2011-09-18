@@ -83,9 +83,7 @@
     <Compile Include="Controllers\SharedControllerBase.profiling.cs">
       <DependentUpon>SharedControllerBase.cs</DependentUpon>
     </Compile>
-    <Compile Include="ConvertGlobFailedException.cs" />
     <Compile Include="FileManager.cs" />
-    <Compile Include="GitErrorException.cs" />
     <Compile Include="GitUtilities.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -94,31 +92,19 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="HtmlHelpers.cs" />
-    <Compile Include="IgnoreEntry.cs" />
-    <Compile Include="IgnoreFileParser.cs" />
     <Compile Include="Installers\ControllersInstaller.cs" />
     <Compile Include="MimeUtilities.cs" />
     <Compile Include="Models\AccessLevel.cs" />
     <Compile Include="Models\BreadCrumbTrail.cs" />
     <Compile Include="Models\CreateRepoRequest.cs" />
-    <Compile Include="Models\DiffInfo.cs" />
-    <Compile Include="Models\GitRef.cs" />
     <Compile Include="Models\RepoImpact.cs" />
     <Compile Include="Models\ImpactWeek.cs" />
-    <Compile Include="Models\LogEntry.cs" />
-    <Compile Include="Models\ObjectInfo.cs" />
-    <Compile Include="Models\ObjectType.cs" />
     <Compile Include="Models\ResourceInfo.cs" />
     <Compile Include="Models\ResourceType.cs" />
-    <Compile Include="Models\TreeView.cs" />
-    <Compile Include="Models\UserImpact.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="RenameEntry.cs" />
-    <Compile Include="RenameFileParser.cs" />
-    <Compile Include="RenameFileSyntaxException.cs" />
     <Compile Include="WindsorControllerFactory.cs" />
   </ItemGroup>
   <ItemGroup>
