@@ -84,7 +84,6 @@
       <DependentUpon>SharedControllerBase.cs</DependentUpon>
     </Compile>
     <Compile Include="FileManager.cs" />
-    <Compile Include="GitUtilities.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

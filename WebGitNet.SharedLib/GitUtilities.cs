@@ -17,13 +17,6 @@ namespace WebGitNet
     using System.Threading;
     using System.Web.Configuration;
 
-    public enum RefValidationResult
-    {
-        Valid,
-        Invalid,
-        Ambiguous,
-    }
-
     public static class GitUtilities
     {
         public static Encoding DefaultEncoding
@@ -60,29 +53,26 @@ namespace WebGitNet
 
         public static string Execute(string command, string workingDir, Encoding outputEncoding = null, bool trustErrorCode = false)
         {
-            using (MvcMiniProfiler.MiniProfiler.StepStatic("Run: git " + command))
+            using (var git = Start(command, workingDir, redirectInput: false, redirectError: trustErrorCode, outputEncoding: outputEncoding))
             {
-                using (var git = Start(command, workingDir, redirectInput: false, redirectError: trustErrorCode, outputEncoding: outputEncoding))
+                string error = null;
+                Thread errorThread = null;
+                if (trustErrorCode)
                 {
-                    string error = null;
-                    Thread errorThread = null;
-                    if (trustErrorCode)
-                    {
-                        errorThread = new Thread(() => { error = git.StandardError.ReadToEnd(); });
-                        errorThread.Start();
-                    }
-
-                    var result = git.StandardOutput.ReadToEnd();
-                    git.WaitForExit();
-
-                    if (trustErrorCode && git.ExitCode != 0)
-                    {
-                        errorThread.Join();
-                        throw new GitErrorException(command, git.ExitCode, error);
-                    }
-
-                    return result;
+                    errorThread = new Thread(() => { error = git.StandardError.ReadToEnd(); });
+                    errorThread.Start();
                 }
+
+                var result = git.StandardOutput.ReadToEnd();
+                git.WaitForExit();
+
+                if (trustErrorCode && git.ExitCode != 0)
+                {
+                    errorThread.Join();
+                    throw new GitErrorException(command, git.ExitCode, error);
+                }
+
+                return result;
             }
         }
 
