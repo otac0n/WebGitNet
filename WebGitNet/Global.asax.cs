@@ -35,64 +35,6 @@ namespace WebGitNet
             }
 
             routes.MapRoute(
-                "Browse Index",
-                "browse",
-                new { controller = "Browse", action = "Index" });
-
-            routes.MapRoute(
-                "View Repo",
-                "browse/{repo}",
-                new { controller = "Browse", action = "ViewRepo" });
-
-            routes.MapRoute(
-                "View Repo Impact",
-                "browse/{repo}/impact",
-                new { controller = "Browse", action = "ViewRepoImpact" });
-
-            routes.MapRoute(
-                "View Tree",
-                "browse/{repo}/tree/{object}/{*path}",
-                new { controller = "Browse", action = "ViewTree", path = UrlParameter.Optional });
-
-            routes.MapRoute(
-                "View Blob",
-                "browse/{repo}/blob/{object}/{*path}",
-                new { controller = "Browse", action = "ViewBlob", path = UrlParameter.Optional });
-
-            routes.MapRoute(
-                "View Commit",
-                "browse/{repo}/commit/{object}",
-                new { controller = "Browse", action = "ViewCommit" });
-
-            routes.MapRoute(
-                "View Commits",
-                "browse/{repo}/commits",
-                new { controller = "Browse", action = "ViewCommits" });
-
-            routes.MapRoute(
-                "Get */info/refs",
-                "git/{*url}",
-                new { controller = "File", action = "GetInfoRefs" },
-                new { url = @"(.*?)/info/refs" });
-
-            routes.MapRoute(
-                "Post */git-upload-pack",
-                "git/{*url}",
-                new { controller = "ServiceRpc", action = "UploadPack" },
-                new { url = @"(.*?)/git-upload-pack" });
-
-            routes.MapRoute(
-                "Post */git-receive-pack",
-                "git/{*url}",
-                new { controller = "ServiceRpc", action = "ReceivePack" },
-                new { url = @"(.*?)/git-receive-pack" });
-
-            routes.MapRoute(
-                "File Access",
-                "git/{*url}",
-                new { controller = "File", action = "Fetch" });
-
-            routes.MapRoute(
                 "Default",
                 "{controller}/{action}",
                 new { controller = "Browse", action = "Index" });

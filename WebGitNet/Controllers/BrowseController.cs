@@ -15,6 +15,7 @@ namespace WebGitNet.Controllers
     using System.Web.Mvc;
     using WebGitNet.ActionResults;
     using WebGitNet.Models;
+    using System.Web.Routing;
 
     public class BrowseController : SharedControllerBase
     {
@@ -243,6 +244,47 @@ namespace WebGitNet.Controllers
             }
 
             return View((object)model);
+        }
+
+        public class RouteRegisterer : IRouteRegisterer
+        {
+            public void RegisterRoutes(RouteCollection routes)
+            {
+                routes.MapRoute(
+                    "Browse Index",
+                    "browse",
+                    new { controller = "Browse", action = "Index" });
+
+                routes.MapRoute(
+                    "View Repo",
+                    "browse/{repo}",
+                    new { controller = "Browse", action = "ViewRepo" });
+
+                routes.MapRoute(
+                    "View Repo Impact",
+                    "browse/{repo}/impact",
+                    new { controller = "Browse", action = "ViewRepoImpact" });
+
+                routes.MapRoute(
+                    "View Tree",
+                    "browse/{repo}/tree/{object}/{*path}",
+                    new { controller = "Browse", action = "ViewTree", path = UrlParameter.Optional });
+
+                routes.MapRoute(
+                    "View Blob",
+                    "browse/{repo}/blob/{object}/{*path}",
+                    new { controller = "Browse", action = "ViewBlob", path = UrlParameter.Optional });
+
+                routes.MapRoute(
+                    "View Commit",
+                    "browse/{repo}/commit/{object}",
+                    new { controller = "Browse", action = "ViewCommit" });
+
+                routes.MapRoute(
+                    "View Commits",
+                    "browse/{repo}/commits",
+                    new { controller = "Browse", action = "ViewCommits" });
+            }
         }
     }
 }
