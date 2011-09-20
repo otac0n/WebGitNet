@@ -48,6 +48,8 @@ namespace WebGitNet
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+
+            ViewEngines.Engines.Add(new ResourceRazorViewEngine());
         }
 
         protected void Application_End()

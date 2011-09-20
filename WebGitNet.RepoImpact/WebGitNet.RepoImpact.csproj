@@ -8,7 +8,7 @@
     <ProjectGuid>{136DB9D1-DC65-4EFF-821C-CCB993BD3CB3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WebGitNet</RootNamespace>
+    <RootNamespace>WebGitNet.RepoImpact</RootNamespace>
     <AssemblyName>WebGitNet.RepoImpact</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -59,7 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <Content Include="Views\Impact\ViewRepoImpact.cshtml" />
+    <EmbeddedResource Include="Views\Impact\ViewRepoImpact.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WebGitNet.SharedLib\WebGitNet.SharedLib.csproj">
