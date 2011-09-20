@@ -8,7 +8,7 @@
     <ProjectGuid>{136DB9D1-DC65-4EFF-821C-CCB993BD3CB3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WebGitNet.RepoImpact</RootNamespace>
+    <RootNamespace>WebGitNet</RootNamespace>
     <AssemblyName>WebGitNet.RepoImpact</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -49,13 +49,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInstaller.cs" />
+    <Compile Include="Controllers\ImpactController.cs" />
+    <Compile Include="Models\ImpactWeek.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Models\RepoImpact.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Content Include="Views\Impact\ViewRepoImpact.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WebGitNet.SharedLib\WebGitNet.SharedLib.csproj">
+      <Project>{F00879C2-B2F3-4202-B1BF-12A875AF4F7B}</Project>
+      <Name>WebGitNet.SharedLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

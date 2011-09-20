@@ -5,7 +5,7 @@
 // <author>John Gietzen</author>
 //-----------------------------------------------------------------------
 
-namespace WebGitNet.Controllers
+namespace WebGitNet
 {
     using System;
     using System.Collections.Generic;

@@ -24,11 +24,6 @@ namespace WebGitNet.Controllers
             this.BreadCrumbs.Append("Browse", "Index", "Browse");
         }
 
-        private void AddRepoBreadCrumb(string repo)
-        {
-            this.BreadCrumbs.Append("Browse", "ViewRepo", repo, new { repo });
-        }
-
         public ActionResult Index()
         {
             var directory = this.FileManager.DirectoryInfo;
@@ -57,50 +52,6 @@ namespace WebGitNet.Controllers
             ViewBag.Refs = GitUtilities.GetAllRefs(resourceInfo.FullPath);
 
             return View();
-        }
-
-        public ActionResult ViewRepoImpact(string repo)
-        {
-            var resourceInfo = this.FileManager.GetResourceInfo(repo);
-            if (resourceInfo.Type != ResourceType.Directory)
-            {
-                return HttpNotFound();
-            }
-
-            AddRepoBreadCrumb(repo);
-            this.BreadCrumbs.Append("Browse", "ViewRepoImpact", "Impact", new { repo });
-
-            var userImpacts = GitUtilities.GetUserImpacts(resourceInfo.FullPath);
-
-            var allTimeImpacts = (from g in userImpacts.GroupBy(u => u.Author, StringComparer.InvariantCultureIgnoreCase)
-                                  select new UserImpact
-                                  {
-                                      Author = g.Key,
-                                      Commits = g.Sum(ui => ui.Commits),
-                                      Insertions = g.Sum(ui => ui.Insertions),
-                                      Deletions = g.Sum(ui => ui.Deletions),
-                                      Impact = g.Sum(ui => ui.Impact),
-                                  }).OrderByDescending(i => i.Commits);
-
-            var weeklyImpacts = (from u in userImpacts
-                                 let dayOffset = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek - u.Date.DayOfWeek
-                                 let commitWeek = u.Date.Date.AddDays(dayOffset + (dayOffset > 0 ? -7 : 0))
-                                 group u by commitWeek into wk
-                                 select new ImpactWeek
-                                 {
-                                     Week = wk.Key,
-                                     Impacts = (from g in wk.GroupBy(u => u.Author, StringComparer.InvariantCultureIgnoreCase)
-                                                select new UserImpact
-                                                {
-                                                    Author = g.Key,
-                                                    Commits = g.Sum(ui => ui.Commits),
-                                                    Insertions = g.Sum(ui => ui.Insertions),
-                                                    Deletions = g.Sum(ui => ui.Deletions),
-                                                    Impact = g.Sum(ui => ui.Impact),
-                                                }).OrderByDescending(i => i.Commits).ToList()
-                                 }).OrderBy(wk => wk.Week);
-
-            return View(new RepoImpact { AllTime = allTimeImpacts, Weekly = weeklyImpacts });
         }
 
         public ActionResult ViewCommit(string repo, string @object)
@@ -259,11 +210,6 @@ namespace WebGitNet.Controllers
                     "View Repo",
                     "browse/{repo}",
                     new { controller = "Browse", action = "ViewRepo" });
-
-                routes.MapRoute(
-                    "View Repo Impact",
-                    "browse/{repo}/impact",
-                    new { controller = "Browse", action = "ViewRepoImpact" });
 
                 routes.MapRoute(
                     "View Tree",

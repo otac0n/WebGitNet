@@ -79,11 +79,6 @@
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ServiceRpcController.cs" />
-    <Compile Include="Controllers\SharedControllerBase.cs" />
-    <Compile Include="Controllers\SharedControllerBase.profiling.cs">
-      <DependentUpon>SharedControllerBase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FileManager.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -92,12 +87,7 @@
     </Compile>
     <Compile Include="HtmlHelpers.cs" />
     <Compile Include="Models\AccessLevel.cs" />
-    <Compile Include="Models\BreadCrumbTrail.cs" />
     <Compile Include="Models\CreateRepoRequest.cs" />
-    <Compile Include="Models\RepoImpact.cs" />
-    <Compile Include="Models\ImpactWeek.cs" />
-    <Compile Include="Models\ResourceInfo.cs" />
-    <Compile Include="Models\ResourceType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
@@ -225,7 +215,6 @@
     <Content Include="Views\Browse\ViewBlob.cshtml" />
     <Content Include="Views\Browse\ViewCommit.cshtml" />
     <Content Include="Views\Browse\ViewCommits.cshtml" />
-    <Content Include="Views\Browse\ViewRepoImpact.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

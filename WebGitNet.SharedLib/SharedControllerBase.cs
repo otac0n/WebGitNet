@@ -5,11 +5,10 @@
 // <author>John Gietzen</author>
 //-----------------------------------------------------------------------
 
-namespace WebGitNet.Controllers
+namespace WebGitNet
 {
     using System.Web.Configuration;
     using System.Web.Mvc;
-    using WebGitNet.Models;
 
     public abstract partial class SharedControllerBase : Controller
     {
@@ -24,6 +23,11 @@ namespace WebGitNet.Controllers
 
             this.breadCrumbs = new BreadCrumbTrail();
             ViewBag.BreadCrumbs = this.breadCrumbs;
+        }
+
+        protected void AddRepoBreadCrumb(string repo)
+        {
+            this.BreadCrumbs.Append("Browse", "ViewRepo", repo, new { repo });
         }
 
         public FileManager FileManager

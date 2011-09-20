@@ -31,9 +31,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MvcMiniProfiler">
+      <HintPath>..\packages\MiniProfiler.1.4\lib\MvcMiniProfiler.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,8 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BreadCrumbTrail.cs" />
     <Compile Include="ConvertGlobFailedException.cs" />
     <Compile Include="DiffInfo.cs" />
+    <Compile Include="FileManager.cs" />
     <Compile Include="GitErrorException.cs" />
     <Compile Include="GitRef.cs" />
     <Compile Include="GitUtilities.cs" />
@@ -62,6 +68,12 @@
     <Compile Include="RenameEntry.cs" />
     <Compile Include="RenameFileParser.cs" />
     <Compile Include="RenameFileSyntaxException.cs" />
+    <Compile Include="ResourceInfo.cs" />
+    <Compile Include="ResourceType.cs" />
+    <Compile Include="SharedControllerBase.cs" />
+    <Compile Include="SharedControllerBase.profiling.cs">
+      <DependentUpon>SharedControllerBase.cs</DependentUpon>
+    </Compile>
     <Compile Include="TreeView.cs" />
     <Compile Include="UserImpact.cs" />
   </ItemGroup>
@@ -69,6 +81,7 @@
     <None Include="mime-types.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="packages.config" />
     <None Include="shjs-languages.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
