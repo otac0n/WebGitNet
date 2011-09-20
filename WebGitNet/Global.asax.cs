@@ -75,6 +75,7 @@ namespace WebGitNet
                                            .BasedOn<IRouteRegisterer>());
                 container.Register(AllTypes.FromThisAssembly()
                                            .BasedOn<IController>()
+                                           .Configure(c => c.Named(c.Implementation.Name))
                                            .Configure(c => c.LifeStyle.Transient));
             }
         }
