@@ -15,6 +15,7 @@ MAKEFILE:text/x-makefile
 .c:text/x-c-source
 .cc:text/plain
 .cd:text/plain
+.classpath:application/xml
 .cod:text/plain
 .config:application/xml
 .coverage:application/xml
@@ -77,6 +78,7 @@ MAKEFILE:text/x-makefile
 .js:text/javascript
 .l:text/x-lex-source
 .latex:text/x-latex
+.launch:application/xml
 .lex:text/x-lex-source
 .library-ms:application/windows-library+xml
 .loadtest:application/xml
@@ -99,7 +101,9 @@ MAKEFILE:text/x-makefile
 .pkgundef:text/plain
 .pl:text/x-perl-source
 .png:image/png
+.prefs:text/plain+properties
 .properties:text/plain+properties
+.project:application/xml
 .psess:application/xml
 .py:text/x-python-source
 .pyproj:application/xml
