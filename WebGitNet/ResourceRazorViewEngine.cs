@@ -32,7 +32,7 @@ namespace WebGitNet
             var controllerType = controllerContext.Controller.GetType();
             var assembly = controllerType.Assembly;
             var viewName = GetResourceName(assembly, viewPath);
-            var masterName = GetResourceName(assembly, viewPath);
+            var masterName = GetResourceName(assembly, masterPath);
 
             var newViewPath = ExtractViewToFile(assembly, viewName, controllerContext.HttpContext.Server);
             var newMasterPath = ExtractViewToFile(assembly, masterName, controllerContext.HttpContext.Server);
