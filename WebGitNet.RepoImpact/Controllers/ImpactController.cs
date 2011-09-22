@@ -52,7 +52,9 @@
                                                 }).OrderByDescending(i => i.Commits).ToList()
                                  }).OrderBy(wk => wk.Week);
 
-            return View(new RepoImpact { AllTime = allTimeImpacts, Weekly = weeklyImpacts });
+            ViewBag.AllTime = allTimeImpacts;
+            ViewBag.Weekly = weeklyImpacts;
+            return View();
         }
 
         public class RouteRegisterer : IRouteRegisterer
