@@ -64,7 +64,7 @@
                 routes.MapRoute(
                     "View Repo Impact",
                     "browse/{repo}/impact",
-                    new { controller = "Impact", action = "ViewRepoImpact" });
+                    new { controller = "Impact", action = "ViewRepoImpact", routeName = "View Repo Impact" });
             }
         }
     }

@@ -227,9 +227,9 @@ namespace WebGitNet.Controllers
                     new { controller = "Browse", action = "ViewCommit" });
 
                 routes.MapRoute(
-                    "View Commits",
+                    "View Commit Log",
                     "browse/{repo}/commits",
-                    new { controller = "Browse", action = "ViewCommits" });
+                    new { controller = "Browse", action = "ViewCommits", routeName = "View Commit Log" });
             }
         }
     }

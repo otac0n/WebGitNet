@@ -8,6 +8,8 @@
 namespace WebGitNet
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
     using System.Web.Mvc;
@@ -32,6 +34,47 @@ namespace WebGitNet
                 size);
 
             return new MvcHtmlString("<img alt=\"" + html.AttributeEncode(name) + "\" src=\"" + html.AttributeEncode(imgUrl) + "\" />");
+        }
+
+        public static IEnumerable<Route> FindSatisfiableRoutes(this HtmlHelper html, object routeData = null)
+        {
+            var routes = html.RouteCollection;
+            var current = html.ViewContext.RequestContext.RouteData.Route;
+            var request = html.ViewContext.RequestContext;
+            var routeValues = routeData == null ? html.ViewContext.RouteData.Values : new RouteValueDictionary(routeData);
+
+            foreach (var route in routes.OfType<Route>())
+            {
+                if (route == current || route.GetName() == null)
+                {
+                    continue;
+                }
+
+                var routed = route.GetVirtualPath(request, routeValues);
+                if (routed != null)
+                {
+                    yield return route;
+                }
+            }
+
+            yield break;
+        }
+
+        public static string GetName(this Route route)
+        {
+            if (route == null || route.Defaults == null)
+            {
+                return null;
+            }
+
+            var routeName = route.Defaults["routeName"];
+
+            if (routeName == null)
+            {
+                return null;
+            }
+
+            return routeName.ToString();
         }
 
         public static MvcHtmlString Pager(this HtmlHelper html, int page, int pages, string controllerName, string actionName, object routeValues, string routeKey = "page")
