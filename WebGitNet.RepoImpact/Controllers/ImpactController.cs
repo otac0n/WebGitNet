@@ -1,12 +1,19 @@
-﻿namespace WebGitNet.Controllers
+﻿//-----------------------------------------------------------------------
+// <copyright file="ImpactController.cs" company="(none)">
+//  Copyright © 2011 John Gietzen. All rights reserved.
+// </copyright>
+// <author>John Gietzen</author>
+//-----------------------------------------------------------------------
+
+namespace WebGitNet.Controllers
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
     using System.Web.Mvc;
     using System.Web.Routing;
-    using System.Globalization;
     using WebGitNet.Models;
 
     public class ImpactController : SharedControllerBase

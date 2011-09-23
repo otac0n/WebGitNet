@@ -47,6 +47,7 @@ namespace WebGitNet
                         break;
                 }
             }
+
             result.Append("\"");
             return result.ToString();
         }
@@ -189,6 +190,7 @@ namespace WebGitNet
         private class Author
         {
             public string Name { get; set; }
+
             public string Email { get; set; }
         }
 
@@ -196,15 +198,31 @@ namespace WebGitNet
         {
             Func<RenameField, Author, string> getField = (f, a) =>
             {
-                if (f == RenameField.Name) return a.Name;
-                if (f == RenameField.Email) return a.Email;
+                if (f == RenameField.Name)
+                {
+                    return a.Name;
+                }
+
+                if (f == RenameField.Email)
+                {
+                    return a.Email;
+                }
+
                 return null;
             };
 
             Action<RenameField, Author, string> setField = (f, a, v) =>
             {
-                if (f == RenameField.Name) a.Name = v;
-                if (f == RenameField.Email) a.Email = v;
+                if (f == RenameField.Name)
+                {
+                    a.Name = v;
+                }
+
+                if (f == RenameField.Email)
+                {
+                    a.Email = v;
+                }
+
                 return;
             };
 
@@ -222,6 +240,7 @@ namespace WebGitNet
                                 setField(dest.Field, author, dest.Replacement);
                             }
                         }
+
                         break;
 
                     case RenameStyle.CaseInsensitive:
@@ -232,6 +251,7 @@ namespace WebGitNet
                                 setField(dest.Field, author, dest.Replacement);
                             }
                         }
+
                         break;
 
                     case RenameStyle.Regex:
@@ -242,8 +262,10 @@ namespace WebGitNet
                             {
                                 setField(dest.Field, newAuthor, Regex.Replace(getField(entry.SourceField, author), entry.Match, dest.Replacement));
                             }
+
                             author = newAuthor;
                         }
+
                         break;
                 }
             }
@@ -253,7 +275,7 @@ namespace WebGitNet
 
         public static Dictionary<string, int> GetLanguageLines(string repoPath)
         {
-            const string fakeHash = "0000000000000000000000000000000000000000";
+            const string FakeHash = "0000000000000000000000000000000000000000";
 
             var result = Execute("diff-tree -z --numstat 4b825dc642cb6eb9a060e54bf8d69288fbee4904 HEAD", repoPath);
             var fileStats = result.Split("\0".ToArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -273,7 +295,7 @@ namespace WebGitNet
                     continue;
                 }
 
-                bool keepPath = ProcessIgnores(ignores, fakeHash, path);
+                bool keepPath = ProcessIgnores(ignores, FakeHash, path);
                 if (!keepPath)
                 {
                     continue;

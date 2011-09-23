@@ -101,13 +101,15 @@ namespace WebGitNet
             RenameEntry.Destination[] destinations;
             if (destinationField2 == RenameField.None)
             {
-                destinations = new[] {
+                destinations = new[]
+                {
                     new RenameEntry.Destination { Field = destinationField1, Replacement = destinationValue1 },
                 };
             }
             else
             {
-                destinations = new[] {
+                destinations = new[]
+                {
                     new RenameEntry.Destination { Field = destinationField1, Replacement = destinationValue1 },
                     new RenameEntry.Destination { Field = destinationField2, Replacement = destinationValue2 },
                 };

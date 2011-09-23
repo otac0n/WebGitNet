@@ -11,9 +11,9 @@ namespace WebGitNet
     using System.Web.Mvc;
     using System.Web.Routing;
     using Castle.MicroKernel.Registration;
+    using Castle.MicroKernel.SubSystems.Configuration;
     using Castle.Windsor;
     using Castle.Windsor.Installer;
-    using Castle.MicroKernel.SubSystems.Configuration;
 
     public partial class WebGitNetApplication : System.Web.HttpApplication
     {

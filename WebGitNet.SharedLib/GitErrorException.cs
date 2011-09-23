@@ -26,10 +26,19 @@ namespace WebGitNet
             this.errorOutput = errorOutput;
         }
 
-        public string Command { get { return this.command; } }
+        public string Command
+        {
+            get { return this.command; }
+        }
 
-        public int ExitCode { get { return this.exitCode; } }
+        public int ExitCode
+        {
+            get { return this.exitCode; }
+        }
 
-        public string ErrorOutput { get { return this.errorOutput; } }
+        public string ErrorOutput
+        {
+            get { return this.errorOutput; }
+        }
     }
 }

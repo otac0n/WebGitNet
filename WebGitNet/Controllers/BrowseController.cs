@@ -13,9 +13,9 @@ namespace WebGitNet.Controllers
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using WebGitNet.ActionResults;
     using WebGitNet.Models;
-    using System.Web.Routing;
 
     public class BrowseController : SharedControllerBase
     {
@@ -87,8 +87,8 @@ namespace WebGitNet.Controllers
                 return HttpNotFound();
             }
 
-            const int pageSize = 20;
-            int skip = pageSize * (page - 1);
+            const int PageSize = 20;
+            int skip = PageSize * (page - 1);
             var count = GitUtilities.CountCommits(resourceInfo.FullPath);
 
             if (skip >= count)
@@ -99,10 +99,10 @@ namespace WebGitNet.Controllers
             AddRepoBreadCrumb(repo);
             this.BreadCrumbs.Append("Browse", "ViewCommits", "Commit Log", new { repo });
 
-            var commits = GitUtilities.GetLogEntries(resourceInfo.FullPath, pageSize, skip);
+            var commits = GitUtilities.GetLogEntries(resourceInfo.FullPath, PageSize, skip);
 
             ViewBag.Page = page;
-            ViewBag.PageCount = (count / pageSize) + (count % pageSize > 0 ? 1 : 0);
+            ViewBag.PageCount = (count / PageSize) + (count % PageSize > 0 ? 1 : 0);
             ViewBag.RepoName = resourceInfo.Name;
 
             return View(commits);

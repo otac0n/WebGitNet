@@ -1,16 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Reflection;
-using System.IO;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
+﻿//-----------------------------------------------------------------------
+// <copyright file="ResourceRazorViewEngine.cs" company="(none)">
+//  Copyright © 2011 John Gietzen. All rights reserved.
+// </copyright>
+// <author>John Gietzen</author>
+//-----------------------------------------------------------------------
 
 namespace WebGitNet
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Security.Cryptography;
+    using System.Text;
+    using System.Threading;
+    using System.Web;
+    using System.Web.Mvc;
+
     public class ResourceRazorViewEngine : RazorViewEngine
     {
         private Dictionary<string, string> resourceHashChache = new Dictionary<string, string>();
