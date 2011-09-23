@@ -15,17 +15,13 @@ namespace WebGitNet.Controllers
     using System.Web.Mvc;
     using WebGitNet.ActionResults;
     using WebGitNet.Models;
+    using System.Web.Routing;
 
     public class BrowseController : SharedControllerBase
     {
         public BrowseController()
         {
             this.BreadCrumbs.Append("Browse", "Index", "Browse");
-        }
-
-        private void AddRepoBreadCrumb(string repo)
-        {
-            this.BreadCrumbs.Append("Browse", "ViewRepo", repo, new { repo });
         }
 
         public ActionResult Index()
@@ -56,50 +52,6 @@ namespace WebGitNet.Controllers
             ViewBag.Refs = GitUtilities.GetAllRefs(resourceInfo.FullPath);
 
             return View();
-        }
-
-        public ActionResult ViewRepoImpact(string repo)
-        {
-            var resourceInfo = this.FileManager.GetResourceInfo(repo);
-            if (resourceInfo.Type != ResourceType.Directory)
-            {
-                return HttpNotFound();
-            }
-
-            AddRepoBreadCrumb(repo);
-            this.BreadCrumbs.Append("Browse", "ViewRepoImpact", "Impact", new { repo });
-
-            var userImpacts = GitUtilities.GetUserImpacts(resourceInfo.FullPath);
-
-            var allTimeImpacts = (from g in userImpacts.GroupBy(u => u.Author, StringComparer.InvariantCultureIgnoreCase)
-                                  select new UserImpact
-                                  {
-                                      Author = g.Key,
-                                      Commits = g.Sum(ui => ui.Commits),
-                                      Insertions = g.Sum(ui => ui.Insertions),
-                                      Deletions = g.Sum(ui => ui.Deletions),
-                                      Impact = g.Sum(ui => ui.Impact),
-                                  }).OrderByDescending(i => i.Commits);
-
-            var weeklyImpacts = (from u in userImpacts
-                                 let dayOffset = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek - u.Date.DayOfWeek
-                                 let commitWeek = u.Date.Date.AddDays(dayOffset + (dayOffset > 0 ? -7 : 0))
-                                 group u by commitWeek into wk
-                                 select new ImpactWeek
-                                 {
-                                     Week = wk.Key,
-                                     Impacts = (from g in wk.GroupBy(u => u.Author, StringComparer.InvariantCultureIgnoreCase)
-                                                select new UserImpact
-                                                {
-                                                    Author = g.Key,
-                                                    Commits = g.Sum(ui => ui.Commits),
-                                                    Insertions = g.Sum(ui => ui.Insertions),
-                                                    Deletions = g.Sum(ui => ui.Deletions),
-                                                    Impact = g.Sum(ui => ui.Impact),
-                                                }).OrderByDescending(i => i.Commits).ToList()
-                                 }).OrderBy(wk => wk.Week);
-
-            return View(new RepoImpact { AllTime = allTimeImpacts, Weekly = weeklyImpacts });
         }
 
         public ActionResult ViewCommit(string repo, string @object)
@@ -243,6 +195,42 @@ namespace WebGitNet.Controllers
             }
 
             return View((object)model);
+        }
+
+        public class RouteRegisterer : IRouteRegisterer
+        {
+            public void RegisterRoutes(RouteCollection routes)
+            {
+                routes.MapRoute(
+                    "Browse Index",
+                    "browse",
+                    new { controller = "Browse", action = "Index" });
+
+                routes.MapRoute(
+                    "View Repo",
+                    "browse/{repo}",
+                    new { controller = "Browse", action = "ViewRepo" });
+
+                routes.MapRoute(
+                    "View Tree",
+                    "browse/{repo}/tree/{object}/{*path}",
+                    new { controller = "Browse", action = "ViewTree", path = UrlParameter.Optional });
+
+                routes.MapRoute(
+                    "View Blob",
+                    "browse/{repo}/blob/{object}/{*path}",
+                    new { controller = "Browse", action = "ViewBlob", path = UrlParameter.Optional });
+
+                routes.MapRoute(
+                    "View Commit",
+                    "browse/{repo}/commit/{object}",
+                    new { controller = "Browse", action = "ViewCommit" });
+
+                routes.MapRoute(
+                    "View Commit Log",
+                    "browse/{repo}/commits",
+                    new { controller = "Browse", action = "ViewCommits", routeName = "View Commit Log" });
+            }
         }
     }
 }

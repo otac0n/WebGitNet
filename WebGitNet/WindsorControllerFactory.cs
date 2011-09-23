@@ -1,12 +1,20 @@
-﻿namespace WebGitNet
+﻿//-----------------------------------------------------------------------
+// <copyright file="WindsorControllerFactory.cs" company="(none)">
+//  Copyright © 2011 John Gietzen. All rights reserved.
+// </copyright>
+// <author>Dustin R. Welden</author>
+// <author>John Gietzen</author>
+//-----------------------------------------------------------------------
+
+namespace WebGitNet
 {
-    using System;
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using System.Web.SessionState;
     using Castle.MicroKernel;
 
-    public class WindsorControllerFactory : DefaultControllerFactory
+    public class WindsorControllerFactory : IControllerFactory
     {
         private readonly IKernel kernel;
 
@@ -15,18 +23,29 @@
             this.kernel = kernel;
         }
 
-        public override void ReleaseController(IController controller)
+        public void ReleaseController(IController controller)
         {
             kernel.ReleaseComponent(controller);
         }
 
-        protected override IController GetControllerInstance(RequestContext requestContext, Type controllerType)
+        public IController CreateController(RequestContext requestContext, string controllerName)
         {
-            if (controllerType == null)
+            controllerName =
+                this.kernel.HasComponent(controllerName) ? controllerName :
+                this.kernel.HasComponent(controllerName + "Controller") ? controllerName + "Controller" :
+                "";
+
+            if (string.IsNullOrEmpty(controllerName))
             {
                 throw new HttpException(404, string.Format("The controller for path '{0}' could not be found.", requestContext.HttpContext.Request.Path));
             }
-            return (IController)kernel.Resolve(controllerType);
+
+            return this.kernel.Resolve<IController>(controllerName);
+        }
+
+        public SessionStateBehavior GetControllerSessionBehavior(RequestContext requestContext, string controllerName)
+        {
+            return SessionStateBehavior.Default;
         }
     }
 }

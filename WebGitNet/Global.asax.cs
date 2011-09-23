@@ -28,63 +28,11 @@ namespace WebGitNet
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            routes.MapRoute(
-                "Browse Index",
-                "browse",
-                new { controller = "Browse", action = "Index" });
-
-            routes.MapRoute(
-                "View Repo",
-                "browse/{repo}",
-                new { controller = "Browse", action = "ViewRepo" });
-
-            routes.MapRoute(
-                "View Repo Impact",
-                "browse/{repo}/impact",
-                new { controller = "Browse", action = "ViewRepoImpact" });
-
-            routes.MapRoute(
-                "View Tree",
-                "browse/{repo}/tree/{object}/{*path}",
-                new { controller = "Browse", action = "ViewTree", path = UrlParameter.Optional });
-
-            routes.MapRoute(
-                "View Blob",
-                "browse/{repo}/blob/{object}/{*path}",
-                new { controller = "Browse", action = "ViewBlob", path = UrlParameter.Optional });
-
-            routes.MapRoute(
-                "View Commit",
-                "browse/{repo}/commit/{object}",
-                new { controller = "Browse", action = "ViewCommit" });
-
-            routes.MapRoute(
-                "View Commits",
-                "browse/{repo}/commits",
-                new { controller = "Browse", action = "ViewCommits" });
-
-            routes.MapRoute(
-                "Get */info/refs",
-                "git/{*url}",
-                new { controller = "File", action = "GetInfoRefs" },
-                new { url = @"(.*?)/info/refs" });
-
-            routes.MapRoute(
-                "Post */git-upload-pack",
-                "git/{*url}",
-                new { controller = "ServiceRpc", action = "UploadPack" },
-                new { url = @"(.*?)/git-upload-pack" });
-
-            routes.MapRoute(
-                "Post */git-receive-pack",
-                "git/{*url}",
-                new { controller = "ServiceRpc", action = "ReceivePack" },
-                new { url = @"(.*?)/git-receive-pack" });
-
-            routes.MapRoute(
-                "File Access",
-                "git/{*url}",
-                new { controller = "File", action = "Fetch" });
+            var routeRegisterers = container.ResolveAll<IRouteRegisterer>();
+            foreach (var registerer in routeRegisterers)
+            {
+                registerer.RegisterRoutes(routes);
+            }
 
             routes.MapRoute(
                 "Default",
@@ -94,11 +42,14 @@ namespace WebGitNet
 
         protected void Application_Start()
         {
+            Bootstrap();
+
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
-            Bootstrap();
+
+            ViewEngines.Engines.Add(new ResourceRazorViewEngine());
         }
 
         protected void Application_End()
@@ -113,6 +64,7 @@ namespace WebGitNet
             container = new WindsorContainer()
                         .Install(new AssemblyInstaller())
                         .Install(FromAssembly.InDirectory(directoryFilter));
+
             var controllerFactory = new WindsorControllerFactory(container.Kernel);
             ControllerBuilder.Current.SetControllerFactory(controllerFactory);
         }
@@ -122,7 +74,10 @@ namespace WebGitNet
             public void Install(IWindsorContainer container, IConfigurationStore configurationStore)
             {
                 container.Register(AllTypes.FromThisAssembly()
+                                           .BasedOn<IRouteRegisterer>());
+                container.Register(AllTypes.FromThisAssembly()
                                            .BasedOn<IController>()
+                                           .Configure(c => c.Named(c.Implementation.Name))
                                            .Configure(c => c.LifeStyle.Transient));
             }
         }

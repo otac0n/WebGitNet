@@ -8,7 +8,6 @@
 namespace WebGitNet
 {
     using System.IO;
-    using WebGitNet.Models;
 
     public class FileManager
     {

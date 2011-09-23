@@ -1,7 +1,7 @@
-﻿@model RepoImpact
-
-@{
+﻿@{
     ViewBag.Title = "Repository Impact";
+    IEnumerable<dynamic> weekly = ViewBag.Weekly;
+    IEnumerable<dynamic> allTime = ViewBag.AllTime;
 }
 
 @section intellisense
@@ -29,11 +29,11 @@
     };
 
     var epoch = new DateTime(1970, 1, 1);
-    var buckets = (from w in Model.Weekly
+    var buckets = (from w in weekly
                    select new
                    {
                        d = (w.Week - epoch).TotalSeconds,
-                       i = (from i in w.Impacts
+                       i = (from i in (IEnumerable<dynamic>)w.Impacts
                             let user = getUser(i.Author)
                             orderby i.Impact descending
                             select new[] { user, i.Impact }).ToArray(),
@@ -90,14 +90,14 @@
     </tr>
   </thead>
   <tbody>
-@foreach (var item in Model.AllTime)
+@foreach (var item in allTime)
 {
     <tr>
-        <td>@Html.DisplayFor(modelItem => item.Author)</td>
-        <td>@Html.DisplayFor(modelItem => item.Commits)</td>
-        <td>@Html.DisplayFor(modelItem => item.Insertions)</td>
-        <td>@Html.DisplayFor(modelItem => item.Deletions)</td>
-        <td>@Html.DisplayFor(modelItem => item.Impact)</td>
+        <td>@item.Author</td>
+        <td>@item.Commits</td>
+        <td>@item.Insertions</td>
+        <td>@item.Deletions</td>
+        <td>@item.Impact</td>
     </tr>
 }
   </tbody>

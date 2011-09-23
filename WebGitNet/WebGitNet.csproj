@@ -25,6 +25,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>ExtendedDesignGuidelineRules.ruleset</CodeAnalysisRuleSet>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -79,11 +80,6 @@
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ServiceRpcController.cs" />
-    <Compile Include="Controllers\SharedControllerBase.cs" />
-    <Compile Include="Controllers\SharedControllerBase.profiling.cs">
-      <DependentUpon>SharedControllerBase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FileManager.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -92,16 +88,12 @@
     </Compile>
     <Compile Include="HtmlHelpers.cs" />
     <Compile Include="Models\AccessLevel.cs" />
-    <Compile Include="Models\BreadCrumbTrail.cs" />
     <Compile Include="Models\CreateRepoRequest.cs" />
-    <Compile Include="Models\RepoImpact.cs" />
-    <Compile Include="Models\ImpactWeek.cs" />
-    <Compile Include="Models\ResourceInfo.cs" />
-    <Compile Include="Models\ResourceType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ResourceRazorViewEngine.cs" />
     <Compile Include="WindsorControllerFactory.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -215,7 +207,9 @@
     <Content Include="Views\File\List.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\Browse\Index.cshtml" />
     <Content Include="Views\Browse\ViewRepo.cshtml" />
     <Content Include="Views\Browse\LogEntry.cshtml" />
@@ -225,7 +219,6 @@
     <Content Include="Views\Browse\ViewBlob.cshtml" />
     <Content Include="Views\Browse\ViewCommit.cshtml" />
     <Content Include="Views\Browse\ViewCommits.cshtml" />
-    <Content Include="Views\Browse\ViewRepoImpact.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -269,4 +262,7 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PreBuildEvent>rmdir /s /q $(ProjectDir)Views\PluginCache</PreBuildEvent>
+  </PropertyGroup>
 </Project>
