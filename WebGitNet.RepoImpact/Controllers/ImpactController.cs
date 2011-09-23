@@ -20,7 +20,7 @@
             }
 
             AddRepoBreadCrumb(repo);
-            this.BreadCrumbs.Append("Browse", "ViewRepoImpact", "Impact", new { repo });
+            this.BreadCrumbs.Append("Impact", "ViewRepoImpact", "Impact", new { repo });
 
             var userImpacts = GitUtilities.GetUserImpacts(resourceInfo.FullPath);
 
