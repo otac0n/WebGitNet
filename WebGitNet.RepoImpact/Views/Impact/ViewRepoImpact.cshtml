@@ -37,7 +37,7 @@
                             let user = getUser(i.Author)
                             orderby i.Impact descending
                             select new[] { user, i.Impact }).ToArray(),
-                   }).ToArray();
+                   }).OrderBy(b => b.d).ThenBy(b => b.i).ToArray();
 
     var authors = users.ToDictionary(a => a.Value.ToString(), a => new { n = a.Key });
 
