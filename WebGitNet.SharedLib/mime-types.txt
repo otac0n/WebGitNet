@@ -37,6 +37,7 @@ MAKEFILE:text/x-makefile
 .dsw:text/plain
 .dtd:application/xml
 .dtsConfig:application/xml
+.edmx:application/xml
 .feature:text/plain
 .filters:application/xml
 .fs:text/x-fsharp-source
@@ -114,10 +115,12 @@ MAKEFILE:text/x-makefile
 .rct:text/plain
 .rdl:application/xml
 .rdlc:application/xml
+.rds:application/xml
 .resx:application/xml
 .rgs:text/plain
 .rmh:text/rmh
 .rpmsg:text/rmh
+.rptproj:application/xml
 .rqy:text/x-ms-rqy
 .ruleset:application/xml
 .s:text/plain
