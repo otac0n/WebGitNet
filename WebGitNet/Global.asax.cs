@@ -7,6 +7,7 @@
 
 namespace WebGitNet
 {
+    using System.Linq;
     using System.Web.Hosting;
     using System.Web.Mvc;
     using System.Web.Routing;
@@ -49,7 +50,11 @@ namespace WebGitNet
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
+            ViewEngines.Engines.Clear();
+            ViewEngines.Engines.Add(new RazorViewEngine());
             ViewEngines.Engines.Add(new ResourceRazorViewEngine());
+
+            HostingEnvironment.RegisterVirtualPathProvider(new ResourceVirtualPathProvider());
         }
 
         protected void Application_End()

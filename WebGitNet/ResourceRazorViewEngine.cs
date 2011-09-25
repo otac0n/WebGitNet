@@ -20,169 +20,75 @@ namespace WebGitNet
 
     public class ResourceRazorViewEngine : RazorViewEngine
     {
-        private Dictionary<string, string> resourceHashChache = new Dictionary<string, string>();
-        private ReaderWriterLockSlim writeLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
+        private static readonly string[] empty = new string[0];
 
-        protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
+        private static readonly string[] viewLocationFormats = new[]
+        {
+            "~/Views/Plugins/{0}/{{1}}/{{0}}.cshtml",
+            "~/Views/Plugins/{0}/{{1}}/{{0}}.vbhtml",
+            "~/Views/Plugins/{0}/Shared/{{0}}.cshtml",
+            "~/Views/Plugins/{0}/Shared/{{0}}.vbhtml",
+        };
+
+        private static readonly string[] areaViewLocationFormats = new[]
+        {
+            "~/Views/Plugins/{0}/Areas/{{2}}/{{1}}/{{0}}.cshtml",
+            "~/Views/Plugins/{0}/Areas/{{2}}/{{1}}/{{0}}.vbhtml",
+            "~/Views/Plugins/{0}/Areas/{{2}}/Shared/{{0}}.cshtml",
+            "~/Views/Plugins/{0}/Areas/{{2}}/Shared/{{0}}.vbhtml",
+        };
+
+        private readonly object syncRoot = new object();
+
+        public ResourceRazorViewEngine()
+        {
+            ClearFormats();
+        }
+
+        private void ClearFormats()
+        {
+            this.ViewLocationFormats =
+            this.MasterLocationFormats =
+            this.PartialViewLocationFormats = empty;
+
+            this.AreaViewLocationFormats =
+            this.AreaMasterLocationFormats =
+            this.AreaPartialViewLocationFormats = empty;
+        }
+
+        private void SetFormats(ControllerContext controllerContext)
         {
             var controllerType = controllerContext.Controller.GetType();
-            var assembly = controllerType.Assembly;
-            var partialName = GetResourceName(assembly, partialPath);
+            var assemblyName = controllerType.Assembly.GetName().Name;
 
-            var newPartialPath = ExtractViewToFile(assembly, partialName, controllerContext.HttpContext.Server);
+            this.ViewLocationFormats =
+            this.MasterLocationFormats =
+            this.PartialViewLocationFormats = viewLocationFormats.Select(f => string.Format(f, assemblyName)).ToArray();
 
-            return base.CreatePartialView(controllerContext, newPartialPath);
+            this.AreaViewLocationFormats =
+            this.AreaMasterLocationFormats =
+            this.AreaPartialViewLocationFormats = areaViewLocationFormats.Select(f => string.Format(f, assemblyName)).ToArray();
         }
 
-        protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
+        public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
         {
-            var controllerType = controllerContext.Controller.GetType();
-            var assembly = controllerType.Assembly;
-            var viewName = GetResourceName(assembly, viewPath);
-            var masterName = GetResourceName(assembly, masterPath);
-
-            var newViewPath = ExtractViewToFile(assembly, viewName, controllerContext.HttpContext.Server);
-            var newMasterPath = ExtractViewToFile(assembly, masterName, controllerContext.HttpContext.Server);
-
-            return base.CreateView(controllerContext, newViewPath, newMasterPath);
-        }
-
-        protected override bool FileExists(ControllerContext controllerContext, string virtualPath)
-        {
-            var controllerType = controllerContext.Controller.GetType();
-            var assembly = controllerType.Assembly;
-            var resourceName = GetResourceName(assembly, virtualPath);
-
-            resourceName = NormalizeResourceName(assembly, resourceName);
-
-            return resourceName != null;
-        }
-
-        private static string GetResourceName(Assembly assembly, string virtualPath)
-        {
-            if (string.IsNullOrEmpty(virtualPath))
+            lock (this.syncRoot)
             {
-                return "";
-            }
-
-            var assemblyName = assembly.GetName().Name;
-
-            if (virtualPath.StartsWith("~/"))
-            {
-                virtualPath = virtualPath.Substring(2);
-            }
-            else if (virtualPath.StartsWith("/"))
-            {
-                virtualPath = virtualPath.Substring(1);
-            }
-
-            return (assemblyName + "/" + virtualPath)
-                .Replace(@"/", ".")
-                .Replace(@"\", ".");
-        }
-
-        private static string NormalizeResourceName(Assembly assembly, string resourceName)
-        {
-            return (from n in assembly.GetManifestResourceNames()
-                    where n.Equals(resourceName, StringComparison.InvariantCultureIgnoreCase)
-                    select n).SingleOrDefault();
-        }
-
-        private string ExtractViewToFile(Assembly assembly, string resourceName, HttpServerUtilityBase server)
-        {
-            if (string.IsNullOrEmpty(resourceName))
-            {
-                return "";
-            }
-
-            resourceName = NormalizeResourceName(assembly, resourceName);
-            if (resourceName == null)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
-
-            string hash;
-
-            this.writeLock.EnterReadLock();
-            try
-            {
-                if (resourceHashChache.TryGetValue(resourceName, out hash))
-                {
-                    var virtualPath = BuildVirtualPath(hash);
-                    if (File.Exists(server.MapPath(virtualPath)))
-                    {
-                        return virtualPath;
-                    }
-                }
-            }
-            finally
-            {
-                this.writeLock.ExitReadLock();
-            }
-
-            this.writeLock.EnterWriteLock();
-            try
-            {
-                if (!resourceHashChache.TryGetValue(resourceName, out hash))
-                {
-                    hash = HashResource(assembly, resourceName);
-                    resourceHashChache.Add(resourceName, hash);
-                }
-
-                var virtualPath = BuildVirtualPath(hash);
-
-                ExtractResource(assembly, resourceName, server.MapPath(virtualPath));
-
-                return virtualPath;
-            }
-            finally
-            {
-                this.writeLock.ExitWriteLock();
+                this.SetFormats(controllerContext);
+                var result = base.FindView(controllerContext, viewName, masterName, useCache);
+                this.ClearFormats();
+                return result;
             }
         }
 
-        private static string BuildVirtualPath(string hash)
+        public override ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
         {
-            return string.Format("~/Views/PluginCache/{0}/{1}.cshtml", hash.Substring(0, 2), hash.Substring(2));
-        }
-
-        private static string HashResource(Assembly assembly, string resourceName)
-        {
-            using (var sha = new SHA1Managed())
+            lock (this.syncRoot)
             {
-                using (var resource = assembly.GetManifestResourceStream(resourceName))
-                {
-                    var hash = sha.ComputeHash(resource);
-                    var hashText = new StringBuilder(hash.Length * 2);
-                    for (int i = 0; i < hash.Length; i++)
-                    {
-                        hashText.Append(hash[i].ToString("x2"));
-                    }
-
-                    return hashText.ToString();
-                }
-            }
-        }
-
-        private static void ExtractResource(Assembly assembly, string resourceName, string path)
-        {
-            var directory = Path.GetDirectoryName(path);
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-
-            using (var @out = File.Open(path, FileMode.OpenOrCreate, FileAccess.Write))
-            {
-                using (var @in = assembly.GetManifestResourceStream(resourceName))
-                {
-                    byte[] buffer = new byte[4096];
-                    int read;
-                    while ((read = @in.Read(buffer, 0, buffer.Length)) > 0)
-                    {
-                        @out.Write(buffer, 0, read);
-                    }
-                }
+                this.SetFormats(controllerContext);
+                var result = base.FindPartialView(controllerContext, partialViewName, useCache);
+                this.ClearFormats();
+                return result;
             }
         }
     }
