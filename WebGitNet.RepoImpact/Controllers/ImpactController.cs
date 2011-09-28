@@ -8,10 +8,8 @@
 namespace WebGitNet.Controllers
 {
     using System;
-    using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-    using System.Text;
     using System.Web.Mvc;
     using System.Web.Routing;
     using WebGitNet.Models;
@@ -26,6 +24,7 @@ namespace WebGitNet.Controllers
                 return HttpNotFound();
             }
 
+            this.BreadCrumbs.Append("Browse", "Index", "Browse");
             AddRepoBreadCrumb(repo);
             this.BreadCrumbs.Append("Impact", "ViewRepoImpact", "Impact", new { repo });
 
