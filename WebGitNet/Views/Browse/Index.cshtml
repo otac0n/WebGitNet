@@ -4,6 +4,15 @@
     ViewBag.Title = "Repositories";
 }
 
+@section headers
+{
+    <link rel="alternate" type="application/atom+xml" href="@Url.Action("LastCommits", "Syndication")" title="Last Commit in All Repos" />
+}
+
+<div class="syndication">
+    <a href="@Url.Action("LastCommits", "Syndication")">Last Commit in All Repos</a>
+</div>
+
 <ul>
 @foreach (var repo in Model)
 {

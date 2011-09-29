@@ -13,7 +13,13 @@
             $("div.date").timeago();
         });
     </script>
+
+    <link rel="alternate" type="application/atom+xml" href="@Url.Action("Commits", "Syndication", new { repo = ViewBag.RepoName })" title="@ViewBag.RepoName Commits" />
 }
+
+<div class="syndication">
+    <a href="@Url.Action("Commits", "Syndication", new { repo = ViewBag.RepoName })">@ViewBag.RepoName Commits</a>
+</div>
 
 <div class="pager">
     @Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Browse", "ViewCommits", new { repo = ViewBag.RepoName })

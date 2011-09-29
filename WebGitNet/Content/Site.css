@@ -369,3 +369,22 @@ ul
 {
     background: #eee;
 }
+
+.syndication
+{
+    float: right;
+}
+
+.syndication a, .syndication a:link, .syndication a:visited
+{
+    color: #333;
+    padding: 10px 15px 10px 36px;
+    background: #f7f7f7 url(feed.png) no-repeat 15px 50%;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.syndication a:hover
+{
+    background-color: #eee;
+}
