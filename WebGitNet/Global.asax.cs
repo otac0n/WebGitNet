@@ -84,6 +84,10 @@ namespace WebGitNet
                                            .BasedOn<IController>()
                                            .Configure(c => c.Named(c.Implementation.Name))
                                            .Configure(c => c.LifeStyle.Transient));
+                container.Register(AllTypes.From(typeof(PluginContentController))
+                                           .BasedOn<IController>()
+                                           .Configure(c => c.Named(c.Implementation.Name))
+                                           .Configure(c => c.LifeStyle.Transient));
             }
         }
     }

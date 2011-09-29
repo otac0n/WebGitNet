@@ -80,7 +80,7 @@
                             where a.GetName().Name == assemblyName
                             select a).SingleOrDefault();
 
-            var name = GetResourceName(assembly, filePath);
+            var name = assembly.GetResourceName(filePath);
             resourceName = assembly.GetManifestResourceNames().Where(s => s == name).FirstOrDefault();
             if (resourceName != null)
             {
@@ -90,29 +90,6 @@
             {
                 return null;
             }
-        }
-
-        private static string GetResourceName(Assembly assembly, string virtualPath)
-        {
-            if (string.IsNullOrEmpty(virtualPath))
-            {
-                return "";
-            }
-
-            var assemblyName = assembly.GetName().Name;
-
-            if (virtualPath.StartsWith("~/"))
-            {
-                virtualPath = virtualPath.Substring(2);
-            }
-            else if (virtualPath.StartsWith("/"))
-            {
-                virtualPath = virtualPath.Substring(1);
-            }
-
-            return (assemblyName + "." + virtualPath)
-                .Replace(@"/", ".")
-                .Replace(@"\", ".");
         }
 
         private class AssemblyResourceVirtualFile : VirtualFile
