@@ -50,6 +50,7 @@
     <Reference Include="MvcMiniProfiler">
       <HintPath>..\packages\MiniProfiler.1.4\lib\MvcMiniProfiler.dll</HintPath>
     </Reference>
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.WebPages" />
     <Reference Include="System.Web.Helpers" />
@@ -73,6 +74,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionResults\AtomActionResult.cs" />
     <Compile Include="ActionResults\GitCommandResult.cs" />
     <Compile Include="ActionResults\GitFileResult.cs" />
     <Compile Include="ActionResults\GitStreamResult.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ServiceRpcController.cs" />
+    <Compile Include="Controllers\SyndicationController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
