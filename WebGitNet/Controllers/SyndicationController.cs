@@ -29,12 +29,33 @@ namespace WebGitNet.Controllers
 
             var items = from entry in GitUtilities.GetLogEntries(resourceInfo.FullPath, 20)
                         select FormatLogEntry(entry, repo);
+
+            var feed = BuildFeed(repo + " Commits", items);
+
+            return new AtomActionResult(feed);
+        }
+
+        public ActionResult LastCommits()
+        {
+            var directory = this.FileManager.DirectoryInfo;
+
+            var items = from repo in directory.EnumerateDirectories()
+                        from entry in GitUtilities.GetLogEntries(repo.FullName, 1)
+                        select FormatLogEntry(entry, repo.Name);
+
+            var feed = BuildFeed("Last Commit in All Repos", items);
+
+            return new AtomActionResult(feed);
+        }
+
+        private SyndicationFeed BuildFeed(string title, IEnumerable<SyndicationItem> items)
+        {
             var feed = new SyndicationFeed(items);
             feed.BaseUri = new Uri(Request.Url, Url.Content("~/"));
             feed.ImageUrl = new Uri(Url.Content("~/favicon.ico"), UriKind.Relative);
-            feed.Title = new TextSyndicationContent(repo + " Commits");
+            feed.Title = new TextSyndicationContent(title);
 
-            return new AtomActionResult(feed);
+            return feed;
         }
 
         private SyndicationItem FormatLogEntry(LogEntry entry, string repo)
@@ -73,6 +94,11 @@ namespace WebGitNet.Controllers
                     "Repo Commit Syndication",
                     "feeds/{repo}/commits",
                     new { controller = "Syndication", action = "Commits" });
+
+                routes.MapRoute(
+                    "All Repo Last Commits Syndication",
+                    "feeds/last",
+                    new { controller = "Syndication", action = "LastCommits" });
             }
         }
     }
