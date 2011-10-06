@@ -69,6 +69,7 @@
     <Compile Include="RenameEntry.cs" />
     <Compile Include="RenameFileParser.cs" />
     <Compile Include="RenameFileSyntaxException.cs" />
+    <Compile Include="RepoInfo.cs" />
     <Compile Include="ResourceInfo.cs" />
     <Compile Include="ResourceType.cs" />
     <Compile Include="RouteCollectionHelpers.cs" />

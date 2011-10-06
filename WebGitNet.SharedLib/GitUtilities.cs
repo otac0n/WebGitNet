@@ -135,6 +135,39 @@ namespace WebGitNet
             Execute("update-server-info", repoPath);
         }
 
+        public static RepoInfo GetRepoInfo(string repoPath)
+        {
+            var descrPath = Path.Combine(repoPath, "description");
+            repoPath = Path.GetDirectoryName(descrPath);
+
+            var repoName = Path.GetFileName(repoPath);
+
+            string description = null;
+            if (File.Exists(descrPath))
+            {
+                description = File.ReadAllText(descrPath);
+            }
+
+            // We use this method rather than 'git rev-parse --git-dir' or similar, because it takes
+            // 0.0036 as much time.
+            var isRepo =
+                Directory.Exists(repoPath) &&
+                (
+                    Directory.Exists(Path.Combine(repoPath, ".git")) ||
+                    (Directory.Exists(Path.Combine(repoPath, "refs")) &&
+                     Directory.Exists(Path.Combine(repoPath, "info")) &&
+                     Directory.Exists(Path.Combine(repoPath, "objects")) &&
+                     File.Exists(Path.Combine(repoPath, "HEAD")))
+                );
+
+            return new RepoInfo
+            {
+                Name = repoName,
+                IsGitRepo = isRepo,
+                Description = description,
+            };
+        }
+
         public static List<GitRef> GetAllRefs(string repoPath)
         {
             var result = Execute("show-ref", repoPath);
