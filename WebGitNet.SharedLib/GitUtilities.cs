@@ -17,6 +17,7 @@ namespace WebGitNet
     using System.Threading;
     using System.Web.Configuration;
     using MvcMiniProfiler;
+    using System.Threading.Tasks;
 
     public static class GitUtilities
     {
@@ -57,21 +58,24 @@ namespace WebGitNet
         {
             using (var git = Start(command, workingDir, redirectInput: false, redirectError: trustErrorCode, outputEncoding: outputEncoding))
             {
-                string error = null;
-                Thread errorThread = null;
+                Task<string> readErrorTask = null;
                 if (trustErrorCode)
                 {
-                    errorThread = new Thread(() => { error = git.StandardError.ReadToEnd(); });
-                    errorThread.Start();
+                    readErrorTask = new Task<string>(() => git.StandardError.ReadToEnd());
+                    readErrorTask.Start();
                 }
 
                 var result = git.StandardOutput.ReadToEnd();
                 git.WaitForExit();
 
-                if (trustErrorCode && git.ExitCode != 0)
+                if (trustErrorCode)
                 {
-                    errorThread.Join();
-                    throw new GitErrorException(command, git.ExitCode, error);
+                    readErrorTask.Wait();
+
+                    if (git.ExitCode != 0)
+                    {
+                        throw new GitErrorException(command, git.ExitCode, readErrorTask.Result);
+                    }
                 }
 
                 return result;
