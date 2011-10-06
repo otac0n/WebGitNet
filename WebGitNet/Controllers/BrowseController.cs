@@ -29,7 +29,7 @@ namespace WebGitNet.Controllers
             var directory = this.FileManager.DirectoryInfo;
 
             var repos = (from dir in directory.EnumerateDirectories()
-                         select dir.Name).ToList();
+                         select GitUtilities.GetRepoInfo(dir.FullName)).ToList();
 
             return View(repos);
         }

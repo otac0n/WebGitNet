@@ -1,4 +1,4 @@
-﻿@model IList<string>
+﻿@model IList<RepoInfo>
 
 @{
     ViewBag.Title = "Repositories";
@@ -13,11 +13,21 @@
     <a href="@Url.Action("LastCommits", "Syndication")">Last Commit in All Repos</a>
 </div>
 
-<ul>
+<table>
+  <tr><th>Repository</th><th>Description</th></tr>
 @foreach (var repo in Model)
 {
-    <li>@Html.ActionLink(repo, "ViewRepo", new { repo = repo })</li>
+    if (repo.IsGitRepo)
+    {
+  <tr><td>@Html.ActionLink(repo.Name, "ViewRepo", new { repo = repo.Name })</td><td>@repo.Description</td></tr>
+    }
+    else
+    {
+  <tr><td>@repo.Name</td><td>(not a repository)</td></tr>
+    }
 }
-</ul>
+</table>
 
-@Html.ActionLink("Create a new repo.", "Create", "Manage")
+<p>
+  @Html.ActionLink("Create a new repo.", "Create", "Manage")
+</p>
