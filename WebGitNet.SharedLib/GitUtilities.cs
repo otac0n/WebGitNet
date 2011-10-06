@@ -103,11 +103,22 @@ namespace WebGitNet
                 returnProcess = process = new Process();
                 process.StartInfo = startInfo;
                 process.EnableRaisingEvents = true;
-                process.Exited += (s, e) => { traceClosure.Dispose(); };
+                process.Exited += (s, e) =>
+                {
+                    if (traceClosure != null)
+                    {
+                        traceClosure.Dispose();
+                    }
+                };
 
                 try
                 {
-                    traceClosure = trace = MiniProfiler.Current.Step("git " + command);
+                    var profiler = MiniProfiler.Current;
+                    if (profiler != null)
+                    {
+                        traceClosure = trace = profiler.Step("git " + command);
+                    }
+
                     process.Start();
 
                     trace = process = null;
