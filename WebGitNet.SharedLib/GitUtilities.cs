@@ -16,6 +16,7 @@ namespace WebGitNet
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Web.Configuration;
+    using MvcMiniProfiler;
 
     public static class GitUtilities
     {
@@ -91,7 +92,38 @@ namespace WebGitNet
                 CreateNoWindow = true,
             };
 
-            return Process.Start(startInfo);
+            Process process = null, returnProcess = null;
+            IDisposable trace = null, traceClosure = null;
+            try
+            {
+                returnProcess = process = new Process();
+                process.StartInfo = startInfo;
+                process.EnableRaisingEvents = true;
+                process.Exited += (s, e) => { traceClosure.Dispose(); };
+
+                try
+                {
+                    traceClosure = trace = MiniProfiler.Current.Step("git " + command);
+                    process.Start();
+
+                    trace = process = null;
+                    return returnProcess;
+                }
+                finally
+                {
+                    if (trace != null)
+                    {
+                        trace.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (process != null)
+                {
+                    process.Dispose();
+                }
+            }
         }
 
         public static void UpdateServerInfo(string repoPath)
