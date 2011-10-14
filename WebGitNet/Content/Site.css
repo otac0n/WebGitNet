@@ -373,6 +373,8 @@ ul
 .syndication
 {
     float: right;
+    margin: 0 0 5px;
+    padding: 10px 0;
 }
 
 .syndication a, .syndication a:link, .syndication a:visited

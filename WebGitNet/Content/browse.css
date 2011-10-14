@@ -22,6 +22,9 @@
     border: solid 1px #aaa;
     margin: 4px 0;
     padding: 1em;
+
+    overflow: auto;
+    width: 100%;
 }
 
 .commit-person
