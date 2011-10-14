@@ -16,6 +16,7 @@ namespace WebGitNet
     using System.Web.Mvc.Html;
     using System.Web.Routing;
     using MarkdownSharp;
+    using System.Web.Configuration;
 
     public static class HtmlHelpers
     {
@@ -28,10 +29,17 @@ namespace WebGitNet
 
         public static MvcHtmlString Gravatar(this HtmlHelper html, string email, string name, int size = 72)
         {
+            var fallBack = WebConfigurationManager.AppSettings["GravatarFallBack"];
+            if (string.IsNullOrEmpty(fallBack))
+            {
+                fallBack = "mm";
+            }
+
             var imgUrl = string.Format(
-                "http://www.gravatar.com/avatar/{0}.jpg?s={1}&d=mm&r=g",
+                "http://www.gravatar.com/avatar/{0}.png?s={1}&d={2}&r=g",
                 HashString(email),
-                size);
+                size,
+                fallBack);
 
             return new MvcHtmlString("<img alt=\"" + html.AttributeEncode(name) + "\" src=\"" + html.AttributeEncode(imgUrl) + "\" />");
         }
