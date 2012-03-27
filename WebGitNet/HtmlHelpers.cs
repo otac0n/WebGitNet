@@ -36,7 +36,7 @@ namespace WebGitNet
             }
 
             var imgUrl = string.Format(
-                "http://www.gravatar.com/avatar/{0}.png?s={1}&d={2}&r=g",
+                "https://secure.gravatar.com/avatar/{0}.png?s={1}&d={2}&r=g",
                 HashString(email),
                 size,
                 fallBack);
