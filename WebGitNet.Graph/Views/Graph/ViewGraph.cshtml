@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<LogEntry>
+
+@{
     ViewBag.Title = "Repository Graph";
 }
 
@@ -6,4 +8,15 @@
 {
 }
 
-Graph.
+<div class="pager">
+    @Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Graph", "ViewGraph", new { repo = ViewBag.RepoName })
+</div>
+
+@foreach (var e in Model)
+{
+    <div>@e.Subject @e.CommitHash</div>
+}
+
+<div class="pager">
+    @Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Graph", "ViewGraph", new { repo = ViewBag.RepoName })
+</div>
