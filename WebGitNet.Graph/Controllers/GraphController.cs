@@ -13,6 +13,7 @@ namespace WebGitNet.Controllers
     using System.Linq;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using WebGitNet.Models;
 
     public class GraphController : SharedControllerBase
     {
@@ -46,7 +47,7 @@ namespace WebGitNet.Controllers
             return View(commits);
         }
 
-        public IEnumerable<LogEntry> GetLogEntries(string path)
+        public IEnumerable<GraphEntry> GetLogEntries(string path)
         {
             var hashes = new HashSet<string>();
             var set = new SortedSet<LogEntry>(LogEntryComparer.Instance);
@@ -70,7 +71,11 @@ namespace WebGitNet.Controllers
 
                 i.Parents.ToList().ForEach(p => add(p));
 
-                yield return i;
+                yield return new GraphEntry
+                {
+                    LogEntry = i,
+                    Refs = refs.Where(r => r.ShaId == i.CommitHash).ToList(),
+                };
             }
         }
 
@@ -102,8 +107,7 @@ namespace WebGitNet.Controllers
                     "browse/{repo}/graph",
                     new { controller = "Graph", action = "ViewGraph", routeName = "View Graph" });
 
-                routes.MapResource("Scripts/repo-impact.js", "text/javascript");
-                routes.MapResource("Scripts/g.raphael/g.impact.js", "text/javascript");
+                routes.MapResource("Content/graph.css", "text/css");
             }
         }
     }

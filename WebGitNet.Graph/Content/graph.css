@@ -1,0 +1,23 @@
+﻿.git-ref
+{
+    border-radius: 3px 3px 3px 3px;
+    padding: 2px 2px 2px 16px;
+    display: inline-block !important;
+    display: block;
+    vertical-align: middle;
+    background-position: 2px center;
+    background-repeat: no-repeat;
+    color: #000;
+}
+
+.git-ref-branch
+{
+    background-image: url(branch.png);
+    background-color: #0F0;
+}
+
+.git-ref-tag
+{
+    background-image: url(tag.png);
+    background-color: #FF0;
+}

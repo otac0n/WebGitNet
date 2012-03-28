@@ -1,11 +1,10 @@
-﻿@model IEnumerable<LogEntry>
-
-@{
+﻿@{
     ViewBag.Title = "Repository Graph";
 }
 
 @section headers
 {
+    <link href="@Url.Content("~/Content/graph.css")" rel="stylesheet" type="text/css" />
 }
 
 <div class="pager">
@@ -14,7 +13,14 @@
 
 @foreach (var e in Model)
 {
-    <div>@e.Subject @e.CommitHash</div>
+    <div>
+        @foreach (var r in e.Refs)
+        {
+            <span class="git-ref @(r.RefType == RefType.Tag ? "git-ref-tag" : "git-ref-branch")">@r.Name</span>
+        }
+
+        @e.LogEntry.Subject
+    </div>
 }
 
 <div class="pager">
