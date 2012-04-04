@@ -134,7 +134,14 @@ namespace WebGitNet.Controllers
 
             public int Compare(LogEntry x, LogEntry y)
             {
-                return x.CommitterDate.CompareTo(y.CommitterDate);
+                var c = x.CommitterDate.CompareTo(y.CommitterDate);
+
+                if (c == 0)
+                {
+                    c = x.CommitHash.CompareTo(y.CommitHash);
+                }
+
+                return c;
             }
         }
 

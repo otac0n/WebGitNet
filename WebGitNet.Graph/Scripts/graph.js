@@ -45,7 +45,9 @@
 
         for (var p = parents.length - 1; p >= 0; p--) {
             var pCol = outgoing.indexOf(parents[p]);
-            shapes.push({ type: "connection", start: { x: col, y: row }, end: { x: pCol, y: row + 1 }, color: parents[p].substr(0, 6) });
+            if (pCol != -1) {
+                shapes.push({ type: "connection", start: { x: col, y: row }, end: { x: pCol, y: row + 1 }, color: parents[p].substr(0, 6) });
+            }
         }
 
         shapes.push({ type: "circle", center: { x: col, y: row }, color: hash.substr(0, 6) });
