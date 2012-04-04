@@ -65,7 +65,7 @@
     var margin = dotRadius * 2;
 
     canvas.width = margin * 2 + maxWidth * colWidth;
-    canvas.height = margin * 2 + data.length * rowHeight;
+    canvas.height = margin * 2 + (data.length - 1) * rowHeight;
 
     // Position the text.
     for (var y = 0; y < data.length; y++) {
