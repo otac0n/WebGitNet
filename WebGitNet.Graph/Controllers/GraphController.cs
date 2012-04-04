@@ -64,6 +64,8 @@ namespace WebGitNet.Controllers
             var refs = GitUtilities.GetAllRefs(path);
             refs.ForEach(r => add(r.ShaId));
 
+            List<string> incoming = new List<string>();
+
             while (set.Count > 0)
             {
                 var i = set.Max;
@@ -75,8 +77,46 @@ namespace WebGitNet.Controllers
                 {
                     LogEntry = i,
                     Refs = refs.Where(r => r.ShaId == i.CommitHash).ToList(),
+                    IncomingHashes = incoming,
                 };
+
+                incoming = BuildOutgoing(incoming, i);
             }
+        }
+
+        private List<string> BuildOutgoing(List<string> incoming, LogEntry entry)
+        {
+            var outgoing = incoming.ToList();
+            var col = outgoing.IndexOf(entry.CommitHash);
+            if (col == -1)
+            {
+                col = outgoing.Count;
+                outgoing.Add(entry.CommitHash);
+            }
+
+            var replaced = false;
+            for (var p = 0; p < entry.Parents.Count; p++)
+            {
+                if (outgoing.IndexOf(entry.Parents[p]) == -1)
+                {
+                    if (!replaced)
+                    {
+                        outgoing[col] = entry.Parents[p];
+                        replaced = true;
+                    }
+                    else
+                    {
+                        outgoing.Add(entry.Parents[p]);
+                    }
+                }
+            }
+
+            if (!replaced)
+            {
+                outgoing.RemoveAt(col);
+            }
+
+            return outgoing;
         }
 
         private class LogEntryComparer : IComparer<LogEntry>
@@ -108,6 +148,7 @@ namespace WebGitNet.Controllers
                     new { controller = "Graph", action = "ViewGraph", routeName = "View Graph" });
 
                 routes.MapResource("Content/graph.css", "text/css");
+                routes.MapResource("Scripts/graph.js", "text/javascript");
             }
         }
     }

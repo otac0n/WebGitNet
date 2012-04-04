@@ -15,5 +15,7 @@ namespace WebGitNet.Models
         public LogEntry LogEntry { get; set; }
 
         public List<GitRef> Refs { get; set; }
+
+        public List<string> IncomingHashes { get; set; }
     }
 }

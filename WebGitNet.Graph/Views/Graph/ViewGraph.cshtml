@@ -5,23 +5,26 @@
 @section headers
 {
     <link href="@Url.Content("~/Content/graph.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/graph.js")"></script>
 }
 
 <div class="pager">
     @Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Graph", "ViewGraph", new { repo = ViewBag.RepoName })
 </div>
 
+<div class="graph">
 @foreach (var e in Model)
 {
-    <div>
+    <div class="graph-node" data-hash="@e.LogEntry.CommitHash" data-incoming-hashes="@string.Join(",", e.IncomingHashes)">
         @foreach (var r in e.Refs)
         {
-            <span class="git-ref @(r.RefType == RefType.Tag ? "git-ref-tag" : "git-ref-branch")">@r.Name</span>
+            <span class="git-ref @("git-ref-" + r.RefType.ToString().ToLower())">@r.Name</span>
         }
 
         @e.LogEntry.Subject
     </div>
 }
+</div>
 
 <div class="pager">
     @Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Graph", "ViewGraph", new { repo = ViewBag.RepoName })
