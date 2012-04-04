@@ -68,7 +68,7 @@ namespace WebGitNet.Controllers
 
             while (set.Count > 0)
             {
-                var i = set.Max;
+                var i = set.LastOrDefault(e => !set.Any(o => o.Parents.Contains(e.CommitHash))) ?? set.Max;
                 set.Remove(i);
 
                 i.Parents.ToList().ForEach(p => add(p));
