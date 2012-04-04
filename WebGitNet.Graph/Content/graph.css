@@ -21,3 +21,8 @@
     background-image: url(tag.png);
     background-color: #FF0;
 }
+
+.graph
+{
+    position: relative;
+}

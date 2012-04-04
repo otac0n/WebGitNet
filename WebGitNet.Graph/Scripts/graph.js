@@ -16,7 +16,8 @@
         data.push({
             hash: $(this).data('hash'),
             parents: split($(this).data('parent-hashes')),
-            incoming: split($(this).data('incoming-hashes'))
+            incoming: split($(this).data('incoming-hashes')),
+            div: this
         });
     });
 
@@ -64,6 +65,16 @@
     canvas.width = margin * 2 + maxWidth * colWidth;
     canvas.height = margin * 2 + data.length * rowHeight;
 
+    // Position the text.
+    for (var y = 0; y < data.length; y++) {
+        $(data[y].div).css({
+            position: "absolute",
+            top: (y * rowHeight) + "px",
+            left: (data[y].incoming.length * colWidth) + "px"
+        });
+    }
+
+    // Draw the lines and nodes.
     for (var i = 0; i < shapes.length; i++) {
         if (shapes[i].type == "connection") {
             var start = shapes[i].start;
