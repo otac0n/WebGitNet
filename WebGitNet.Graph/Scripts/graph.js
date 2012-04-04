@@ -20,6 +20,7 @@
         });
     });
 
+    var maxWidth = 1;
     var shapes = [];
     for (var row = 0; row < data.length; row++) {
         var entry = data[row];
@@ -34,8 +35,6 @@
             incoming.push(hash);
         }
 
-        console.log("Incoming: ", incoming, "Outgoing: ", outgoing);
-
         for (var i = 0; i < incoming.length; i++) {
             var o = outgoing.indexOf(incoming[i]);
             if (o != -1) {
@@ -49,6 +48,8 @@
         }
 
         shapes.push({ type: "circle", center: { x: col, y: row }, color: hash.substr(0, 6) });
+
+        maxWidth = Math.max(maxWidth, incoming.length);
     }
 
     var canvas = $("#graph-canvas")[0];
@@ -59,6 +60,9 @@
     var lineWidth = 2;
     var dotRadius = 4;
     var margin = dotRadius * 2;
+
+    canvas.width = margin * 2 + maxWidth * colWidth;
+    canvas.height = margin * 2 + data.length * rowHeight;
 
     for (var i = 0; i < shapes.length; i++) {
         if (shapes[i].type == "connection") {
