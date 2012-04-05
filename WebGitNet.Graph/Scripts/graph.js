@@ -69,10 +69,12 @@
 
     // Position the text.
     for (var y = 0; y < data.length; y++) {
-        $(data[y].div).css({
+        $div = $(data[y].div);
+        var h = $div.height();
+        $div.css({
             position: "absolute",
-            top: (y * rowHeight) + "px",
-            left: (data[y].incoming.length * colWidth) + "px"
+            top: (margin + y * rowHeight - h / 2) + "px",
+            left: (margin + data[y].incoming.length * colWidth) + "px"
         });
     }
 
