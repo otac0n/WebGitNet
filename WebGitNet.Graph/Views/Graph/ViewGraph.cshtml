@@ -23,7 +23,7 @@
             <span class="git-ref @("git-ref-" + r.RefType.ToString().ToLower())">@r.Name</span>
         }
 
-        @e.LogEntry.Subject
+        @Html.ActionLink((string)e.LogEntry.Subject, "ViewCommit", "Browse", new { @object = (string)e.LogEntry.CommitHash }, null)
     </div>
 }
 </div>
