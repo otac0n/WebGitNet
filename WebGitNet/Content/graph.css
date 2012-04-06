@@ -16,10 +16,22 @@
     background-color: #0F0;
 }
 
+.git-ref-remotebranch
+{
+    background-image: url(branch.png);
+    background-color: #F00;
+}
+
 .git-ref-tag
 {
     background-image: url(tag.png);
     background-color: #FF0;
+}
+
+.git-ref-stash
+{
+    background-image: url(stash.png);
+    background-color: #00F;
 }
 
 .graph
