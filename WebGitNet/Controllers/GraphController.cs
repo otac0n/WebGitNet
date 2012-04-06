@@ -52,17 +52,22 @@ namespace WebGitNet.Controllers
             var hashes = new HashSet<string>();
             var set = new SortedSet<LogEntry>(LogEntryComparer.Instance);
 
-            Action<string> add = h =>
+            Action<string, int> add = (h, n) =>
             {
-                if (hashes.Add(h))
+                if (!hashes.Contains(h))
                 {
-                    var e = GitUtilities.GetLogEntries(path, 1, @object: h).Single();
-                    set.Add(e);
+                    foreach (var e in GitUtilities.GetLogEntries(path, n, @object: h))
+                    {
+                        if (hashes.Add(e.CommitHash))
+                        {
+                            set.Add(e);
+                        }
+                    }
                 }
             };
 
             var refs = GitUtilities.GetAllRefs(path);
-            refs.ForEach(r => add(r.ShaId));
+            refs.ForEach(r => add(r.ShaId, 5));
 
             List<string> incoming = new List<string>();
 
@@ -71,7 +76,7 @@ namespace WebGitNet.Controllers
                 var i = set.LastOrDefault(e => !set.Any(o => o.Parents.Contains(e.CommitHash))) ?? set.Max;
                 set.Remove(i);
 
-                i.Parents.ToList().ForEach(p => add(p));
+                i.Parents.ToList().ForEach(p => add(p, 50));
 
                 yield return new GraphEntry
                 {
