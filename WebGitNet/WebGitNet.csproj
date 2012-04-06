@@ -80,6 +80,7 @@
     <Compile Include="ActionResults\GitStreamResult.cs" />
     <Compile Include="Controllers\BrowseController.cs" />
     <Compile Include="Controllers\FileController.cs" />
+    <Compile Include="Controllers\GraphController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ServiceRpcController.cs" />
     <Compile Include="Controllers\SyndicationController.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="HtmlHelpers.cs" />
     <Compile Include="Models\AccessLevel.cs" />
     <Compile Include="Models\CreateRepoRequest.cs" />
+    <Compile Include="Models\GraphEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
@@ -112,6 +114,7 @@
     <Content Include="Content\checkerboard.png" />
     <Content Include="Content\desc.gif" />
     <Content Include="Content\feed.png" />
+    <Content Include="Content\graph.css" />
     <Content Include="Content\logo.png" />
     <Content Include="Content\merge.png" />
     <Content Include="Content\sh_typical.min.css" />
@@ -126,6 +129,7 @@
     <Content Include="Scripts\g.raphael\g.pie-min.js" />
     <Content Include="Scripts\g.raphael\g.raphael-min.js" />
     <Content Include="Scripts\g.raphael\raphael-min.js" />
+    <Content Include="Scripts\graph.js" />
     <Content Include="Scripts\jquery.background-position.min.js" />
     <Content Include="Scripts\jquery.tablesorter.min.js" />
     <Content Include="Scripts\jquery.timeago.min.js" />
@@ -222,6 +226,7 @@
     <Content Include="Views\Browse\ViewBlob.cshtml" />
     <Content Include="Views\Browse\ViewCommit.cshtml" />
     <Content Include="Views\Browse\ViewCommits.cshtml" />
+    <Content Include="Views\Graph\ViewGraph.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

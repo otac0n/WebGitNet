@@ -231,6 +231,14 @@ namespace WebGitNet
                     select int.Parse(count.Trim())).Sum();
         }
 
+        public static string[] GetFilePaths(string repoPath, string @object = null, string filter = null)
+        {
+            @object = @object ?? "HEAD";
+            var results = Execute(string.Format("git ls-tree -r -z --full-name --name-only {0}", Q(@object)), repoPath);
+
+            return results.Split('\0');
+        }
+
         public static List<LogEntry> GetLogEntries(string repoPath, int count, int skip = 0, string @object = null)
         {
             if (count < 0)
