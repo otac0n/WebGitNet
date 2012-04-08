@@ -37,4 +37,10 @@
 .graph
 {
     position: relative;
+    overflow: auto;
+}
+
+.graph-node, .graph-node a
+{
+    white-space: nowrap;
 }
