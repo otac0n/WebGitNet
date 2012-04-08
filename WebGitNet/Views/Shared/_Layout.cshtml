@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using StackExchange.Profiling
+<!DOCTYPE html>
 <html>
 <head>
     <title>@ViewBag.Title | WebGit .NET</title>
@@ -8,7 +9,7 @@
     <script src="@Url.Content("~/Scripts/jquery-ui.min.js")" type="text/javascript"></script>
     @RenderSection("headers", required: false)
     @{WriteTo(new StringWriter(), RenderSection("intellisense", required: false));}
-    @MvcMiniProfiler.MiniProfiler.RenderIncludes(showTrivial: true, showTimeWithChildren: true, position: MvcMiniProfiler.RenderPosition.Right)
+    @MiniProfiler.RenderIncludes(showTrivial: true, showTimeWithChildren: true, position: RenderPosition.Right)
 </head>
 
 <body>
@@ -42,7 +43,7 @@
     </div>
 
     <div id="main">
-        @using (MvcMiniProfiler.MiniProfiler.StepStatic("Rendering Body"))
+        @using (MiniProfiler.StepStatic("Rendering Body"))
         {
             @RenderBody()
         }

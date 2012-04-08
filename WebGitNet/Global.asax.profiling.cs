@@ -7,7 +7,7 @@
 
 namespace WebGitNet
 {
-    using MvcMiniProfiler;
+    using StackExchange.Profiling;
 
     public partial class WebGitNetApplication
     {

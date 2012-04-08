@@ -14,10 +14,9 @@ namespace WebGitNet
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
-    using System.Threading;
-    using System.Web.Configuration;
-    using MvcMiniProfiler;
     using System.Threading.Tasks;
+    using System.Web.Configuration;
+    using StackExchange.Profiling;
 
     public static class GitUtilities
     {
