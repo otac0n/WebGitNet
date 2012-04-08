@@ -27,7 +27,7 @@ namespace WebGitNet.Controllers
 
             const int PageSize = 50;
             int skip = PageSize * (page - 1);
-            var count = GitUtilities.CountCommits(resourceInfo.FullPath);
+            var count = GitUtilities.CountCommits(resourceInfo.FullPath, allRefs: true);
 
             if (skip >= count)
             {
@@ -38,7 +38,7 @@ namespace WebGitNet.Controllers
             AddRepoBreadCrumb(repo);
             this.BreadCrumbs.Append("Graph", "ViewGraph", "View Graph", new { repo });
 
-            var commits = GetLogEntries(resourceInfo.FullPath).Skip(skip).Take(PageSize).ToList();
+            var commits = GetLogEntries(resourceInfo.FullPath, skip + PageSize).Skip(skip).ToList();
 
             ViewBag.Page = page;
             ViewBag.PageCount = (count / PageSize) + (count % PageSize > 0 ? 1 : 0);
@@ -47,46 +47,27 @@ namespace WebGitNet.Controllers
             return View(commits);
         }
 
-        public IEnumerable<GraphEntry> GetLogEntries(string path)
+        public List<GraphEntry> GetLogEntries(string path, int count)
         {
-            var hashes = new HashSet<string>();
-            var set = new SortedSet<LogEntry>(LogEntryComparer.Instance);
-
-            Action<string, int> add = (h, n) =>
-            {
-                if (!hashes.Contains(h))
-                {
-                    foreach (var e in GitUtilities.GetLogEntries(path, n, @object: h))
-                    {
-                        if (hashes.Add(e.CommitHash))
-                        {
-                            set.Add(e);
-                        }
-                    }
-                }
-            };
-
+            var entries = GitUtilities.GetLogEntries(path, count + 1000, allRefs: true);
             var refs = GitUtilities.GetAllRefs(path);
-            refs.ForEach(r => add(r.ShaId, 5));
 
-            List<string> incoming = new List<string>();
+            var results = new List<GraphEntry>();
 
-            while (set.Count > 0)
+            var incoming = new List<string>();
+            foreach (var entry in entries.Take(count))
             {
-                var i = set.LastOrDefault(e => !set.Any(o => o.Parents.Contains(e.CommitHash))) ?? set.Max;
-                set.Remove(i);
-
-                i.Parents.ToList().ForEach(p => add(p, 50));
-
-                yield return new GraphEntry
+                results.Add(new GraphEntry
                 {
-                    LogEntry = i,
-                    Refs = refs.Where(r => r.ShaId == i.CommitHash).ToList(),
+                    LogEntry = entry,
+                    Refs = refs.Where(r => r.ShaId == entry.CommitHash).ToList(),
                     IncomingHashes = incoming,
-                };
+                });
 
-                incoming = BuildOutgoing(incoming, i);
+                incoming = BuildOutgoing(incoming, entry);
             }
+
+            return results;
         }
 
         private List<string> BuildOutgoing(List<string> incoming, LogEntry entry)
