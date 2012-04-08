@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<GraphEntry>
+@{
     ViewBag.Title = "Repository Graph";
 }
 
@@ -23,7 +24,7 @@
             <span class="git-ref @("git-ref-" + r.RefType.ToString().ToLower())">@r.Name</span>
         }
 
-        @Html.ActionLink((string)e.LogEntry.Subject, "ViewCommit", "Browse", new { @object = (string)e.LogEntry.CommitHash }, null)
+        @Html.ActionLink(string.IsNullOrWhiteSpace(e.LogEntry.Subject) ? "(no subject)" : e.LogEntry.Subject, "ViewCommit", "Browse", new { @object = e.LogEntry.CommitHash }, null)
     </div>
 }
 </div>
