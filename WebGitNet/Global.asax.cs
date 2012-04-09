@@ -79,15 +79,16 @@ namespace WebGitNet
             public void Install(IWindsorContainer container, IConfigurationStore configurationStore)
             {
                 container.Register(AllTypes.FromThisAssembly()
-                                           .BasedOn<IRouteRegisterer>());
+                                           .BasedOn<IRouteRegisterer>()
+                                           .WithService.FromInterface());
                 container.Register(AllTypes.FromThisAssembly()
                                            .BasedOn<IController>()
                                            .Configure(c => c.Named(c.Implementation.Name))
-                                           .Configure(c => c.LifeStyle.Transient));
+                                           .LifestyleTransient());
                 container.Register(AllTypes.From(typeof(PluginContentController))
                                            .BasedOn<IController>()
                                            .Configure(c => c.Named(c.Implementation.Name))
-                                           .Configure(c => c.LifeStyle.Transient));
+                                           .LifestyleTransient());
             }
         }
     }

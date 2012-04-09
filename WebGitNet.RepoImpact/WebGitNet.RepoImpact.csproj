@@ -32,12 +32,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core">
-      <HintPath>..\packages\Castle.Core.2.5.2\lib\NET35\Castle.Core.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\packages\Castle.Core.3.0.0.4001\lib\net40-client\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Windsor">
-      <HintPath>..\packages\Castle.Windsor.2.5.3\lib\NET40\Castle.Windsor.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\packages\Castle.Windsor.3.0.0.4001\lib\net40\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -60,7 +58,6 @@
     <Compile Include="Models\RepoImpact.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <EmbeddedResource Include="Views\Impact\ViewRepoImpact.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +70,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Scripts\g.raphael\g.impact.js" />
     <EmbeddedResource Include="Scripts\repo-impact.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

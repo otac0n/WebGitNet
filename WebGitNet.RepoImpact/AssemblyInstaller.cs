@@ -17,11 +17,12 @@ namespace WebGitNet.RepoImpact
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
             container.Register(AllTypes.FromThisAssembly()
-                                       .BasedOn<IRouteRegisterer>());
+                                       .BasedOn<IRouteRegisterer>()
+                                       .WithService.FromInterface());
             container.Register(AllTypes.FromThisAssembly()
                                        .BasedOn<IController>()
                                        .Configure(c => c.Named(c.Implementation.Name))
-                                       .Configure(c => c.LifeStyle.Transient));
+                                       .LifestyleTransient());
         }
     }
 }
