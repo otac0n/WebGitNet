@@ -98,7 +98,7 @@ namespace WebGitNet.Controllers
                     }
                     else
                     {
-                        nodeColors[parent] = color = colorNumber++;
+                        nodeColors[parent] = colorNumber++;
                     }
                 }
             }
