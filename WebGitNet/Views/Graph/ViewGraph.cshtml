@@ -18,7 +18,7 @@
     </canvas>
 @foreach (var e in Model)
 {
-    <div class="graph-node" data-hash="@e.LogEntry.CommitHash" data-parent-hashes="@string.Join(",", e.LogEntry.Parents)" data-incoming-hashes="@string.Join(",", e.IncomingHashes)">
+    <div class="graph-node" data-node="@e.Node" data-parent-nodes="@string.Join(",", e.ParentNodes)" data-incoming-nodes="@string.Join(",", e.IncomingNodes)">
         @foreach (var r in e.Refs)
         {
             <span class="git-ref @("git-ref-" + r.RefType.ToString().ToLower())">@r.Name</span>

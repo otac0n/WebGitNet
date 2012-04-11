@@ -96,6 +96,7 @@
     <Compile Include="Models\AccessLevel.cs" />
     <Compile Include="Models\CreateRepoRequest.cs" />
     <Compile Include="Models\GraphEntry.cs" />
+    <Compile Include="Models\NodeInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>

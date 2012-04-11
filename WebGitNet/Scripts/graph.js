@@ -1,11 +1,23 @@
 ﻿$(function () {
     var $divs = $(".graph-node");
 
+    var node = function (str) {
+        var i = str.split(':');
+        return {
+            hash: i[0],
+            color: +i[1]
+        };
+    };
+
     var split = function (hashes) {
         var result = hashes.split(',');
         var empty;
         while ((empty = result.indexOf('')) != -1) {
             result.splice(empty, 1);
+        }
+
+        for (var i = 0; i < result.length; i++) {
+            result[i] = node(result[i]);
         }
 
         return result;
@@ -14,43 +26,70 @@
     var data = [];
     $divs.each(function () {
         data.push({
-            hash: $(this).data('hash'),
-            parents: split($(this).data('parent-hashes')),
-            incoming: split($(this).data('incoming-hashes')),
+            node: node($(this).data('node')),
+            parents: split($(this).data('parent-nodes')),
+            incoming: split($(this).data('incoming-nodes')),
             div: this
         });
     });
+
+    var usePalette = true;
+    var palette = [
+        "ff0000",
+        "00ff00",
+        "0000ff",
+        "ff00ff",
+        "00ffff"
+    ];
+
+    var color = function (node) {
+        if (usePalette) {
+            return palette[node.color % palette.length];
+        } else {
+            return node.hash.substr(0, 6);
+        }
+    };
+
+    var find = function (list, predicate) {
+        for (var i = 0; i < list.length; i++) {
+            if (predicate(list[i])) {
+                return i;
+            }
+        }
+
+        return -1;
+    };
 
     var maxWidth = 1;
     var shapes = [];
     for (var row = 0; row < data.length; row++) {
         var entry = data[row];
-        var hash = entry.hash;
+        var node = entry.node;
         var parents = entry.parents;
         var incoming = entry.incoming;
         var outgoing = row < data.length - 1 ? data[row + 1].incoming : [];
 
-        var col = incoming.indexOf(hash);
+        var col = find(incoming, function (n) { return n.hash == node.hash; });
         if (col == -1) {
             col = incoming.length;
-            incoming.push(hash);
+            incoming.push(node);
         }
 
         for (var i = 0; i < incoming.length; i++) {
-            var o = outgoing.indexOf(incoming[i]);
+            var o = find(outgoing, function (n) { return n.hash == incoming[i].hash; });
             if (o != -1) {
-                shapes.push({ type: "connection", start: { x: i, y: row }, end: { x: o, y: row + 1 }, color: incoming[i].substr(0, 6) });
+                shapes.push({ type: "connection", start: { x: i, y: row }, end: { x: o, y: row + 1 }, color: color(incoming[i]) });
             }
         }
 
         for (var p = parents.length - 1; p >= 0; p--) {
-            var pCol = outgoing.indexOf(parents[p]);
+            var pCol = find(outgoing, function (n) { return n.hash == parents[p].hash; });
             if (pCol != -1) {
-                shapes.push({ type: "connection", start: { x: col, y: row }, end: { x: pCol, y: row + 1 }, color: parents[p].substr(0, 6) });
+                shapes.push({ type: "connection", start: { x: col, y: row }, end: { x: pCol, y: row + 1 }, color: color(parents[p]) });
             }
         }
 
-        shapes.push({ type: "circle", center: { x: col, y: row }, color: hash.substr(0, 6) });
+        shapes.push({ type: "circle", center: { x: col, y: row }, color: color(node) });
 
         maxWidth = Math.max(maxWidth, incoming.length);
     }

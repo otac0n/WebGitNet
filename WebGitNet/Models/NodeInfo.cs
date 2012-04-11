@@ -9,17 +9,18 @@ namespace WebGitNet.Models
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
 
-    public class GraphEntry
+    public class NodeInfo
     {
-        public LogEntry LogEntry { get; set; }
+        public string Hash { get; set; }
 
-        public List<GitRef> Refs { get; set; }
+        public int Color { get; set; }
 
-        public NodeInfo Node { get; set; }
-
-        public List<NodeInfo> ParentNodes { get; set; }
-
-        public List<NodeInfo> IncomingNodes { get; set; }
+        public override string ToString()
+        {
+            return this.Hash + ":" + this.Color;
+        }
     }
 }

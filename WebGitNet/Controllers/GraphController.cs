@@ -49,6 +49,9 @@ namespace WebGitNet.Controllers
 
         public List<GraphEntry> GetLogEntries(string path, int count)
         {
+            var nodeColors = new Dictionary<string, int>();
+            var colorNumber = 0;
+
             var entries = GitUtilities.GetLogEntries(path, count + 1000, allRefs: true);
             var refs = GitUtilities.GetAllRefs(path);
 
@@ -57,17 +60,50 @@ namespace WebGitNet.Controllers
             var incoming = new List<string>();
             foreach (var entry in entries.Take(count))
             {
+                var color = ColorNode(entry, nodeColors, ref colorNumber);
+
                 results.Add(new GraphEntry
                 {
                     LogEntry = entry,
                     Refs = refs.Where(r => r.ShaId == entry.CommitHash).ToList(),
-                    IncomingHashes = incoming,
+
+                    Node = new NodeInfo { Hash = entry.CommitHash, Color = color },
+                    IncomingNodes = incoming.Select(i => new NodeInfo { Hash = i, Color = nodeColors[i] }).ToList(),
+                    ParentNodes = entry.Parents.Select(i => new NodeInfo { Hash = i, Color = nodeColors[i] }).ToList(),
                 });
 
                 incoming = BuildOutgoing(incoming, entry);
             }
 
             return results;
+        }
+
+        private static int ColorNode(LogEntry entry, Dictionary<string, int> nodeColors, ref int colorNumber)
+        {
+            int color;
+            if (!nodeColors.TryGetValue(entry.CommitHash, out color))
+            {
+                nodeColors[entry.CommitHash] = color = colorNumber++;
+            }
+
+            bool transferedColor = false;
+            foreach (var parent in entry.Parents)
+            {
+                if (!nodeColors.ContainsKey(parent))
+                {
+                    if (!transferedColor)
+                    {
+                        transferedColor = true;
+                        nodeColors[parent] = color;
+                    }
+                    else
+                    {
+                        nodeColors[parent] = color = colorNumber++;
+                    }
+                }
+            }
+
+            return color;
         }
 
         private List<string> BuildOutgoing(List<string> incoming, LogEntry entry)
