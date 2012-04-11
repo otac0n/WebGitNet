@@ -61,7 +61,9 @@
     var colWidth = 13;
     var rowHeight = 24;
     var lineWidth = 2;
-    var dotRadius = 4;
+    var curveLine = true;
+    var dotRadius = 3;
+    var dotBorder = 0;
     var margin = dotRadius * 2;
 
     canvas.width = margin * 2 + maxWidth * colWidth;
@@ -86,7 +88,11 @@
             var color = shapes[i].color;
             context.beginPath();
             context.moveTo(margin + start.x * colWidth, margin + start.y * rowHeight);
-            context.bezierCurveTo(margin + start.x * colWidth, margin + end.y * rowHeight - rowHeight / 2, margin + end.x * colWidth, margin + start.y * rowHeight + rowHeight / 2, margin + end.x * colWidth, margin + end.y * rowHeight);
+            if (curveLine) {
+                context.bezierCurveTo(margin + start.x * colWidth, margin + end.y * rowHeight - rowHeight / 2, margin + end.x * colWidth, margin + start.y * rowHeight + rowHeight / 2, margin + end.x * colWidth, margin + end.y * rowHeight);
+            } else {
+                context.lineTo(margin + end.x * colWidth, margin + end.y * rowHeight);
+            }
             context.strokeStyle = "#" + color;
             context.lineWidth = lineWidth;
             context.stroke();
@@ -97,9 +103,11 @@
             context.arc(margin + center.x * colWidth, margin + center.y * rowHeight, dotRadius, 0, 2 * Math.PI, false);
             context.fillStyle = "#" + color;
             context.fill();
-            context.strokeStyle = "#000";
-            context.lineWidth = 1;
-            context.stroke();
+            if (dotBorder) {
+                context.strokeStyle = "#000";
+                context.lineWidth = dotBorder;
+                context.stroke();
+            }
         }
     }
 });
