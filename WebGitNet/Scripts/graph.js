@@ -35,11 +35,17 @@
 
     var usePalette = true;
     var palette = [
-        "ff0000",
-        "00ff00",
-        "0000ff",
-        "ff00ff",
-        "00ffff"
+        "0061B0",
+        "6A4A3D",
+        "911822",
+        "CCAD49",
+        "439959",
+        "A01E86",
+        "875B0E",
+        "EA4517",
+        "2B14AD",
+        "3E6000",
+        "68727F"
     ];
 
     var color = function (node) {
