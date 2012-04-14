@@ -110,6 +110,8 @@
     var dotRadius = 3;
     var dotBorder = 0;
     var margin = dotRadius * 2;
+    var rightAlign = true;
+    var flushLeft = false;
 
     canvas.width = margin * 2 + maxWidth * colWidth;
     canvas.height = margin * 2 + (data.length - 1) * rowHeight;
@@ -121,31 +123,38 @@
         $div.css({
             position: "absolute",
             top: (margin + y * rowHeight - h / 2) + "px",
-            left: (margin + data[y].incoming.length * colWidth) + "px"
+            left: (margin + (rightAlign || flushLeft ? maxWidth : data[y].incoming.length) * colWidth) + "px"
         });
     }
+
+    var map = function (location) {
+        return {
+            x: margin + (rightAlign ? maxWidth - location.x - 1 : location.x) * colWidth,
+            y: margin + location.y * rowHeight
+        };
+    };
 
     // Draw the lines and nodes.
     for (var i = 0; i < shapes.length; i++) {
         if (shapes[i].type == "connection") {
-            var start = shapes[i].start;
-            var end = shapes[i].end;
+            var start = map(shapes[i].start);
+            var end = map(shapes[i].end);
             var color = shapes[i].color;
             context.beginPath();
-            context.moveTo(margin + start.x * colWidth, margin + start.y * rowHeight);
+            context.moveTo(start.x, start.y);
             if (curveLine) {
-                context.bezierCurveTo(margin + start.x * colWidth, margin + end.y * rowHeight - rowHeight / 2, margin + end.x * colWidth, margin + start.y * rowHeight + rowHeight / 2, margin + end.x * colWidth, margin + end.y * rowHeight);
+                context.bezierCurveTo(start.x, end.y - rowHeight / 2, end.x, start.y + rowHeight / 2, end.x, end.y);
             } else {
-                context.lineTo(margin + end.x * colWidth, margin + end.y * rowHeight);
+                context.lineTo(end.x, end.y);
             }
             context.strokeStyle = "#" + color;
             context.lineWidth = lineWidth;
             context.stroke();
         } else if (shapes[i].type == "circle") {
-            var center = shapes[i].center;
+            var center = map(shapes[i].center);
             var color = shapes[i].color;
             context.beginPath();
-            context.arc(margin + center.x * colWidth, margin + center.y * rowHeight, dotRadius, 0, 2 * Math.PI, false);
+            context.arc(center.x, center.y, dotRadius, 0, 2 * Math.PI, false);
             context.fillStyle = "#" + color;
             context.fill();
             if (dotBorder) {
