@@ -1,4 +1,31 @@
 ﻿$(function () {
+    var options = {
+        colWidth: 13,
+        rowHeight: 24,
+        lineWidth: 2,
+        curveLine: true,
+        dotRadius: 3,
+        dotBorder: 0,
+        margin: 10,
+        rightAlign: true,
+        flushLeft: false,
+        usePalette: true,
+        palette: [
+            "0061B0",
+            "911822",
+            "CCAD49",
+            "439959",
+            "A01E86",
+            "875B0E",
+            "EA4517",
+            "2B14AD",
+            "3E6000",
+            "68727F",
+            "000000"
+        ]
+    };
+    options.margin = Math.max((options.dotRadius + options.dotBorder) * 2, options.margin);
+
     var $divs = $(".graph-node");
 
     var node = function (str) {
@@ -33,24 +60,9 @@
         });
     });
 
-    var usePalette = true;
-    var palette = [
-        "0061B0",
-        "911822",
-        "CCAD49",
-        "439959",
-        "A01E86",
-        "875B0E",
-        "EA4517",
-        "2B14AD",
-        "3E6000",
-        "68727F",
-        "000000"
-    ];
-
     var color = function (node) {
-        if (usePalette) {
-            return palette[node.color % palette.length];
+        if (options.usePalette) {
+            return options.palette[node.color % options.palette.length];
         } else {
             return node.hash.substr(0, 6);
         }
@@ -103,18 +115,8 @@
     var canvas = $("#graph-canvas")[0];
     var context = canvas.getContext("2d");
 
-    var colWidth = 13;
-    var rowHeight = 24;
-    var lineWidth = 2;
-    var curveLine = true;
-    var dotRadius = 3;
-    var dotBorder = 0;
-    var margin = dotRadius * 2;
-    var rightAlign = true;
-    var flushLeft = false;
-
-    canvas.width = margin * 2 + maxWidth * colWidth;
-    canvas.height = margin * 2 + (data.length - 1) * rowHeight;
+    canvas.width = options.margin * 2 + maxWidth * options.colWidth;
+    canvas.height = options.margin * 2 + (data.length - 1) * options.rowHeight;
 
     // Position the text.
     for (var y = 0; y < data.length; y++) {
@@ -122,15 +124,15 @@
         var h = $div.height();
         $div.css({
             position: "absolute",
-            top: (margin + y * rowHeight - h / 2) + "px",
-            left: (margin + (rightAlign || flushLeft ? maxWidth : data[y].incoming.length) * colWidth) + "px"
+            top: (options.margin + y * options.rowHeight - h / 2) + "px",
+            left: (options.margin + (options.rightAlign || options.flushLeft ? maxWidth : data[y].incoming.length) * options.colWidth) + "px"
         });
     }
 
     var map = function (location) {
         return {
-            x: margin + (rightAlign ? maxWidth - location.x - 1 : location.x) * colWidth,
-            y: margin + location.y * rowHeight
+            x: options.margin + (options.rightAlign ? maxWidth - location.x - 1 : location.x) * options.colWidth,
+            y: options.margin + location.y * options.rowHeight
         };
     };
 
@@ -142,24 +144,24 @@
             var color = shapes[i].color;
             context.beginPath();
             context.moveTo(start.x, start.y);
-            if (curveLine) {
-                context.bezierCurveTo(start.x, end.y - rowHeight / 2, end.x, start.y + rowHeight / 2, end.x, end.y);
+            if (options.curveLine) {
+                context.bezierCurveTo(start.x, end.y - options.rowHeight / 2, end.x, start.y + options.rowHeight / 2, end.x, end.y);
             } else {
                 context.lineTo(end.x, end.y);
             }
             context.strokeStyle = "#" + color;
-            context.lineWidth = lineWidth;
+            context.lineWidth = options.lineWidth;
             context.stroke();
         } else if (shapes[i].type == "circle") {
             var center = map(shapes[i].center);
             var color = shapes[i].color;
             context.beginPath();
-            context.arc(center.x, center.y, dotRadius, 0, 2 * Math.PI, false);
+            context.arc(center.x, center.y, options.dotRadius, 0, 2 * Math.PI, false);
             context.fillStyle = "#" + color;
             context.fill();
-            if (dotBorder) {
+            if (options.dotBorder) {
                 context.strokeStyle = "#000";
-                context.lineWidth = dotBorder;
+                context.lineWidth = options.dotBorder;
                 context.stroke();
             }
         }
