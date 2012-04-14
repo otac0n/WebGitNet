@@ -1,33 +1,32 @@
-﻿$(function () {
-    var options = {
-        colWidth: 13,
-        rowHeight: 24,
-        lineWidth: 2,
-        curveLine: true,
-        dotRadius: 3,
-        dotBorder: 0,
-        margin: 10,
-        rightAlign: true,
-        flushLeft: false,
-        usePalette: true,
-        palette: [
-            "0061B0",
-            "911822",
-            "CCAD49",
-            "439959",
-            "A01E86",
-            "875B0E",
-            "EA4517",
-            "2B14AD",
-            "3E6000",
-            "68727F",
-            "000000"
-        ]
-    };
-    options.margin = Math.max((options.dotRadius + options.dotBorder) * 2, options.margin);
+﻿var Graph = {};
 
-    var $divs = $(".graph-node");
+Graph.options = {
+    colWidth: 13,
+    rowHeight: 24,
+    lineWidth: 2,
+    curveLine: true,
+    dotRadius: 3,
+    dotBorder: 0,
+    margin: 10,
+    rightAlign: true,
+    flushLeft: false,
+    usePalette: true,
+    palette: [
+        "0061B0",
+        "911822",
+        "CCAD49",
+        "439959",
+        "A01E86",
+        "875B0E",
+        "EA4517",
+        "2B14AD",
+        "3E6000",
+        "68727F",
+        "000000"
+    ]
+};
 
+Graph.init = function () {
     var node = function (str) {
         var i = str.split(':');
         return {
@@ -50,23 +49,22 @@
         return result;
     };
 
-    var data = [];
-    $divs.each(function () {
-        data.push({
+    Graph.data = [];
+    $(".graph-node").each(function () {
+        Graph.data.push({
             node: node($(this).data('node')),
             parents: split($(this).data('parent-nodes')),
             incoming: split($(this).data('incoming-nodes')),
             div: this
         });
     });
+};
 
-    var color = function (node) {
-        if (options.usePalette) {
-            return options.palette[node.color % options.palette.length];
-        } else {
-            return node.hash.substr(0, 6);
-        }
-    };
+Graph.render = function () {
+    var data = this.data;
+    var options = this.options;
+
+    options.margin = Math.max((options.dotRadius + options.dotBorder) * 2, options.margin);
 
     var find = function (list, predicate) {
         for (var i = 0; i < list.length; i++) {
@@ -76,6 +74,14 @@
         }
 
         return -1;
+    };
+
+    var color = function (node) {
+        if (options.usePalette) {
+            return options.palette[node.color % options.palette.length];
+        } else {
+            return node.hash.substr(0, 6);
+        }
     };
 
     var maxWidth = 1;
@@ -166,4 +172,9 @@
             }
         }
     }
+};
+
+$(function () {
+    Graph.init();
+    Graph.render();
 });
