@@ -1,9 +1,11 @@
 ﻿/// <reference path="~/Scripts/jquery-1.7.1-vsdoc.js" />
 /// <reference path="~/Scripts/jquery-ui-1.8.18.js" />
+/// <reference path="~/Scripts/jquery.cookie.js" />
+/// <reference path="~/Scripts/json2.js" />
 
 var Graph = {};
 
-Graph.options = {
+Graph.defaults = {
     colWidth: 13,
     rowHeight: 24,
     lineWidth: 2,
@@ -30,6 +32,8 @@ Graph.options = {
 };
 
 Graph.init = function () {
+    Graph.options = JSON.parse($.cookie("Graph.options")) || {};
+
     var node = function (str) {
         var i = str.split(':');
         return {
@@ -65,7 +69,7 @@ Graph.init = function () {
 
 Graph.render = function () {
     var data = this.data;
-    var options = $.extend({}, this.options);
+    var options = $.extend({}, this.defaults, this.options);
 
     options.margin = Math.max((options.dotRadius + options.dotBorder) * 2, options.margin);
 
@@ -183,46 +187,48 @@ $(function () {
 });
 
 $(function () {
+    var options = $.extend({}, Graph.defaults, Graph.options);
+    var save = function (value) {
+        $.extend(Graph.options, value);
+        $.cookie("Graph.options", JSON.stringify(Graph.options));
+        Graph.render();
+    };
+
     $("#show-graph-settings").click(function () {
         $("#graph-settings").toggle('slow');
     });
 
     $("input[name='align']").each(function () {
-        $(this).prop("checked", $(this).val() == (Graph.options.rightAlign ? "right" : "left"));
+        $(this).prop("checked", $(this).val() == (options.rightAlign ? "right" : "left"));
     }).change(function () {
-        Graph.options.rightAlign = $("input[name='align']:checked").val() == "right";
-        Graph.render();
+        save({ rightAlign: $("input[name='align']:checked").val() == "right" });
     });
 
-    $("input[name='outline']").prop("checked", !Graph.options.flushLeft).change(function () {
-        Graph.options.flushLeft = !$(this).prop("checked");
-        Graph.render();
+    $("input[name='outline']").prop("checked", !options.flushLeft).change(function () {
+        save({ flushLeft: !$(this).prop("checked") });
     });
 
     $("#lineWidth").slider({
         min: 1,
         max: 5,
         range: 'min',
-        value: Graph.options.lineWidth,
+        value: options.lineWidth,
         slide: function (event, ui) {
-            Graph.options.lineWidth = ui.value;
-            Graph.render();
+            save({ lineWidth: ui.value });
         }
     });
 
-    $("input[name='curveLine']").prop("checked", Graph.options.curveLine).change(function () {
-        Graph.options.curveLine = $(this).prop("checked");
-        Graph.render();
+    $("input[name='curveLine']").prop("checked", options.curveLine).change(function () {
+        save({ curveLine: $(this).prop("checked") });
     });
 
     $("#dotRadius").slider({
         min: 1,
         max: 5,
         range: 'min',
-        value: Graph.options.dotRadius,
+        value: options.dotRadius,
         slide: function (event, ui) {
-            Graph.options.dotRadius = ui.value;
-            Graph.render();
+            save({ dotRadius: ui.value });
         }
     });
 
@@ -230,10 +236,9 @@ $(function () {
         min: 0,
         max: 3,
         range: 'min',
-        value: Graph.options.dotBorder,
+        value: options.dotBorder,
         slide: function (event, ui) {
-            Graph.options.dotBorder = ui.value;
-            Graph.render();
+            save({ dotBorder: ui.value });
         }
     });
 
@@ -241,10 +246,9 @@ $(function () {
         min: 5,
         max: 30,
         range: 'min',
-        value: Graph.options.colWidth,
+        value: options.colWidth,
         slide: function (event, ui) {
-            Graph.options.colWidth = ui.value;
-            Graph.render();
+            save({ colWidth: ui.value });
         }
     });
 
@@ -252,10 +256,9 @@ $(function () {
         min: 5,
         max: 30,
         range: 'min',
-        value: Graph.options.rowHeight,
+        value: options.rowHeight,
         slide: function (event, ui) {
-            Graph.options.rowHeight = ui.value;
-            Graph.render();
+            save({ rowHeight: ui.value });
         }
     });
 });
