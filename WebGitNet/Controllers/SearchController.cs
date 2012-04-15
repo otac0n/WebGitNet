@@ -59,7 +59,7 @@ namespace WebGitNet.Controllers
 
             Task.WaitAll(results);
 
-            return View("Search", new List<SearchResult>());
+            return View("Search", results.Select(r => r.Result).SelectMany(r => r));
         }
 
         public class RouteRegisterer : IRouteRegisterer

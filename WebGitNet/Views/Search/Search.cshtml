@@ -5,3 +5,16 @@
 }
 
 <h2>@ViewBag.Title</h2>
+
+<ul>
+@foreach (var result in Model)
+{
+    <li>
+        @Html.ActionLink(result.LinkText, result.ActionName, result.ControllerName, result.RouteValues, null)<br/>
+        @foreach (var r in result.Intervals)
+        {
+            @r.Value
+        }
+    </li>
+}
+</ul>

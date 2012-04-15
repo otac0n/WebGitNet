@@ -12,14 +12,14 @@ namespace WebGitNet.Search
 
     public class SearchResult
     {
-        public string Controller { get; set; }
+        public string LinkText { get; set; }
 
-        public string Action { get; set; }
+        public string ControllerName { get; set; }
+
+        public string ActionName { get; set; }
 
         public object RouteValues { get; set; }
 
-        public string ResultText { get; set; }
-
-        public IList<StringInterval> Results { get; set; }
+        public IList<StringInterval> Intervals { get; set; }
     }
 }

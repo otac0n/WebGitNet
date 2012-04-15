@@ -43,10 +43,11 @@
                 {
                     yield return new SearchResult
                     {
-                        Action = "ViewRepo",
-                        Controller = "Browse",
-                        RouteValues = new { RepoName = repo.Name },
-                        Results = Enumerable.Concat(
+                        LinkText = repo.Name,
+                        ActionName = "ViewRepo",
+                        ControllerName = "Browse",
+                        RouteValues = new { repo = repo.Name },
+                        Intervals = Enumerable.Concat(
                             matches.SelectMany(m => m.NameMathces),
                             matches.SelectMany(m => m.DescriptionMatches)).ToList(),
                     };
