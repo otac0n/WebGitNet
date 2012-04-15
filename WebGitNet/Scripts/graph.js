@@ -1,4 +1,7 @@
-﻿var Graph = {};
+﻿/// <reference path="~/Scripts/jquery-1.7.1-vsdoc.js" />
+/// <reference path="~/Scripts/jquery-ui-1.8.18.js" />
+
+var Graph = {};
 
 Graph.options = {
     colWidth: 13,
@@ -177,4 +180,22 @@ Graph.render = function () {
 $(function () {
     Graph.init();
     Graph.render();
+});
+
+$(function () {
+    $("#show-graph-settings").click(function () {
+        $("#graph-settings").toggle('slow');
+    });
+
+    $("input[name='align']").each(function () {
+        $(this).prop("checked", $(this).val() == (Graph.options.rightAlign ? "right" : "left"));
+    }).change(function () {
+        Graph.options.rightAlign = $("input[name='align']:checked").val() == "right";
+        Graph.render();
+    });
+
+    $("input[name='outline']").prop("checked", !Graph.options.flushLeft).change(function () {
+        Graph.options.flushLeft = !$(this).prop("checked");
+        Graph.render();
+    });
 });

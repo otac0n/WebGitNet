@@ -42,3 +42,13 @@
 {
     white-space: nowrap;
 }
+
+.settings
+{
+    float: right;
+}
+
+#graph-settings
+{
+    display: none;
+}
