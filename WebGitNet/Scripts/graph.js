@@ -65,7 +65,7 @@ Graph.init = function () {
 
 Graph.render = function () {
     var data = this.data;
-    var options = this.options;
+    var options = $.extend({}, this.options);
 
     options.margin = Math.max((options.dotRadius + options.dotBorder) * 2, options.margin);
 
@@ -197,5 +197,65 @@ $(function () {
     $("input[name='outline']").prop("checked", !Graph.options.flushLeft).change(function () {
         Graph.options.flushLeft = !$(this).prop("checked");
         Graph.render();
+    });
+
+    $("#lineWidth").slider({
+        min: 1,
+        max: 5,
+        range: 'min',
+        value: Graph.options.lineWidth,
+        slide: function (event, ui) {
+            Graph.options.lineWidth = ui.value;
+            Graph.render();
+        }
+    });
+
+    $("input[name='curveLine']").prop("checked", Graph.options.curveLine).change(function () {
+        Graph.options.curveLine = $(this).prop("checked");
+        Graph.render();
+    });
+
+    $("#dotRadius").slider({
+        min: 1,
+        max: 5,
+        range: 'min',
+        value: Graph.options.dotRadius,
+        slide: function (event, ui) {
+            Graph.options.dotRadius = ui.value;
+            Graph.render();
+        }
+    });
+
+    $("#dotBorder").slider({
+        min: 0,
+        max: 3,
+        range: 'min',
+        value: Graph.options.dotBorder,
+        slide: function (event, ui) {
+            Graph.options.dotBorder = ui.value;
+            Graph.render();
+        }
+    });
+
+    $("#colWidth").slider({
+        min: 5,
+        max: 30,
+        range: 'min',
+        value: Graph.options.colWidth,
+        slide: function (event, ui) {
+            Graph.options.colWidth = ui.value;
+            Graph.render();
+        }
+    });
+
+    $("#rowHeight").slider({
+        min: 5,
+        max: 30,
+        range: 'min',
+        value: Graph.options.rowHeight,
+        slide: function (event, ui) {
+            Graph.options.rowHeight = ui.value;
+            Graph.render();
+        }
     });
 });
