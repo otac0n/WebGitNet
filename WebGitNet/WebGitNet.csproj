@@ -84,6 +84,7 @@
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\GraphController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\ServiceRpcController.cs" />
     <Compile Include="Controllers\SyndicationController.cs" />
     <Compile Include="Global.asax.cs">
@@ -246,6 +247,7 @@
     <Content Include="Views\Browse\ViewCommit.cshtml" />
     <Content Include="Views\Browse\ViewCommits.cshtml" />
     <Content Include="Views\Graph\ViewGraph.cshtml" />
+    <Content Include="Views\Search\Search.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -9,6 +9,13 @@
     <link rel="alternate" type="application/atom+xml" href="@Url.Action("LastCommits", "Syndication")" title="Last Commit in All Repos" />
 }
 
+<div class="search">
+@using (Html.BeginForm("Search", "Search", FormMethod.Get))
+{
+    <input type="text" name="q" /> <button type="submit">Search</button>
+}
+</div>
+
 <div class="syndication">
     <a href="@Url.Action("LastCommits", "Syndication")">Last Commit in All Repos</a>
 </div>

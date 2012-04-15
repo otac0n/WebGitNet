@@ -22,6 +22,13 @@
     </script>
 }
 
+<div class="search">
+@using (Html.BeginForm("SearchRepo", "Search", new { repo = repoName }, FormMethod.Get, null))
+{
+    <input type="text" name="q" /> <button type="submit">Search</button>
+}
+</div>
+
 <div class="repo-info">
   <table class="clone-info">
     <tr><th>Clone URL:</th><td>@Html.TextBox("clone-url", repoUrl)</td></tr>
