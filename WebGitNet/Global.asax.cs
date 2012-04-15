@@ -78,6 +78,8 @@ namespace WebGitNet
         {
             public void Install(IWindsorContainer container, IConfigurationStore configurationStore)
             {
+                container.Register(Component.For<IWindsorContainer>().Instance(container));
+
                 container.Register(AllTypes.FromThisAssembly()
                                            .BasedOn<IRouteRegisterer>()
                                            .WithService.FromInterface());

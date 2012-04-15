@@ -14,16 +14,51 @@ namespace WebGitNet.Controllers
     using System.Web.Mvc;
     using System.Web.Routing;
     using WebGitNet.Search;
+    using Castle.Windsor;
+    using System.Threading.Tasks;
 
-    public class SearchController : Controller
+    public class SearchController : SharedControllerBase
     {
+        private readonly IWindsorContainer container;
+
+        public SearchController(IWindsorContainer container)
+        {
+            this.container = container;
+        }
+
         public ActionResult Search(string q)
         {
-            return View(new List<SearchResult>());
+            return Search(q, null);
         }
 
         public ActionResult SearchRepo(string repo, string q)
         {
+            var resourceInfo = this.FileManager.GetResourceInfo(repo);
+            if (resourceInfo.Type != ResourceType.Directory)
+            {
+                return HttpNotFound();
+            }
+
+            var repoInfo = GitUtilities.GetRepoInfo(repo);
+            if (!repoInfo.IsGitRepo)
+            {
+                return HttpNotFound();
+            }
+
+            return Search(q, repoInfo);
+        }
+
+        private ActionResult Search(string q, RepoInfo repoInfo)
+        {
+            var searchProviders = container.ResolveAll<ISearchProvider>();
+
+            var query = new SearchQuery(q);
+
+            var results = (from p in searchProviders
+                           select p.Search(query, this.FileManager, repoInfo, 0, 10)).ToArray();
+
+            Task.WaitAll(results);
+
             return View("Search", new List<SearchResult>());
         }
 
