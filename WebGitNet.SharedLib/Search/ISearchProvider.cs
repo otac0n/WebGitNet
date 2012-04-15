@@ -12,6 +12,6 @@ namespace WebGitNet.Search
 
     public interface ISearchProvider
     {
-        public Task<IList<SearchResult>> Search(SearchQuery query, RepoInfo repository, int skip, int count);
+        Task<IList<SearchResult>> Search(SearchQuery query, FileManager fileManager, RepoInfo repository, int skip, int count);
     }
 }
