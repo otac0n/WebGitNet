@@ -73,6 +73,10 @@
     <Compile Include="ResourceInfo.cs" />
     <Compile Include="ResourceType.cs" />
     <Compile Include="RouteCollectionHelpers.cs" />
+    <Compile Include="Search\ISearchProvider.cs" />
+    <Compile Include="Search\ResultSpan.cs" />
+    <Compile Include="Search\SearchQuery.cs" />
+    <Compile Include="Search\SearchResult.cs" />
     <Compile Include="SharedControllerBase.cs" />
     <Compile Include="SharedControllerBase.profiling.cs">
       <DependentUpon>SharedControllerBase.cs</DependentUpon>
