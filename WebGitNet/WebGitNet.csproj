@@ -153,6 +153,7 @@
     <Content Include="Scripts\jquery-ui-1.8.18.js" />
     <Content Include="Scripts\jquery-ui-1.8.18.min.js" />
     <Content Include="Scripts\jquery.background-position.min.js" />
+    <Content Include="Scripts\jquery.cookie.js" />
     <Content Include="Scripts\jquery.tablesorter.min.js" />
     <Content Include="Scripts\jquery.timeago.min.js" />
     <Content Include="Scripts\shjs\sh_bison.min.js" />
