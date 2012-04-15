@@ -156,6 +156,8 @@
     <Content Include="Scripts\jquery.cookie.js" />
     <Content Include="Scripts\jquery.tablesorter.min.js" />
     <Content Include="Scripts\jquery.timeago.min.js" />
+    <Content Include="Scripts\json2.js" />
+    <Content Include="Scripts\json2.min.js" />
     <Content Include="Scripts\shjs\sh_bison.min.js" />
     <Content Include="Scripts\shjs\sh_c.min.js" />
     <Content Include="Scripts\shjs\sh_caml.min.js" />
