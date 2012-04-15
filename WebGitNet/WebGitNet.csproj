@@ -133,6 +133,9 @@
     <Content Include="Scripts\g.raphael\g.raphael-min.js" />
     <Content Include="Scripts\g.raphael\raphael-min.js" />
     <Content Include="Scripts\graph.js" />
+    <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />
+    <Content Include="Scripts\jquery-1.7.1.js" />
+    <Content Include="Scripts\jquery-1.7.1.min.js" />
     <Content Include="Scripts\jquery.background-position.min.js" />
     <Content Include="Scripts\jquery.tablesorter.min.js" />
     <Content Include="Scripts\jquery.timeago.min.js" />
@@ -201,9 +204,6 @@
     <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
-    <None Include="Scripts\jquery-1.4.4.js" />
-    <Content Include="Scripts\jquery-1.4.4.min.js" />
-    <None Include="Scripts\jquery-1.4.4-vsdoc.js" />
     <None Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <None Include="Scripts\jquery.validate.js" />
