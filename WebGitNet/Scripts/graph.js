@@ -194,6 +194,12 @@ $(function () {
         Graph.render();
     };
 
+    $("#reset-settings").click(function () {
+        Graph.options = {};
+        $.cookie("Graph.options", null, { path: '/', expires: 365 });
+        Graph.render();
+    });
+
     $("#show-graph-settings").click(function () {
         $("#graph-settings").toggle('slow');
     });
