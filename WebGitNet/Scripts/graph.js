@@ -190,7 +190,7 @@ $(function () {
     var options = $.extend({}, Graph.defaults, Graph.options);
     var save = function (value) {
         $.extend(Graph.options, value);
-        $.cookie("Graph.options", JSON.stringify(Graph.options));
+        $.cookie("Graph.options", JSON.stringify(Graph.options), { path: '/' });
         Graph.render();
     };
 
