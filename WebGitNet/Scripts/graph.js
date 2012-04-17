@@ -187,30 +187,47 @@ $(function () {
 });
 
 $(function () {
-    var options = $.extend({}, Graph.defaults, Graph.options);
+    var suppressSave = false;
     var save = function (value) {
-        $.extend(Graph.options, value);
-        $.cookie("Graph.options", JSON.stringify(Graph.options), { path: '/', expires: 365 });
-        Graph.render();
+        if (!suppressSave) {
+            $.extend(Graph.options, value);
+            $.cookie("Graph.options", JSON.stringify(Graph.options), { path: '/', expires: 365 });
+            Graph.render();
+        }
     };
+
+    var resetUI = function () {
+        var options = $.extend({}, Graph.defaults, Graph.options);
+        suppressSave = true;
+        $("input[name='align']").each(function () {
+            $(this).prop("checked", $(this).val() == (options.rightAlign ? "right" : "left"));
+        });
+        $("input[name='outline']").prop("checked", !options.flushLeft);
+        $("#lineWidth").slider("value", options.lineWidth);
+        $("input[name='curveLine']").prop("checked", options.curveLine);
+        $("#dotRadius").slider("value", options.dotRadius);
+        $("#dotBorder").slider("value", options.dotBorder);
+        $("#colWidth").slider("value", options.colWidth);
+        $("#rowHeight").slider("value", options.rowHeight);
+        suppressSave = false;
+    }
 
     $("#reset-settings").click(function () {
         Graph.options = {};
         $.cookie("Graph.options", null, { path: '/', expires: 365 });
         Graph.render();
+        resetUI();
     });
 
     $("#show-graph-settings").click(function () {
         $("#graph-settings").toggle('slow');
     });
 
-    $("input[name='align']").each(function () {
-        $(this).prop("checked", $(this).val() == (options.rightAlign ? "right" : "left"));
-    }).change(function () {
+    $("input[name='align']").change(function () {
         save({ rightAlign: $("input[name='align']:checked").val() == "right" });
     });
 
-    $("input[name='outline']").prop("checked", !options.flushLeft).change(function () {
+    $("input[name='outline']").change(function () {
         save({ flushLeft: !$(this).prop("checked") });
     });
 
@@ -218,13 +235,12 @@ $(function () {
         min: 1,
         max: 5,
         range: 'min',
-        value: options.lineWidth,
         slide: function (event, ui) {
             save({ lineWidth: ui.value });
         }
     });
 
-    $("input[name='curveLine']").prop("checked", options.curveLine).change(function () {
+    $("input[name='curveLine']").change(function () {
         save({ curveLine: $(this).prop("checked") });
     });
 
@@ -232,7 +248,6 @@ $(function () {
         min: 1,
         max: 5,
         range: 'min',
-        value: options.dotRadius,
         slide: function (event, ui) {
             save({ dotRadius: ui.value });
         }
@@ -242,7 +257,6 @@ $(function () {
         min: 0,
         max: 3,
         range: 'min',
-        value: options.dotBorder,
         slide: function (event, ui) {
             save({ dotBorder: ui.value });
         }
@@ -252,7 +266,6 @@ $(function () {
         min: 5,
         max: 30,
         range: 'min',
-        value: options.colWidth,
         slide: function (event, ui) {
             save({ colWidth: ui.value });
         }
@@ -262,9 +275,10 @@ $(function () {
         min: 5,
         max: 30,
         range: 'min',
-        value: options.rowHeight,
         slide: function (event, ui) {
             save({ rowHeight: ui.value });
         }
     });
+
+    resetUI();
 });
