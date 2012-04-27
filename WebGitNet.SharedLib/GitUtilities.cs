@@ -170,11 +170,14 @@ namespace WebGitNet
                      File.Exists(Path.Combine(repoPath, "HEAD")))
                 );
 
+            var isArchived = IsArchived(repoPath);
+
             return new RepoInfo
             {
                 Name = repoName,
                 IsGitRepo = isRepo,
                 Description = description,
+                IsArchived = isArchived,
             };
         }
 
@@ -471,6 +474,11 @@ namespace WebGitNet
                 Impact = Math.Max(insertions, deletions),
                 Date = commitDay,
             };
+        }
+
+        private static bool IsArchived(string repoPath)
+        {
+            return File.Exists(Path.Combine(repoPath, "info", "webgit.net", "archived"));
         }
 
         private static List<RenameEntry> LoadRenames(string repoPath)
