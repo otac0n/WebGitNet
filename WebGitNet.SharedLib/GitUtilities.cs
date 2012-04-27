@@ -142,7 +142,7 @@ namespace WebGitNet
 
         public static void ToggleArchived(string repoPath)
         {
-            var file = Path.Combine(repoPath, "info", "webgit.net", "archived");
+            var file = Path.Combine(RepoInfoPath(repoPath), "archived");
 
             if (File.Exists(file))
             {
@@ -490,9 +490,30 @@ namespace WebGitNet
             };
         }
 
+        private static string RepoInfoPath(string repoPath)
+        {
+            // Basic way to check for non-bared-ness
+            var nonbare = Path.Combine(repoPath, ".git");
+            var path = repoPath;
+
+            if (Directory.Exists(nonbare))
+            {
+                path = repoPath;
+            }
+
+            path = Path.Combine(path, "info", "webgit.net");
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            return path;
+        }
+
         private static bool IsArchived(string repoPath)
         {
-            return File.Exists(Path.Combine(repoPath, "info", "webgit.net", "archived"));
+            return File.Exists(Path.Combine(RepoInfoPath(repoPath), "archived"));
         }
 
         private static List<RenameEntry> LoadRenames(string repoPath)
@@ -500,7 +521,7 @@ namespace WebGitNet
             var renames = new List<RenameEntry>();
 
             var parentRenames = Path.Combine(new DirectoryInfo(repoPath).Parent.FullName, "renames");
-            var renamesFile = Path.Combine(repoPath, "info", "webgit.net", "renames");
+            var renamesFile = Path.Combine(RepoInfoPath(repoPath), "renames");
 
             Action<string> readRenames = (file) =>
             {
@@ -518,7 +539,7 @@ namespace WebGitNet
 
         private static List<IgnoreEntry> LoadIgnores(string repoPath)
         {
-            var ignoresFile = Path.Combine(repoPath, "info", "webgit.net", "ignore");
+            var ignoresFile = Path.Combine(RepoInfoPath(repoPath), "ignore");
 
             var ignores = new List<IgnoreEntry>();
             if (File.Exists(ignoresFile))
