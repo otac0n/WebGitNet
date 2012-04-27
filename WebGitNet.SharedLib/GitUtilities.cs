@@ -140,6 +140,20 @@ namespace WebGitNet
             }
         }
 
+        public static void ToggleArchived(string repoPath)
+        {
+            var file = Path.Combine(repoPath, "info", "webgit.net", "archived");
+
+            if (File.Exists(file))
+            {
+                File.Delete(file);
+            }
+            else
+            {
+                File.Create(file).Close();
+            }
+        }
+
         public static void UpdateServerInfo(string repoPath)
         {
             Execute("update-server-info", repoPath);
