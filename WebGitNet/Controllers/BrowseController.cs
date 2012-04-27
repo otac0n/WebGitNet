@@ -29,7 +29,17 @@ namespace WebGitNet.Controllers
             var directory = this.FileManager.DirectoryInfo;
 
             var repos = (from dir in directory.EnumerateDirectories()
-                         select GitUtilities.GetRepoInfo(dir.FullName)).ToList();
+                         select GitUtilities.GetRepoInfo(dir.FullName)).Where(ri => !ri.IsArchived).ToList();
+
+            return View(repos);
+        }
+
+        public ActionResult ArchivedIndex()
+        {
+            var directory = this.FileManager.DirectoryInfo;
+
+            var repos = (from dir in directory.EnumerateDirectories()
+                         select GitUtilities.GetRepoInfo(dir.FullName)).Where(ri => ri.IsArchived).ToList();
 
             return View(repos);
         }
@@ -205,6 +215,11 @@ namespace WebGitNet.Controllers
                     "Browse Index",
                     "browse",
                     new { controller = "Browse", action = "Index" });
+
+                routes.MapRoute(
+                    "Browse Archived Index",
+                    "browse/archivedindex",
+                    new { controller = "Browse", action = "ArchivedIndex" });
 
                 routes.MapRoute(
                     "View Repo",

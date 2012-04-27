@@ -1,7 +1,7 @@
 ﻿@model IList<RepoInfo>
 
 @{
-    ViewBag.Title = "Repositories";
+    ViewBag.Title = "Archived Repositories";
 }
 
 @section headers
@@ -14,7 +14,7 @@
 </div>
 
 <div class="archived">
-    <a href="@Url.Action("ArchivedIndex", "Browse")">View Archived Repos</a>
+    <a href="@Url.Action("Index", "Browse")">View Current Repos</a>
 </div>
 
 <table>

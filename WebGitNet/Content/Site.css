@@ -370,7 +370,7 @@ ul
     background: #eee;
 }
 
-.syndication
+.syndication, .archived
 {
     float: right;
     margin: 0 0 5px;
@@ -386,7 +386,17 @@ ul
     font-weight: bold;
 }
 
-.syndication a:hover
+.archived a, .archived a:link, .archived a:visited
+{
+    color: #333;
+    padding: 10px 15px;
+    background: #f7f7f7;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0px 5px 0px 0px;
+}
+
+.syndication a:hover, .archived a:hover
 {
     background-color: #eee;
 }
