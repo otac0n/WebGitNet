@@ -273,6 +273,11 @@
             <param name="start">The starting index of this interval.</param>
             <param name="length">The length of this interval.</param>
         </member>
+        <member name="P:Intervals.StringInterval.Source">
+            <summary>
+            Gets the string that this interval descries.
+            </summary>
+        </member>
         <member name="P:Intervals.StringInterval.Start">
             <summary>
             Gets the starting index of this interval.
