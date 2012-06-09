@@ -1,9 +1,11 @@
 ﻿@{
-    string repoName = ViewBag.RepoName;
     LogEntry lastCommit = ViewBag.LastCommit;
     TreeView currentTree = ViewBag.CurrentTree;
     List<GitRef> refs = ViewBag.Refs;
+    RepoInfo info = ViewBag.RepoInfo;
 
+    string repoName = info.Name;
+    
     ViewBag.Title = repoName;
 
     var requestUrl = Url.RequestContext.HttpContext.Request.Url;
@@ -39,6 +41,7 @@ else
 {
 <text>Last Commit:
 @Html.Partial("LogEntry", lastCommit)
+@Html.ActionLink(info.IsArchived ? "Unarchive Repo" : "Archive Repo", "ToggleArchived", new { repo = repoName }, new { @class = "rightloglink" })
 @foreach (var route in Html.FindSatisfiableRoutes(new { repo = repoName }))
 {
     <text>@Html.RouteLink(route.GetName(), route.GetName(), new { repo = repoName }) </text>
