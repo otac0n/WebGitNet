@@ -7,15 +7,12 @@
 
 namespace WebGitNet.Controllers
 {
-    using System;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Web.Mvc;
     using System.Web.Routing;
     using WebGitNet.ActionResults;
-    using WebGitNet.Models;
 
     public class BrowseController : SharedControllerBase
     {
@@ -42,10 +39,17 @@ namespace WebGitNet.Controllers
                 return HttpNotFound();
             }
 
+            var repoInfo = GitUtilities.GetRepoInfo(resourceInfo.FullPath);
+            if (!repoInfo.IsGitRepo)
+            {
+                return HttpNotFound();
+            }
+
             AddRepoBreadCrumb(repo);
 
             var lastCommit = GitUtilities.GetLogEntries(resourceInfo.FullPath, 1).FirstOrDefault();
 
+            ViewBag.Description = repoInfo.Description;
             ViewBag.RepoName = resourceInfo.Name;
             ViewBag.LastCommit = lastCommit;
             ViewBag.CurrentTree = lastCommit != null ? GitUtilities.GetTreeInfo(resourceInfo.FullPath, "HEAD") : null;

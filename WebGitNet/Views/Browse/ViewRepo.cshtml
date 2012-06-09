@@ -22,12 +22,13 @@
     </script>
 }
 
-<div class="repo-info">
-  <table class="clone-info">
-    <tr><th>Clone URL:</th><td>@Html.TextBox("clone-url", repoUrl)</td></tr>
-    <tr><th>Clone Command:</th><td>@Html.TextBox("clone-command", "git clone " + repoUrl + (Uri.EscapeUriString(repoName) != repoName ? " \"" + repoName + "\"" : string.Empty))</td></tr>
-  </table>
-</div>
+<h2>@ViewBag.Title</h2>
+
+<table class="repo-info">
+  <tr><th>Description: @Html.ActionLink("edit", "ManageRepo", "Manage", new { repoName }, null)</th><td>@ViewBag.Description</td></tr>
+  <tr><th>Clone URL:</th><td>@Html.TextBox("clone-url", repoUrl)</td></tr>
+  <tr><th>Clone Command:</th><td>@Html.TextBox("clone-command", "git clone " + repoUrl + (Uri.EscapeUriString(repoName) != repoName ? " \"" + repoName + "\"" : string.Empty))</td></tr>
+</table>
 
 <div id="last-commit" class="page-section">
 @if (lastCommit == null)
