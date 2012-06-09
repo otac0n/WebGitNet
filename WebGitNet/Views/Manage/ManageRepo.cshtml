@@ -20,6 +20,14 @@
             @Html.ValidationMessageFor(model => model.Description)
         </div>
 
+        <div class="editor-label">
+            Archive?:
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.IsArchived)
+            @Html.ValidationMessageFor(model => model.IsArchived)
+        </div>
+
         <p>
             <input type="submit" value="Update" />
         </p>

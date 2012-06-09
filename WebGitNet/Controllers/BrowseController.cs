@@ -59,7 +59,6 @@ namespace WebGitNet.Controllers
 
             var lastCommit = GitUtilities.GetLogEntries(resourceInfo.FullPath, 1).FirstOrDefault();
 
-            ViewBag.Description = repoInfo.Description;
             ViewBag.RepoInfo = GitUtilities.GetRepoInfo(resourceInfo.FullPath);
             ViewBag.LastCommit = lastCommit;
             ViewBag.CurrentTree = lastCommit != null ? GitUtilities.GetTreeInfo(resourceInfo.FullPath, "HEAD") : null;
@@ -211,19 +210,6 @@ namespace WebGitNet.Controllers
             return View((object)model);
         }
 
-        public ActionResult ToggleArchived(string repo)
-        {
-            var resourceInfo = this.FileManager.GetResourceInfo(repo);
-            if (resourceInfo.Type != ResourceType.Directory)
-            {
-                return HttpNotFound();
-            }
-
-            GitUtilities.ToggleArchived(resourceInfo.FullPath);
-
-            return RedirectToAction("ViewRepo", new { repo = repo });
-        }
-
         public class RouteRegisterer : IRouteRegisterer
         {
             public void RegisterRoutes(RouteCollection routes)
@@ -262,11 +248,6 @@ namespace WebGitNet.Controllers
                     "View Commit Log",
                     "browse/{repo}/commits",
                     new { controller = "Browse", action = "ViewCommits", routeName = "View Commit Log" });
-
-                routes.MapRoute(
-                    "Toggle Archived",
-                    "browse/togglearchived/{repo}",
-                    new { controller = "Browse", action = "ToggleArchived" });
             }
         }
     }

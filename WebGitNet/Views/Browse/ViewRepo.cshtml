@@ -27,10 +27,11 @@
 <h2>@ViewBag.Title</h2>
 
 <table class="repo-info">
-  <tr><th>Description: @Html.ActionLink("edit", "ManageRepo", "Manage", new { repoName }, null)</th><td>@ViewBag.Description</td></tr>
+  <tr><th>Description:</th><td>@info.Description</td></tr>
   <tr><th>Clone URL:</th><td>@Html.TextBox("clone-url", repoUrl)</td></tr>
   <tr><th>Clone Command:</th><td>@Html.TextBox("clone-command", "git clone " + repoUrl + (Uri.EscapeUriString(repoName) != repoName ? " \"" + repoName + "\"" : string.Empty))</td></tr>
 </table>
+@Html.ActionLink("Manage Repo", "ManageRepo", "Manage", new { repoName }, null)
 
 <div id="last-commit" class="page-section">
 @if (lastCommit == null)
@@ -41,7 +42,6 @@ else
 {
 <text>Last Commit:
 @Html.Partial("LogEntry", lastCommit)
-@Html.ActionLink(info.IsArchived ? "Unarchive Repo" : "Archive Repo", "ToggleArchived", new { repo = repoName }, new { @class = "rightloglink" })
 @foreach (var route in Html.FindSatisfiableRoutes(new { repo = repoName }))
 {
     <text>@Html.RouteLink(route.GetName(), route.GetName(), new { repo = repoName }) </text>

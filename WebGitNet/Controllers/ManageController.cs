@@ -86,6 +86,7 @@ namespace WebGitNet.Controllers
             return View(new RepoSettings
             {
                 Description = repo.Description,
+                IsArchived = repo.IsArchived,
             });
         }
 
@@ -110,6 +111,11 @@ namespace WebGitNet.Controllers
             }
 
             io::File.WriteAllText(Path.Combine(resourceInfo.FullPath, "description"), settings.Description);
+            if (repo.IsArchived != settings.IsArchived)
+            {
+                GitUtilities.ToggleArchived(resourceInfo.FullPath);
+            }
+
             return RedirectToAction("ViewRepo", "Browse", new { repo = repoName });
         }
 
