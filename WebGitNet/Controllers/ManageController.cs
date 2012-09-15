@@ -124,6 +124,11 @@ namespace WebGitNet.Controllers
             public void RegisterRoutes(RouteCollection routes)
             {
                 routes.MapRoute(
+                    "Create Repo",
+                    "create",
+                    new { controller = "Manage", action = "Create" });
+
+                routes.MapRoute(
                     "Manage Repo",
                     "manage/{repoName}",
                     new { controller = "Manage", action = "ManageRepo" });
