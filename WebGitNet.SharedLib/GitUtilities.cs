@@ -175,6 +175,7 @@ namespace WebGitNet
                 Name = repoName,
                 IsGitRepo = isRepo,
                 Description = description,
+				RepoPath = repoPath,
             };
         }
 
