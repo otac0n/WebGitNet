@@ -54,6 +54,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="RepoGrepSearchProvider.cs" />
     <Compile Include="RepoInfoSearchProvider.cs" />
   </ItemGroup>
   <ItemGroup>
