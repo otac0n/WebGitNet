@@ -19,7 +19,9 @@ namespace WebGitNet.SearchProviders
 
 		public Task<IList<SearchResult>> Search(SearchQuery query, FileManager fileManager, RepoInfo repository, int skip, int count)
 		{
-			return repository != null ? Task.Factory.StartNew(() => (IList<SearchResult>)new SearchResult[0]) : Task.Factory.StartNew(() => (IList<SearchResult>)Search(query, fileManager).Skip(skip).Take(count).ToList());
+			if (repository != null)
+				return Task.Factory.StartNew(() => (IList<SearchResult>) Search(query, repository).Skip(skip).Take(count).ToList());
+			return Task.Factory.StartNew(() => (IList<SearchResult>) Search(query, fileManager).Skip(skip).Take(count).ToList());
 		}
 
 		private IEnumerable<GrepResult> GrepRepo(string term, string repoPath)
@@ -34,6 +36,26 @@ namespace WebGitNet.SearchProviders
 				});
 		}
 
+		public IEnumerable<SearchResult> Search(SearchQuery query, RepoInfo repository)
+		{
+			var results = new List<SearchResult>();
+			foreach (var matches in query.Terms.Select(t => GrepRepo(t, repository.RepoPath)))
+			{
+				results.AddRange(matches.Select(match => new SearchResult
+					{
+						LinkText = match.FilePath,
+						ActionName = "ViewBlob",
+						ControllerName = "Browse",
+						RouteValues = new { repo = repository.Name, @object = "HEAD", path = match.FilePath },
+						Intervals = new List<StringInterval>
+							{
+								new StringInterval(match.Term)
+							},
+					}));
+			}
+			return results;
+		}
+
 		public IEnumerable<SearchResult> Search(SearchQuery query, FileManager fileManager)
 		{
 			var repos = from dir in fileManager.DirectoryInfo.EnumerateDirectories()
@@ -44,20 +66,7 @@ namespace WebGitNet.SearchProviders
 			var results = new List<SearchResult>();
 			foreach (var repo in repos)
 			{
-				foreach (var matches in query.Terms.Select(t => GrepRepo(t, repo.RepoPath)))
-				{
-					results.AddRange(matches.Select(match => new SearchResult
-						{
-							LinkText = match.FilePath,
-							ActionName = "ViewBlob",
-							ControllerName = "Browse",
-							RouteValues = new { repo = repo.Name, @object = "HEAD", path = match.FilePath },
-							Intervals = new List<StringInterval>
-								{
-									new StringInterval(match.Term)
-								},
-						}));
-				}
+				results.AddRange(Search(query, repo));
 			}
 			return results;
 		}

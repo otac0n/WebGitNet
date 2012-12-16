@@ -39,7 +39,7 @@ namespace WebGitNet.Controllers
                 return HttpNotFound();
             }
 
-            var repoInfo = GitUtilities.GetRepoInfo(repo);
+			var repoInfo = GitUtilities.GetRepoInfo(resourceInfo.FullPath);
             if (!repoInfo.IsGitRepo)
             {
                 return HttpNotFound();
@@ -55,7 +55,7 @@ namespace WebGitNet.Controllers
             var query = new SearchQuery(q);
 
             var results = (from p in searchProviders
-                           select p.Search(query, this.FileManager, repoInfo, 0, 10)).ToArray();
+                           select p.Search(query, this.FileManager, repoInfo, 0, 100)).ToArray();
 
             Task.WaitAll(results);
 
