@@ -36,6 +36,36 @@ code
     padding: 0 3px;
 }
 
+table.code
+{
+    font-family: Consolas, Courier;
+    font-size: 10pt;
+    color: #52595D;
+    background-color: #F9F9F9;
+    border: 1px solid #CCC;
+    white-space: pre;
+    padding: 0 3px;
+}
+
+table.code td
+{
+    padding: 0;
+    border: none;
+}
+
+table.code td.line-number
+{
+    padding-left: 5px;
+    padding-right: 5px;
+    text-align: right;
+    width: 1px;
+}
+
+table.code td.missing-lines
+{
+    padding-left: 10px;
+}
+
 h1, h2, h3, h4, h5, h6
 {
     color: #000;
