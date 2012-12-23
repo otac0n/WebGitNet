@@ -22,14 +22,17 @@ namespace WebGitNet.SearchProviders
 
         private IEnumerable<GrepResult> GrepRepo(string term, string repoPath)
         {
-            var commandResult = GitUtilities.Execute(string.Format("grep --count --fixed-strings -e {0}", GitUtilities.Q(term)), repoPath);
+            var commandResult = GitUtilities.Execute(string.Format("grep --count --fixed-strings -e {0} HEAD", GitUtilities.Q(term)), repoPath, trustErrorCode: true);
             var repoResults = commandResult.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
-            return repoResults.Select(m => new GrepResult
-            {
-                Term = term,
-                FilePath = m.Split(':')[0],
-                Matches = int.Parse(m.Split(':')[1]),
-            });
+
+            return from m in repoResults
+                   let parts = m.Split(':')
+                   select new GrepResult
+                   {
+                       Term = term,
+                       FilePath = parts[1],
+                       Matches = int.Parse(parts[2]),
+                   };
         }
 
         public IEnumerable<SearchResult> Search(SearchQuery query, RepoInfo repository)
