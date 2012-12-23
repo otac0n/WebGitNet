@@ -31,7 +31,7 @@
 
             foreach (var repo in repos)
             {
-                if (query.Terms.Any(t => repo.Name.Contains(t) || repo.Description.Contains(t)))
+                if (query.Terms.Any(t => repo.Name.IndexOf(t, StringComparison.OrdinalIgnoreCase) != -1 || repo.Description.IndexOf(t, StringComparison.OrdinalIgnoreCase) != -1))
                 {
                     yield return new SearchResult
                     {
