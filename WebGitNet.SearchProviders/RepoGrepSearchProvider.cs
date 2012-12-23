@@ -42,14 +42,14 @@
                    };
         }
 
-        public IEnumerable<SearchResult> Search(SearchQuery query, RepoInfo repository)
+        public IEnumerable<SearchResult> Search(SearchQuery query, RepoInfo repository, bool includeRepoName = false)
         {
             var results = new List<SearchResult>();
             foreach (var matches in query.Terms.Select(t => GrepRepo(t, repository.RepoPath)))
             {
                 results.AddRange(matches.Select(match => new SearchResult
                 {
-                    LinkText = match.FilePath,
+                    LinkText = (includeRepoName ? repository.Name + " " : string.Empty) + "/" + match.FilePath,
                     ActionName = "ViewBlob",
                     ControllerName = "Browse",
                     RouteValues = new { repo = repository.Name, @object = "HEAD", path = match.FilePath },
@@ -70,7 +70,7 @@
             var results = new List<SearchResult>();
             foreach (var repo in repos)
             {
-                results.AddRange(Search(query, repo));
+                results.AddRange(Search(query, repo, includeRepoName: true));
             }
 
             return results;
