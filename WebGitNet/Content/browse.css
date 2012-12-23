@@ -24,7 +24,6 @@
     padding: 1em;
 
     overflow: auto;
-    width: 100%;
 }
 
 .commit-person
@@ -77,7 +76,7 @@
 .diff-line-remove { background: #faa; }
 .diff-line-info { background: #ddd; }
 
-.clone-info input 
+.repo-info input 
 {
     width : 600px;
 }

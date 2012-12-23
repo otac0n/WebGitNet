@@ -7,15 +7,12 @@
 
 namespace WebGitNet.Controllers
 {
-    using System;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Web.Mvc;
     using System.Web.Routing;
     using WebGitNet.ActionResults;
-    using WebGitNet.Models;
 
     public class BrowseController : SharedControllerBase
     {
@@ -29,7 +26,17 @@ namespace WebGitNet.Controllers
             var directory = this.FileManager.DirectoryInfo;
 
             var repos = (from dir in directory.EnumerateDirectories()
-                         select GitUtilities.GetRepoInfo(dir.FullName)).ToList();
+                         select GitUtilities.GetRepoInfo(dir.FullName)).Where(ri => !ri.IsArchived).ToList();
+
+            return View(repos);
+        }
+
+        public ActionResult ArchivedIndex()
+        {
+            var directory = this.FileManager.DirectoryInfo;
+
+            var repos = (from dir in directory.EnumerateDirectories()
+                         select GitUtilities.GetRepoInfo(dir.FullName)).Where(ri => ri.IsArchived).ToList();
 
             return View(repos);
         }
@@ -42,11 +49,17 @@ namespace WebGitNet.Controllers
                 return HttpNotFound();
             }
 
+            var repoInfo = GitUtilities.GetRepoInfo(resourceInfo.FullPath);
+            if (!repoInfo.IsGitRepo)
+            {
+                return HttpNotFound();
+            }
+
             AddRepoBreadCrumb(repo);
 
             var lastCommit = GitUtilities.GetLogEntries(resourceInfo.FullPath, 1).FirstOrDefault();
 
-            ViewBag.RepoName = resourceInfo.Name;
+            ViewBag.RepoInfo = GitUtilities.GetRepoInfo(resourceInfo.FullPath);
             ViewBag.LastCommit = lastCommit;
             ViewBag.CurrentTree = lastCommit != null ? GitUtilities.GetTreeInfo(resourceInfo.FullPath, "HEAD") : null;
             ViewBag.Refs = GitUtilities.GetAllRefs(resourceInfo.FullPath);
@@ -205,6 +218,11 @@ namespace WebGitNet.Controllers
                     "Browse Index",
                     "browse",
                     new { controller = "Browse", action = "Index" });
+
+                routes.MapRoute(
+                    "Browse Archived Index",
+                    "browse/archivedindex",
+                    new { controller = "Browse", action = "ArchivedIndex" });
 
                 routes.MapRoute(
                     "View Repo",

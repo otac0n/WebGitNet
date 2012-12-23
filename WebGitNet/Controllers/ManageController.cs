@@ -10,6 +10,7 @@ namespace WebGitNet.Controllers
     using System.IO;
     using System.Linq;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using WebGitNet.Models;
     using io = System.IO;
 
@@ -66,6 +67,72 @@ namespace WebGitNet.Controllers
             GitUtilities.ExecutePostCreateHook(repoPath);
 
             return RedirectToAction("ViewRepo", "Browse", new { repo = request.RepoName });
+        }
+
+        public ActionResult ManageRepo(string repoName)
+        {
+            var resourceInfo = this.FileManager.GetResourceInfo(repoName);
+            if (resourceInfo.Type != ResourceType.Directory)
+            {
+                return HttpNotFound();
+            }
+
+            var repo = GitUtilities.GetRepoInfo(resourceInfo.FullPath);
+            if (!repo.IsGitRepo)
+            {
+                return HttpNotFound();
+            }
+
+            return View(new RepoSettings
+            {
+                Description = repo.Description,
+                IsArchived = repo.IsArchived,
+            });
+        }
+
+        [HttpPost]
+        public ActionResult ManageRepo(string repoName, RepoSettings settings)
+        {
+            var resourceInfo = this.FileManager.GetResourceInfo(repoName);
+            if (resourceInfo.Type != ResourceType.Directory)
+            {
+                return HttpNotFound();
+            }
+
+            var repo = GitUtilities.GetRepoInfo(resourceInfo.FullPath);
+            if (!repo.IsGitRepo)
+            {
+                return HttpNotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(settings);
+            }
+
+            io::File.WriteAllText(Path.Combine(resourceInfo.FullPath, "description"), settings.Description);
+            if (repo.IsArchived != settings.IsArchived)
+            {
+                GitUtilities.ToggleArchived(resourceInfo.FullPath);
+            }
+
+            return RedirectToAction("ViewRepo", "Browse", new { repo = repoName });
+        }
+
+        public class RouteRegisterer : IRouteRegisterer
+        {
+            public void RegisterRoutes(RouteCollection routes)
+            {
+                routes.MapRoute(
+                    "Create Repo",
+                    "create",
+                    new { controller = "Manage", action = "Create" });
+
+                routes.MapRoute(
+                    "Manage Repo",
+                    "manage/{repoName}",
+                    new { controller = "Manage", action = "ManageRepo" });
+            }
         }
     }
 }

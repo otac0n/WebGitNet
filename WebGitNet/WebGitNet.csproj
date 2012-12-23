@@ -98,6 +98,7 @@
     <Compile Include="Models\CreateRepoRequest.cs" />
     <Compile Include="Models\GraphEntry.cs" />
     <Compile Include="Models\NodeInfo.cs" />
+    <Compile Include="Models\RepoSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
@@ -247,6 +248,8 @@
     <Content Include="Views\Browse\ViewCommit.cshtml" />
     <Content Include="Views\Browse\ViewCommits.cshtml" />
     <Content Include="Views\Graph\ViewGraph.cshtml" />
+    <Content Include="Views\Browse\ArchivedIndex.cshtml" />
+    <Content Include="Views\Manage\ManageRepo.cshtml" />
     <Content Include="Views\Search\Search.cshtml" />
   </ItemGroup>
   <ItemGroup>
