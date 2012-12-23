@@ -19,7 +19,7 @@ p, ul
     line-height: 1.6em;
 }
 
-p 
+p
 {
     margin: 0px;
 }
@@ -64,6 +64,17 @@ table.code td.line-number
 table.code td.missing-lines
 {
     padding-left: 10px;
+}
+
+ul.search-results
+{
+    padding: 0;
+}
+
+ul.search-results li
+{
+    list-style-type: none;
+    margin-bottom: 10px;
 }
 
 h1, h2, h3, h4, h5, h6
