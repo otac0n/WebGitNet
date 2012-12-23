@@ -20,17 +20,18 @@
 
         private IEnumerable<GrepResult> GrepRepo(string term, string repoPath)
         {
-            var commandResult = GitUtilities.Execute(string.Format("grep --line-number --fixed-strings -e {0} HEAD", GitUtilities.Q(term)), repoPath);
+            var commandResult = GitUtilities.Execute(string.Format("grep --line-number --fixed-strings --ignore-case --context 3 --null -e {0} HEAD", GitUtilities.Q(term)), repoPath);
             var repoResults = commandResult.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
             return from m in repoResults
+                   where m != "--"
                    where !m.StartsWith("Binary file")
-                   let parts = m.Split(':')
-                   let filePath = parts[1]
+                   let parts = m.Split('\0')
+                   let filePath = parts[0].Split(':')[1]
                    let searchLine = new SearchLine
                    {
-                       Line = parts[3],
-                       LineNumber = int.Parse(parts[2]),
+                       Line = parts[2],
+                       LineNumber = int.Parse(parts[1]),
                    }
                    group searchLine by filePath into g
                    select new GrepResult
