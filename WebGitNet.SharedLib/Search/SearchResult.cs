@@ -8,7 +8,6 @@
 namespace WebGitNet.Search
 {
     using System.Collections.Generic;
-    using Intervals;
 
     public class SearchResult
     {
@@ -20,6 +19,6 @@ namespace WebGitNet.Search
 
         public object RouteValues { get; set; }
 
-        public IList<StringInterval> Intervals { get; set; }
+        public IList<SearchLine> Lines { get; set; }
     }
 }

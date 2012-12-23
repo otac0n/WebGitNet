@@ -31,10 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Intervals, Version=1.1.4499.37325, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Intervals.1.1.4499.37325\lib\net35\Intervals.dll</HintPath>
-    </Reference>
     <Reference Include="MiniProfiler">
       <HintPath>..\packages\MiniProfiler.2.0.1\lib\net40\MiniProfiler.dll</HintPath>
     </Reference>
@@ -78,7 +74,7 @@
     <Compile Include="ResourceType.cs" />
     <Compile Include="RouteCollectionHelpers.cs" />
     <Compile Include="Search\ISearchProvider.cs" />
-    <Compile Include="Search\SearchHelper.cs" />
+    <Compile Include="Search\SearchLine.cs" />
     <Compile Include="Search\SearchQuery.cs" />
     <Compile Include="Search\SearchResult.cs" />
     <Compile Include="SharedControllerBase.cs" />

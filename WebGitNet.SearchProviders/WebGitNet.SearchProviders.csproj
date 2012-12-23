@@ -37,10 +37,6 @@
     <Reference Include="Castle.Windsor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Windsor.3.0.0.4001\lib\net40\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="Intervals, Version=1.1.4499.37325, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Intervals.1.1.4499.37325\lib\net35\Intervals.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

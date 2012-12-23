@@ -11,9 +11,9 @@
 {
     <li>
         @Html.ActionLink(result.LinkText, result.ActionName, result.ControllerName, result.RouteValues, null)<br/>
-        @foreach (var r in result.Intervals)
+        @foreach (var r in result.Lines)
         {
-            @r.Value
+            @r.LineNumber @r.Line<br />
         }
     </li>
 }

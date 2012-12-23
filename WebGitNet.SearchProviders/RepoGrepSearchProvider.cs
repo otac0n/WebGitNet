@@ -1,8 +1,6 @@
-﻿using System;
-using Intervals;
-
-namespace WebGitNet.SearchProviders
+﻿namespace WebGitNet.SearchProviders
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Search;
@@ -22,16 +20,24 @@ namespace WebGitNet.SearchProviders
 
         private IEnumerable<GrepResult> GrepRepo(string term, string repoPath)
         {
-            var commandResult = GitUtilities.Execute(string.Format("grep --count --fixed-strings -e {0} HEAD", GitUtilities.Q(term)), repoPath, trustErrorCode: true);
+            var commandResult = GitUtilities.Execute(string.Format("grep --line-number --fixed-strings -e {0} HEAD", GitUtilities.Q(term)), repoPath);
             var repoResults = commandResult.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
             return from m in repoResults
+                   where !m.StartsWith("Binary file")
                    let parts = m.Split(':')
+                   let filePath = parts[1]
+                   let searchLine = new SearchLine
+                   {
+                       Line = parts[3],
+                       LineNumber = int.Parse(parts[2]),
+                   }
+                   group searchLine by filePath into g
                    select new GrepResult
                    {
                        Term = term,
-                       FilePath = parts[1],
-                       Matches = int.Parse(parts[2]),
+                       FilePath = g.Key,
+                       Matches= g.ToList(),
                    };
         }
 
@@ -46,10 +52,7 @@ namespace WebGitNet.SearchProviders
                     ActionName = "ViewBlob",
                     ControllerName = "Browse",
                     RouteValues = new { repo = repository.Name, @object = "HEAD", path = match.FilePath },
-                    Intervals = new List<StringInterval>
-                    {
-                        new StringInterval(match.Term)
-                    },
+                    Lines = match.Matches,
                 }));
             }
 
@@ -76,7 +79,7 @@ namespace WebGitNet.SearchProviders
         {
             public string Term;
             public string FilePath;
-            public int Matches;
+            public List<SearchLine> Matches;
         }
     }
 }

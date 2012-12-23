@@ -6,7 +6,6 @@
     using System.Text;
     using WebGitNet.Search;
     using System.Threading.Tasks;
-    using Intervals;
 
     public class RepoInfoSearchProvider : ISearchProvider
     {
@@ -32,14 +31,7 @@
 
             foreach (var repo in repos)
             {
-                var matches = (from t in query.Terms
-                               select new
-                               {
-                                  NameMathces = SearchHelper.FindIntervals(t, repo.Name),
-                                  DescriptionMatches = SearchHelper.FindIntervals(t, repo.Description)
-                               }).ToList();
-
-                if (matches.All(t => t.NameMathces.Count > 0 || t.DescriptionMatches.Count > 0))
+                if (query.Terms.Any(t => repo.Name.Contains(t) || repo.Description.Contains(t)))
                 {
                     yield return new SearchResult
                     {
@@ -47,9 +39,10 @@
                         ActionName = "ViewRepo",
                         ControllerName = "Browse",
                         RouteValues = new { repo = repo.Name },
-                        Intervals = Enumerable.Concat(
-                            matches.SelectMany(m => m.NameMathces),
-                            matches.SelectMany(m => m.DescriptionMatches)).ToList(),
+                        Lines = new List<SearchLine>
+                        {
+                            new SearchLine { Line = repo.Description },
+                        },
                     };
                 }
             }
