@@ -20,13 +20,13 @@ namespace WebGitNet.Search
                 throw new ArgumentNullException("term");
             }
 
+			var results = new List<StringInterval>();
+			var end = 0;
+
             if (subject == null)
             {
-                return null;
+				return results;
             }
-
-            var results = new List<StringInterval>();
-            var end = 0;
 
             while (end < subject.Length)
             {
