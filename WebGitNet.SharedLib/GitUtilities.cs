@@ -606,7 +606,7 @@ namespace WebGitNet
             return diffs;
         }
 
-        public static TreeView GetTreeInfo(string repoPath, string tree, string path = null)
+        public static TreeView GetTreeInfo(string repoPath, string tree, string path = null, bool recurse = false)
         {
             if (string.IsNullOrEmpty(tree))
             {
@@ -619,7 +619,18 @@ namespace WebGitNet
             }
 
             path = path ?? string.Empty;
-            var results = Execute(string.Format("ls-tree -l -z {0}:{1}", Q(tree), Q(path)), repoPath, Encoding.UTF8, trustErrorCode: true);
+            string results;
+            if (recurse)
+            {
+                results =
+                    Execute(string.Format("ls-tree -l -r -z {0}:{1}", Q(tree), Q(path)), repoPath, Encoding.UTF8, trustErrorCode: true)
+                    + '\0' +
+                    Execute(string.Format("ls-tree -l -r -d -z {0}:{1}", Q(tree), Q(path)), repoPath, Encoding.UTF8, trustErrorCode: true);
+            }
+            else
+            {
+                results = Execute(string.Format("ls-tree -l -z {0}:{1}", Q(tree), Q(path)), repoPath, Encoding.UTF8, trustErrorCode: true);
+            }
 
             Func<string, ObjectInfo> parseResults = result =>
             {
