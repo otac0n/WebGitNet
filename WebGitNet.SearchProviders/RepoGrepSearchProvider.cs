@@ -56,12 +56,5 @@
                    from searchResult in Search(query, repo, includeRepoName: true)
                    select searchResult;
         }
-
-        private class GrepResult
-        {
-            public string Term;
-            public string FilePath;
-            public List<SearchLine> Matches;
-        }
     }
 }
