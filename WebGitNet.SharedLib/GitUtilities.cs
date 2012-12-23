@@ -28,7 +28,7 @@ namespace WebGitNet
         /// <summary>
         /// Quotes and Escapes a command-line argument for Git and Bash.
         /// </summary>
-        private static string Q(string argument)
+        public static string Q(string argument)
         {
             var result = new StringBuilder(argument.Length + 10);
             result.Append("\"");
