@@ -18,9 +18,10 @@
             return Task.Factory.StartNew(() => (IList<SearchResult>)Search(query, fileManager).Skip(skip).Take(count).ToList());
         }
 
-        private IEnumerable<GrepResult> GrepRepo(string term, string repoPath)
+        private IEnumerable<SearchResult> Search(SearchQuery query, RepoInfo repo, bool includeRepoName = false)
         {
-            var commandResult = GitUtilities.Execute(string.Format("grep --line-number --fixed-strings --ignore-case --context 3 --null -e {0} HEAD", GitUtilities.Q(term)), repoPath);
+            var allTerms = string.Join(" --or ", query.Terms.Select(t => "-e " + GitUtilities.Q(t)));
+            var commandResult = GitUtilities.Execute("grep --line-number --fixed-strings --ignore-case --context 3 --null --all-match " + allTerms + " HEAD", repo.RepoPath);
             var repoResults = commandResult.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
             return from m in repoResults
@@ -34,30 +35,14 @@
                        LineNumber = int.Parse(parts[1]),
                    }
                    group searchLine by filePath into g
-                   select new GrepResult
+                   select new SearchResult
                    {
-                       Term = term,
-                       FilePath = g.Key,
-                       Matches= g.ToList(),
+                       LinkText = (includeRepoName ? repo.Name + " " : string.Empty) + "/" + g.Key,
+                       ActionName = "ViewBlob",
+                       ControllerName = "Browse",
+                       RouteValues = new { repo = repo.Name, @object = "HEAD", path = g.Key },
+                       Lines = g.ToList(),
                    };
-        }
-
-        public IEnumerable<SearchResult> Search(SearchQuery query, RepoInfo repository, bool includeRepoName = false)
-        {
-            var results = new List<SearchResult>();
-            foreach (var matches in query.Terms.Select(t => GrepRepo(t, repository.RepoPath)))
-            {
-                results.AddRange(matches.Select(match => new SearchResult
-                {
-                    LinkText = (includeRepoName ? repository.Name + " " : string.Empty) + "/" + match.FilePath,
-                    ActionName = "ViewBlob",
-                    ControllerName = "Browse",
-                    RouteValues = new { repo = repository.Name, @object = "HEAD", path = match.FilePath },
-                    Lines = match.Matches,
-                }));
-            }
-
-            return results;
         }
 
         public IEnumerable<SearchResult> Search(SearchQuery query, FileManager fileManager)
@@ -67,13 +52,9 @@
                         where repoInfo.IsGitRepo
                         select repoInfo;
 
-            var results = new List<SearchResult>();
-            foreach (var repo in repos)
-            {
-                results.AddRange(Search(query, repo, includeRepoName: true));
-            }
-
-            return results;
+            return from repo in repos
+                   from searchResult in Search(query, repo, includeRepoName: true)
+                   select searchResult;
         }
 
         private class GrepResult
