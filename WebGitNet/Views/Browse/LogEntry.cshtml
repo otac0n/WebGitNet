@@ -2,38 +2,40 @@
 @{
     bool? showDetails = ViewBag.Details;
 }
-<div class="log-entry">
-  <div class="commit-references">
-    <div class="commit-ref">
-        <span>commit:</span> @Html.ActionLink(Model.CommitHash, "ViewCommit", new { @object = Model.CommitHash })
+<div class="media well well-small">
+    <a class="pull-left" href="mailto:@Model.AuthorEmail">@Html.Gravatar(Model.AuthorEmail, Model.Author, 64)</a>
+
+    <div class="media-body">
+        <div class="pull-right">
+            <div>
+                <span>commit:</span> @Html.ActionLink(Model.CommitHash, "ViewCommit", new { @object = Model.CommitHash })
+            </div>
+            <div>
+                <span>tree:</span> @Html.ActionLink(Model.Tree, "ViewTree", new { @object = Model.Tree })
+            </div>
+            @foreach (var parent in Model.Parents)
+            {
+                <div>
+                    <span>parent:</span> @Html.ActionLink(parent, "ViewCommit", new { @object = parent })
+                </div>
+            }
+            <div>
+                <span>author:</span> <a href="mailto:@Model.AuthorEmail">@Model.Author</a>
+            </div>
+            @if (Model.Author != Model.Committer ||
+                 Model.AuthorEmail.Trim().ToLowerInvariant() != Model.CommitterEmail.Trim().ToLowerInvariant())
+            {
+                <div>
+                    <span>committer:</span> <a href="mailto:@Model.CommitterEmail">@Model.Committer</a>
+                </div>
+            }
+        </div>
+
+        <h4 class="media-heading">@Html.Markdown(Model.Subject)</h4>
+        @if (showDetails == true)
+        {
+          <p>@Html.Markdown(Model.Body)</p>
+        }
+        <div class="date" title="@Model.AuthorDate.ToString("u")">@Model.AuthorDate.ToString("u")</div>
     </div>
-    <div class="tree-ref">
-        <span>tree:</span> @Html.ActionLink(Model.Tree, "ViewTree", new { @object = Model.Tree })
-    </div>
-  @foreach (var parent in Model.Parents)
-  {
-    <div class="tree-ref">
-        <span>parent:</span> @Html.ActionLink(parent, "ViewCommit", new { @object = parent })
-    </div>
-  }
-  </div>
-  <div class="commit-subject">@Html.Markdown(Model.Subject)</div>
-@if (showDetails == true)
-{
-  <div class="commit-body">@Html.Markdown(Model.Body)</div>
-}
-  <div class="commit-author commit-person">
-      <div class="avatar">@Html.Gravatar(Model.AuthorEmail, Model.Author, 24)</div>
-      <div class="name"><a href="mailto:@Model.AuthorEmail">@Model.Author</a> <span class="role">(author)</span></div>
-      <div class="date" title="@Model.AuthorDate.ToString("u")">@Model.AuthorDate.ToString("u")</div>
-  </div>
-@if (Model.Author != Model.Committer ||
-     Model.AuthorEmail.Trim().ToLowerInvariant() != Model.CommitterEmail.Trim().ToLowerInvariant())
-{
-  <div class="commit-committer commit-person">
-      <div class="avatar">@Html.Gravatar(Model.CommitterEmail, Model.Committer, 24)</div>
-      <div class="name"><a href="mailto:@Model.CommitterEmail">@Model.Committer</a> <span class="role">(committer)</span></div>
-      <div class="date" title="@Model.CommitterDate.ToString("u")">@Model.CommitterDate.ToString("u")</div>
-  </div>
-}
 </div>
