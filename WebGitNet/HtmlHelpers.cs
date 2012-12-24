@@ -94,7 +94,7 @@ namespace WebGitNet
                 result.Append(link);
             };
 
-            result.Append("<div class=\"pagination\"><ul>");
+            result.Append("<div class=\"pagination pagination-centered\"><ul>");
 
             renderPageLink(1, "Newest", page == 1);
             renderPageLink(page - 1, "Newer", page == 1);

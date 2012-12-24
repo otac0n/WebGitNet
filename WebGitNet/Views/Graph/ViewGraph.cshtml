@@ -1,6 +1,22 @@
 ﻿@model IEnumerable<GraphEntry>
 @{
     ViewBag.Title = "Repository Graph";
+
+    var refTypeIcons = new Dictionary<RefType, string>
+    {
+        { RefType.Branch, "icon-branch" },
+        { RefType.RemoteBranch, "icon-branch" },
+        { RefType.Stash, "icon-briefcase" },
+        { RefType.Tag, "icon-tag" },
+    };
+
+    var refTypeLabels = new Dictionary<RefType, string>
+    {
+        { RefType.Branch, "label-success" },
+        { RefType.RemoteBranch, "label-important" },
+        { RefType.Stash, "label-inverse" },
+        { RefType.Tag, "label-info" },
+    };
 }
 
 @section headers
@@ -9,24 +25,61 @@
     <script src="@Url.Content("~/Scripts/graph.js")"></script>
 }
 
-<div class="settings">
-    <a id="show-graph-settings" href="#">Graph Settings</a>
-    <div id="graph-settings">
-        <table>
-            <tr><th>Graph Alignment:</th><td><input name="align" type="radio" value="left" />Left <input name="align" type="radio" value="right" />Right</td></tr>
-            <tr><th>Follow Contour:</th><td><input name="outline" type="checkbox" /></td></tr>
-            <tr><th>Line Width:</th><td><div id="lineWidth" /></td></tr>
-            <tr><th>Curved Lines:</th><td><input name="curveLine" type="checkbox" /></td></tr>
-            <tr><th>Dot Radius:</th><td><div id="dotRadius" /></td></tr>
-            <tr><th>Dot Border:</th><td><div id="dotBorder" /></td></tr>
-            <tr><th>Column Width:</th><td><div id="colWidth" /></td></tr>
-            <tr><th>Row Height:</th><td><div id="rowHeight" /></td></tr>
-            <tr><td colspan="2"><a id="reset-settings" href="#">Reset to Defaults</a></td></tr>
-        </table>
+<div class="modal hide fade" id="graph-settings" data-backdrop="false">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3>Graph Settings</h3>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal" action="#" method="get">
+            <div class="control-group">
+                <label class="control-label">Graph Alignment:</label>
+                <div class="controls">
+                    <label class="radio inline"><input name="align" type="radio" value="left" /> Left</label>
+                    <label class="radio inline"><input name="align" type="radio" value="right" checked="checked" /> Right</label>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <label class="checkbox"><input name="outline" type="checkbox" /> Follow Contour</label>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Line Width:</label>
+                <div class="controls"><input name="lineWidth" type="text" value="2" /></div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <label class="checkbox"><input name="curveLine" type="checkbox" checked="checked" /> Curved Lines</label>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Dot Radius:</label>
+                <div class="controls"><input name="dotRadius" type="text" value="3" /></div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Dot Border:</label>
+                <div class="controls"><input name="dotBorder" type="text" value="0" /></div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Column Width:</label>
+                <div class="controls"><input name="colWidth" type="text" value="13" /></div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Row Height:</label>
+                <div class="controls"><input name="rowHeight" type="text" value="24" /></div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary"  data-toggle="modal" data-target="#graph-settings">Done</button>
+        <button class="btn btn-link pull-left" id="reset-settings" type="button">Reset to Defaults</button>
     </div>
 </div>
 
 @Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Graph", "ViewGraph", new { repo = ViewBag.RepoName })
+
+<a href="#" class="pull-right" data-toggle="modal" data-target="#graph-settings">Graph Settings</a>
 
 <div class="graph">
     <canvas id="graph-canvas" width="0" height="0">
@@ -36,7 +89,7 @@
     <div class="graph-node" data-node="@e.Node" data-parent-nodes="@string.Join(",", e.ParentNodes)" data-incoming-nodes="@string.Join(",", e.IncomingNodes)">
         @foreach (var r in e.Refs)
         {
-            <span class="git-ref @("git-ref-" + r.RefType.ToString().ToLower())">@r.Name</span>
+            <span class="label @(refTypeLabels[r.RefType])"><i class="@(refTypeIcons[r.RefType]) icon-white"></i>@r.Name</span>
         }
 
         @Html.ActionLink(string.IsNullOrWhiteSpace(e.LogEntry.Subject) ? "(no subject)" : e.LogEntry.Subject, "ViewCommit", "Browse", new { @object = e.LogEntry.CommitHash }, null)

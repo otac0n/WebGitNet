@@ -203,12 +203,12 @@ $(function () {
             $(this).prop("checked", $(this).val() == (options.rightAlign ? "right" : "left"));
         });
         $("input[name='outline']").prop("checked", !options.flushLeft);
-        $("#lineWidth").slider("value", options.lineWidth);
+        $("input[name='lineWidth']").val(options.lineWidth);
         $("input[name='curveLine']").prop("checked", options.curveLine);
-        $("#dotRadius").slider("value", options.dotRadius);
-        $("#dotBorder").slider("value", options.dotBorder);
-        $("#colWidth").slider("value", options.colWidth);
-        $("#rowHeight").slider("value", options.rowHeight);
+        $("input[name='dotRadius']").val(options.dotRadius);
+        $("input[name='dotBorder']").val(options.dotBorder);
+        $("input[name='colWidth']").val(options.colWidth);
+        $("input[name='rowHeight']").val(options.rowHeight);
         suppressSave = false;
     }
 
@@ -217,10 +217,7 @@ $(function () {
         $.cookie("Graph.options", null, { path: '/', expires: 365 });
         Graph.render();
         resetUI();
-    });
-
-    $("#show-graph-settings").click(function () {
-        $("#graph-settings").toggle('slow');
+        $("#graph-settings").modal('toggle');
     });
 
     $("input[name='align']").change(function () {
@@ -231,53 +228,28 @@ $(function () {
         save({ flushLeft: !$(this).prop("checked") });
     });
 
-    $("#lineWidth").slider({
-        min: 1,
-        max: 5,
-        range: 'min',
-        slide: function (event, ui) {
-            save({ lineWidth: ui.value });
-        }
+    $("input[name='lineWidth']").change(function () {
+        save({ lineWidth: +$(this).val() });
     });
 
     $("input[name='curveLine']").change(function () {
         save({ curveLine: $(this).prop("checked") });
     });
 
-    $("#dotRadius").slider({
-        min: 1,
-        max: 5,
-        range: 'min',
-        slide: function (event, ui) {
-            save({ dotRadius: ui.value });
-        }
+    $("input[name='dotRadius']").change(function () {
+        save({ dotRadius: +$(this).val() });
     });
 
-    $("#dotBorder").slider({
-        min: 0,
-        max: 3,
-        range: 'min',
-        slide: function (event, ui) {
-            save({ dotBorder: ui.value });
-        }
+    $("input[name='dotBorder']").change(function () {
+        save({ dotBorder: +$(this).val() });
     });
 
-    $("#colWidth").slider({
-        min: 5,
-        max: 30,
-        range: 'min',
-        slide: function (event, ui) {
-            save({ colWidth: ui.value });
-        }
+    $("input[name='colWidth']").change(function () {
+        save({ colWidth: +$(this).val() });
     });
 
-    $("#rowHeight").slider({
-        min: 5,
-        max: 30,
-        range: 'min',
-        slide: function (event, ui) {
-            save({ rowHeight: ui.value });
-        }
+    $("input[name='rowHeight']").change(function () {
+        save({ rowHeight: +$(this).val() });
     });
 
     resetUI();

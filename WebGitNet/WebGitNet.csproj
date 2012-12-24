@@ -117,6 +117,7 @@
     <Content Include="Content\bootstrap-responsive.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\branch-white.png" />
     <Content Include="Content\branch.png" />
     <Content Include="Content\breadcrumber_bg.png" />
     <Content Include="Content\browse.css" />
@@ -130,7 +131,6 @@
     <Content Include="Content\merge.png" />
     <Content Include="Content\sh_typical.min.css" />
     <Content Include="Content\tablesort.css" />
-    <Content Include="Content\tag.png" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="browse.cshtml" />
