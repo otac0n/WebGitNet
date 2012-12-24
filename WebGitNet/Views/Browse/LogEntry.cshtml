@@ -7,12 +7,12 @@
 
     <div class="media-body">
         <div class="pull-right">
-            <table>
-                <tr><td>commit:</td><td>@Html.ActionLink(Model.CommitHash, "ViewCommit", new { @object = Model.CommitHash })</td></tr>
-                <tr><td>tree:</td><td>@Html.ActionLink(Model.Tree, "ViewTree", new { @object = Model.Tree })</td></tr>
+            <table class="commit-metadata">
+                <tr><td>commit:</td><td>@Html.ActionLink(Model.CommitHash.Substring(0, 16), "ViewCommit", new { @object = Model.CommitHash })</td></tr>
+                <tr><td>tree:</td><td>@Html.ActionLink(Model.Tree.Substring(0, 16), "ViewTree", new { @object = Model.Tree })</td></tr>
                 @foreach (var parent in Model.Parents)
                 {
-                    <tr><td>parent:</td><td>@Html.ActionLink(parent, "ViewCommit", new { @object = parent })</td></tr>
+                    <tr><td>parent:</td><td>@Html.ActionLink(parent.Substring(0, 16), "ViewCommit", new { @object = parent })</td></tr>
                 }
                 <tr><td>author:</td><td><a href="mailto:@Model.AuthorEmail">@Model.Author</a></td></tr>
                 @if (Model.Author != Model.Committer ||
