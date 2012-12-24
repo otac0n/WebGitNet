@@ -7,28 +7,20 @@
 
     <div class="media-body">
         <div class="pull-right">
-            <div>
-                <span>commit:</span> @Html.ActionLink(Model.CommitHash, "ViewCommit", new { @object = Model.CommitHash })
-            </div>
-            <div>
-                <span>tree:</span> @Html.ActionLink(Model.Tree, "ViewTree", new { @object = Model.Tree })
-            </div>
-            @foreach (var parent in Model.Parents)
-            {
-                <div>
-                    <span>parent:</span> @Html.ActionLink(parent, "ViewCommit", new { @object = parent })
-                </div>
-            }
-            <div>
-                <span>author:</span> <a href="mailto:@Model.AuthorEmail">@Model.Author</a>
-            </div>
-            @if (Model.Author != Model.Committer ||
-                 Model.AuthorEmail.Trim().ToLowerInvariant() != Model.CommitterEmail.Trim().ToLowerInvariant())
-            {
-                <div>
-                    <span>committer:</span> <a href="mailto:@Model.CommitterEmail">@Model.Committer</a>
-                </div>
-            }
+            <table>
+                <tr><td>commit:</td><td>@Html.ActionLink(Model.CommitHash, "ViewCommit", new { @object = Model.CommitHash })</td></tr>
+                <tr><td>tree:</td><td>@Html.ActionLink(Model.Tree, "ViewTree", new { @object = Model.Tree })</td></tr>
+                @foreach (var parent in Model.Parents)
+                {
+                    <tr><td>parent:</td><td>@Html.ActionLink(parent, "ViewCommit", new { @object = parent })</td></tr>
+                }
+                <tr><td>author:</td><td><a href="mailto:@Model.AuthorEmail">@Model.Author</a></td></tr>
+                @if (Model.Author != Model.Committer ||
+                     Model.AuthorEmail.Trim().ToLowerInvariant() != Model.CommitterEmail.Trim().ToLowerInvariant())
+                {
+                    <tr><td>committer:</td><td><a href="mailto:@Model.CommitterEmail">@Model.Committer</a></td></tr>
+                }
+            </table>
         </div>
 
         <h4 class="media-heading">@Html.Markdown(Model.Subject)</h4>
