@@ -23,24 +23,25 @@
                 <li>@Html.ActionLink("Create Repo", "Create", "Manage")</li>
             </ul>
         </div>
-        @if (ViewBag.BreadCrumbs != null)
+        @if (breadcrumbs != null)
         {
-            <div id="breadcrumber">
+            <ul class="breadcrumb">
             @{
-                bool first = true;
-                foreach (var breadCrumb in (BreadCrumbTrail)ViewBag.BreadCrumbs)
+                var breadcrumbList = breadcrumbs.ToList();
+                for (var i = 0; i < breadcrumbList.Count; i++)
                 {
-                    if (!first)
-                    {
-                        <span>&gt;</span>
-                    }
-
-                    @Html.ActionLink(breadCrumb.Name, breadCrumb.Action, breadCrumb.Controller, breadCrumb.RouteValues, null);
-
-                    first = false;
+                    var last = i == breadcrumbList.Count - 1;
+                    var breadcrumb = breadcrumbList[i];
+                    <li@Html.Raw(last ? " class=\"active\"" : "")>
+                        @Html.ActionLink(breadcrumb.Name, breadcrumb.Action, breadcrumb.Controller, breadcrumb.RouteValues, null)
+                        @if (!last)
+                        {
+                            <span class="divider">/</span>
+                        }
+                    </li>
                 }
             }
-            </div>
+            </ul>
         }
     </div>
 
