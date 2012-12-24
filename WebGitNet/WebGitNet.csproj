@@ -113,6 +113,10 @@
     </CodeAnalysisDictionary>
     <Content Include="Content\asc.gif" />
     <Content Include="Content\bg.gif" />
+    <Content Include="Content\bootstrap-responsive.css" />
+    <Content Include="Content\bootstrap-responsive.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\branch.png" />
     <Content Include="Content\breadcrumber_bg.png" />
     <Content Include="Content\browse.css" />
@@ -120,6 +124,8 @@
     <Content Include="Content\desc.gif" />
     <Content Include="Content\feed.png" />
     <Content Include="Content\graph.css" />
+    <Content Include="Content\images\glyphicons-halflings-white.png" />
+    <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Content\logo.png" />
     <Content Include="Content\merge.png" />
     <Content Include="Content\sh_typical.min.css" />
@@ -128,6 +134,8 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="browse.cshtml" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\g.raphael\g.bar-min.js" />
     <Content Include="Scripts\g.raphael\g.dot-min.js" />
     <Content Include="Scripts\g.raphael\g.line-min.js" />
