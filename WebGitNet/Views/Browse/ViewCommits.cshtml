@@ -1,5 +1,4 @@
 ﻿@model IEnumerable<LogEntry>
-
 @{
     ViewBag.Title = "Commit Log";
 }
@@ -7,7 +6,6 @@
 @section headers
 {
     <script src="@Url.Content("~/Scripts/jquery.timeago.min.js")"></script>
-    <link href="@Url.Content("~/Content/browse.css")" rel="stylesheet" type="text/css" />
     <script>
         $(function () {
             $("div.date").timeago();
@@ -17,9 +15,10 @@
     <link rel="alternate" type="application/atom+xml" href="@Url.Action("Commits", "Syndication", new { repo = ViewBag.RepoName })" title="@ViewBag.RepoName Commits" />
 }
 
-<div class="syndication">
-    <a href="@Url.Action("Commits", "Syndication", new { repo = ViewBag.RepoName })">@ViewBag.RepoName Commits</a>
-</div>
+@section syndication
+{
+    <li><a href="@Url.Action("Commits", "Syndication", new { repo = ViewBag.RepoName })"><i class="icon-feed"></i> @ViewBag.RepoName Commits</a></li>
+}
 
 @Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Browse", "ViewCommits", new { repo = ViewBag.RepoName })
 
