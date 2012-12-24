@@ -1,30 +1,12 @@
 ﻿@model IList<DiffInfo>
-
 @{
-    LogEntry commitLogEntry = ViewBag.CommitLogEntry;
-
-    Func<char, string> diffLineStyle = c =>
-    {
-        switch (c)
-        {
-            case '+':
-                return "diff-line-add";
-            case '-':
-                return "diff-line-remove";
-            case ' ':
-                return "diff-line-context";
-            default:
-                return "diff-line-info";
-        }
-    };
-
+    var commitLogEntry = (LogEntry)ViewBag.CommitLogEntry;
     ViewBag.Title = "View Commit";
 }
 
 @section headers
 {
     <script src="@Url.Content("~/Scripts/jquery.timeago.min.js")"></script>
-    <link href="@Url.Content("~/Content/browse.css")" rel="stylesheet" type="text/css" />
     <script>
         $(function () {
             $("div.date").timeago();
@@ -36,12 +18,5 @@
 
 @foreach (var diff in Model)
 {
-<div class="diff-container page-section">
-  <div class="diff">
-    @foreach (var line in diff.Lines)
-    {
-    <span class="diff-line @diffLineStyle(line[0])">@Html.Raw(Html.Encode(line).Replace(" ", "&nbsp;"))</span><br />
-    }
-  </div>
-</div>
+    <pre>@string.Join(Environment.NewLine, diff.Lines)</pre>
 }
