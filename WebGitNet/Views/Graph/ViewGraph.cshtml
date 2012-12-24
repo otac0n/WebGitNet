@@ -26,9 +26,7 @@
     </div>
 </div>
 
-<div class="pager">
-    @Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Graph", "ViewGraph", new { repo = ViewBag.RepoName })
-</div>
+@Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Graph", "ViewGraph", new { repo = ViewBag.RepoName })
 
 <div class="graph">
     <canvas id="graph-canvas" width="0" height="0">
@@ -46,6 +44,4 @@
 }
 </div>
 
-<div class="pager">
-    @Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Graph", "ViewGraph", new { repo = ViewBag.RepoName })
-</div>
+@Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Graph", "ViewGraph", new { repo = ViewBag.RepoName })

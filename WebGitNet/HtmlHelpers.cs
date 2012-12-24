@@ -84,28 +84,20 @@ namespace WebGitNet
 
             Action<int, string, bool> renderPageLink = (p, text, active) =>
             {
-                string link;
-
-                if (active)
+                var r = new RouteValueDictionary(routeValues);
+                if (p != 1)
                 {
-                    var r = new RouteValueDictionary(routeValues);
-                    if (p != 1)
-                    {
-                        r[routeKey] = p;
-                    }
-
-                    link = html.ActionLink(text, actionName, controllerName, r, null).ToString();
-                }
-                else
-                {
-                    link = string.Format("<a>{0}</a>", html.Encode(text));
+                    r[routeKey] = p;
                 }
 
+                var link = "<li" + (active ? " class=\"active\"" : string.Empty) + ">" + html.ActionLink(text, actionName, controllerName, r, null).ToString() + "</li>";
                 result.Append(link);
             };
 
-            renderPageLink(1, "Newest", page > 1);
-            renderPageLink(page - 1, "Newer", page > 1);
+            result.Append("<div class=\"pagination\"><ul>");
+
+            renderPageLink(1, "Newest", page == 1);
+            renderPageLink(page - 1, "Newer", page == 1);
 
             int left = Math.Min(page - 1, 2);
             int right = Math.Min(pages - page, 2);
@@ -113,11 +105,13 @@ namespace WebGitNet
             int endPage = Math.Min(pages, page + right + (2 - left));
             for (int p = startPage; p <= endPage; p++)
             {
-                renderPageLink(p, p.ToString(), p != page);
+                renderPageLink(p, p.ToString(), p == page);
             }
 
-            renderPageLink(page + 1, "Older", page < pages);
-            renderPageLink(pages, "Oldest", page < pages);
+            renderPageLink(page + 1, "Older", page == pages);
+            renderPageLink(pages, "Oldest", page == pages);
+
+            result.Append("</ul></div>");
 
             return new MvcHtmlString(result.ToString());
         }

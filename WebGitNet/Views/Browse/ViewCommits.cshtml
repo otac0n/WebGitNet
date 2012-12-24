@@ -21,15 +21,11 @@
     <a href="@Url.Action("Commits", "Syndication", new { repo = ViewBag.RepoName })">@ViewBag.RepoName Commits</a>
 </div>
 
-<div class="pager">
-    @Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Browse", "ViewCommits", new { repo = ViewBag.RepoName })
-</div>
+@Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Browse", "ViewCommits", new { repo = ViewBag.RepoName })
 
 @foreach (var entry in Model)
 {
     @Html.Partial("LogEntry", entry)
 }
 
-<div class="pager">
-    @Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Browse", "ViewCommits", new { repo = ViewBag.RepoName })
-</div>
+@Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Browse", "ViewCommits", new { repo = ViewBag.RepoName })
