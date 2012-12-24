@@ -59,20 +59,16 @@
     <tr><th style="width: 150px;">Clone Command:</th><td><code>@("git clone " + repoUrl + (Uri.EscapeUriString(repoName) != repoName ? " \"" + repoName + "\"" : string.Empty))</code></td></tr>
 </table>
 
-<section>
-    @if (lastCommit == null)
-    {
-        <span class="empty-commit-history">There are no commits in this repository.</span>
-    }
-    else
-    {
+@if (lastCommit != null)
+{
+    <section>
         @Html.Partial("LogEntry", lastCommit)
-        foreach (var route in Html.FindSatisfiableRoutes(new { repo = repoName }))
+        @foreach (var route in Html.FindSatisfiableRoutes(new { repo = repoName }))
         {
-            <text>@Html.RouteLink(route.GetName(), route.GetName(), new { repo = repoName }) </text>
+            @Html.RouteLink(route.GetName(), route.GetName(), new { repo = repoName })
         }
-    }
-</section>
+    </section>
+}
 
 @if (refsGrouped.Any())
 {
