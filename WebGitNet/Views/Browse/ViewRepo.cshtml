@@ -35,6 +35,13 @@
             margin-top: 20px;
         }
     </style>
+
+    <link rel="alternate" type="application/atom+xml" href="@Url.Action("Commits", "Syndication", new { repo = repoName })" title="@repoName Commits" />
+}
+
+@section syndication
+{
+    <li><a href="@Url.Action("Commits", "Syndication", new { repo = repoName })"><i class="icon-feed"></i> @repoName Commits</a></li>
 }
 
 <div class="pull-right">
