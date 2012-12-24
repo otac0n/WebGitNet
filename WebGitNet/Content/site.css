@@ -7,6 +7,19 @@
     background-position: 2px 2px;
 }
 
-.icon-branch.icon-white {
+.icon-branch.icon-white, .dropdown-menu > li > a:hover > .icon-branch {
     background-image: url(branch-white.png);
+}
+
+.icon-feed {
+    background-image: url(feed.png);
+    background-position: 2px 3px;
+}
+
+.icon-feed.icon-white, .dropdown-menu > li > a:hover > .icon-feed {
+    background-image: url(feed-white.png);
+}
+
+#footer {
+    text-align: center;
 }

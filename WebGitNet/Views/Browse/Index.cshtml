@@ -4,41 +4,29 @@
     ViewBag.Title = "Repositories";
 }
 
-@section headers
-{
-    <link rel="alternate" type="application/atom+xml" href="@Url.Action("LastCommits", "Syndication")" title="Last Commit in All Repos" />
-}
-
-<div class="search">
-@using (Html.BeginForm("Search", "Search", FormMethod.Get))
-{
-    <input type="text" name="q" /> <button type="submit">Search</button>
-}
-</div>
-
-<div class="syndication">
-    <a href="@Url.Action("LastCommits", "Syndication")">Last Commit in All Repos</a>
-</div>
-
-<div class="archived">
-    <a href="@Url.Action("ArchivedIndex", "Browse")">View Archived Repos</a>
-</div>
-
-<table>
-  <tr><th>Repository</th><th>Description</th></tr>
-@foreach (var repo in Model)
-{
-    if (repo.IsGitRepo)
+<div class="pull-right">
+    @using (Html.BeginForm("Search", "Search", FormMethod.Get, new { @class = "form form-search" }))
     {
-  <tr><td>@Html.ActionLink(repo.Name, "ViewRepo", new { repo = repo.Name })</td><td>@repo.Description</td></tr>
+        <input class="search-query" type="text" name="q" /> <button class="btn" type="submit">Search All Repos</button>
     }
-    else
+</div>
+
+<table class="table table-bordered">
+    <tr><th>Repository</th><th>Description</th></tr>
+    @foreach (var repo in Model)
     {
-  <tr><td>@repo.Name</td><td>(not a repository)</td></tr>
+        if (repo.IsGitRepo)
+        {
+            <tr><td>@Html.ActionLink(repo.Name, "ViewRepo", new { repo = repo.Name })</td><td>@repo.Description</td></tr>
+        }
+        else
+        {
+            <tr><td>@repo.Name</td><td>(not a repository)</td></tr>
+        }
     }
-}
 </table>
 
 <p>
-  @Html.ActionLink("Create a new repo.", "Create", "Manage")
+    <a class="btn btn-link" href="@Url.Action("Create", "Manage")"><i class="icon-plus"></i> Create a new repo</a>
+    <a class="btn btn-link" href="@Url.Action("ArchivedIndex", "Browse")"><i class="icon-folder-open"></i> View archived repos</a>
 </p>

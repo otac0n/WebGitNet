@@ -12,6 +12,7 @@
     <script src="@Url.Content("~/Scripts/jquery.cookie.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/json2.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/bootstrap.min.js")" type="text/javascript"></script>
+    <link rel="alternate" type="application/atom+xml" href="@Url.Action("LastCommits", "Syndication")" title="Last Commit in All Repos" />
     @RenderSection("headers", required: false)
     @{WriteTo(new StringWriter(), RenderSection("intellisense", required: false));}
     @MiniProfiler.RenderIncludes(showTrivial: true, showTimeWithChildren: true, position: RenderPosition.Right)
@@ -26,6 +27,12 @@
                     <ul class="nav pull-right">
                         <li>@Html.ActionLink("Browse", "Index", "Browse")</li>
                         <li>@Html.ActionLink("Create Repo", "Create", "Manage")</li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-feed icon-white"></i> Feeds <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="@Url.Action("LastCommits", "Syndication")"><i class="icon-feed"></i> Last Commit in All Repos</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -61,7 +68,7 @@
         }
     </div>
 
-    <div id="footer">
+    <div class="container" id="footer">
         Copyright &copy; @DateTime.Now.Year John Gietzen. All rights reserved.
     </div>
 </body>
