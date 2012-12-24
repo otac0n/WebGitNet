@@ -31,6 +31,7 @@
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-feed icon-white"></i> Feeds <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="@Url.Action("LastCommits", "Syndication")"><i class="icon-feed"></i> Last Commit in All Repos</a></li>
+                                @RenderSection("syndication", required: false)
                             </ul>
                         </li>
                     </ul>

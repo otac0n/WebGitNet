@@ -10,72 +10,105 @@
 
     var requestUrl = Url.RequestContext.HttpContext.Request.Url;
     var repoUrl = requestUrl.Scheme + "://" + requestUrl.Authority + Url.Action("Fetch", "File", new { url = repoName });
+
+    var refTypeIcons = new Dictionary<RefType, string>
+    {
+        { RefType.Branch, "icon-branch" },
+        { RefType.RemoteBranch, "icon-branch" },
+        { RefType.Stash, "icon-bookmark" },
+        { RefType.Tag, "icon-tag" },
+    };
+
+    var refsGrouped = refs.Where(r => r.RefType != RefType.RemoteBranch).ToLookup(r => r.RefType);
 }
 
 @section headers
 {
     <script src="@Url.Content("~/Scripts/jquery.timeago.min.js")"></script>
-    <link href="@Url.Content("~/Content/browse.css")" rel="stylesheet" type="text/css" />
     <script>
         $(function () {
-            $(".clone-info input").focus(function () { this.select(); });
             $("div.date").timeago();
         });
     </script>
+    <style>
+        section {
+            margin-top: 20px;
+        }
+    </style>
 }
 
-<div class="search">
-@using (Html.BeginForm("SearchRepo", "Search", new { repo = repoName }, FormMethod.Get, null))
-{
-    <input type="text" name="q" /> <button type="submit">Search</button>
-}
+<div class="pull-right">
+    @using (Html.BeginForm("SearchRepo", "Search", new { repo = repoName }, FormMethod.Get, new { @class = "form form-search" }))
+    {
+        <input class="search-query" type="text" name="q" /> <button class="btn" type="submit">Search</button>
+    }
 </div>
 
 <h2>@ViewBag.Title</h2>
 
-<table class="repo-info">
-  <tr><th>Description:</th><td>@info.Description</td></tr>
-  <tr><th>Clone URL:</th><td>@Html.TextBox("clone-url", repoUrl)</td></tr>
-  <tr><th>Clone Command:</th><td>@Html.TextBox("clone-command", "git clone " + repoUrl + (Uri.EscapeUriString(repoName) != repoName ? " \"" + repoName + "\"" : string.Empty))</td></tr>
+<table class="table">
+    <tr><th style="width: 150px;">Description:</th><td>@info.Description @Html.ActionLink("edit", "ManageRepo", "Manage", new { repoName }, null)</td></tr>
+    <tr><th style="width: 150px;">Clone URL:</th><td><code>@repoUrl</code></td></tr>
+    <tr><th style="width: 150px;">Clone Command:</th><td><code>@("git clone " + repoUrl + (Uri.EscapeUriString(repoName) != repoName ? " \"" + repoName + "\"" : string.Empty))</code></td></tr>
 </table>
-@Html.ActionLink("Manage Repo", "ManageRepo", "Manage", new { repoName }, null)
 
-<div id="last-commit" class="page-section">
-@if (lastCommit == null)
-{
-    <span class="empty-commit-history">There are no commits in this repository.</span>
-}
-else
-{
-<text>Last Commit:
-@Html.Partial("LogEntry", lastCommit)
-@foreach (var route in Html.FindSatisfiableRoutes(new { repo = repoName }))
-{
-    <text>@Html.RouteLink(route.GetName(), route.GetName(), new { repo = repoName }) </text>
-}</text>
-}
-</div>
+<section>
+    @if (lastCommit == null)
+    {
+        <span class="empty-commit-history">There are no commits in this repository.</span>
+    }
+    else
+    {
+        @Html.Partial("LogEntry", lastCommit)
+        foreach (var route in Html.FindSatisfiableRoutes(new { repo = repoName }))
+        {
+            <text>@Html.RouteLink(route.GetName(), route.GetName(), new { repo = repoName }) </text>
+        }
+    }
+</section>
 
-@if (refs.Any())
+@if (refsGrouped.Any())
 {
-<div class="page-section">
-  Branches / Tags:
-  <ul id="ref-list">
-  @foreach (var r in refs.Where(r => r.RefType != RefType.RemoteBranch).OrderBy(r => r.Name))
-  {
-    <li><span class="git-icon @(r.RefType == RefType.Tag ? "git-icon-tag" : "git-icon-branch")"></span> @r.Name</li>
-  }
-  </ul>
-</div>
+    var branches = refsGrouped[RefType.Branch];
+    var tags = refsGrouped[RefType.Tag].OrderByDescending(r => r.Name);
+    var stashes = refsGrouped[RefType.Stash];
+
+    <section>
+        @if (branches.Any())
+        {
+            <div class="btn-group">
+                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="@(refTypeIcons[RefType.Branch])"></i> Branches <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    @foreach (var branch in branches)
+                    {
+                        <li><a><i class="@(refTypeIcons[branch.RefType])"></i> @branch.Name</a></li>
+                    }
+                </ul>
+            </div>
+        }
+
+        @if (tags.Any())
+        {
+            <div class="btn-group">
+                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="@(refTypeIcons[RefType.Tag])"></i> Tags <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    @foreach (var tag in tags)
+                    {
+                        <li><a><i class="@(refTypeIcons[RefType.Tag])"></i> @tag.Name</a></li>
+                    }
+                </ul>
+            </div>
+        }
+    </section>
 }
 
-<div class="page-section">
-@if (currentTree == null || currentTree.Objects.Count == 0)
-{
-    <span class="empty-tree">There are no files being tracked in this repository.</span>
-}
-else
-{
-@Html.Partial("ObjectTree", currentTree)
-}
-</div>
+<section>
+    @if (currentTree == null || currentTree.Objects.Count == 0)
+    {
+        <span class="empty-tree">There are no files being tracked in this repository.</span>
+    }
+    else
+    {
+        @Html.Partial("ObjectTree", currentTree)
+    }
+</section>
