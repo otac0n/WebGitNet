@@ -1,21 +1,16 @@
 ﻿@model ResourceInfo
-
 @{
     ViewBag.Title = "Index of git/" + Model.LocalPath;
-    var dirInfo = Model.FileSystemInfo as DirectoryInfo;
+    var dirInfo = (DirectoryInfo)Model.FileSystemInfo;
 }
 
-<ul>
-@foreach (var dir in dirInfo.EnumerateDirectories())
-{
-    <li class="folder">
-        @Html.ActionLink(dir.Name, "Fetch", new { url = Model.LocalPath + "/" + dir.Name + "/" })
-    </li>
-}
-@foreach (var file in dirInfo.EnumerateFiles())
-{
-    <li class="file">
-        @Html.ActionLink(file.Name, "Fetch", new { url = Model.LocalPath + "/" + file.Name })
-    </li>
-}
+<ul class="unstyled">
+    @foreach (var dir in dirInfo.EnumerateDirectories())
+    {
+        <li class="folder"><a href="@Url.Action("Fetch", new { url = Model.LocalPath + "/" + dir.Name + "/" })"><i class="icon-folder-close"></i> @dir.Name/</a></li>
+    }
+    @foreach (var file in dirInfo.EnumerateFiles())
+    {
+        <li class="file"><a href="@Url.Action("Fetch", new { url = Model.LocalPath + "/" + file.Name })"><i class="icon-file"></i> @file.Name</a></li>
+    }
 </ul>
