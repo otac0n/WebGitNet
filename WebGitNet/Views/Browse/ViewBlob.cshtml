@@ -12,15 +12,11 @@
 @section headers
 {
     <script src="@Url.Content("~/Scripts/jquery.background-position.min.js")"></script>
-    <link href="@Url.Content("~/Content/sh_typical.min.css")" rel="stylesheet" type="text/css" />
-    <script src="@Url.Content("~/Scripts/shjs/sh_main.min.js")"></script>
     <script>
         $(function () {
             (function animate_background() {
                 $('.image-preview').css('backgroundPosition', '0px 0px').animate({ backgroundPosition: '32px 16px' }, 2000, 'linear', animate_background);
             })();
-
-            sh_highlightDocument('@Url.Content("~/Scripts/shjs/")', '.min.js');
         });
     </script>
 }
@@ -38,7 +34,7 @@
     {
         var language = MimeUtilities.GetLanguage(contentType);
         <div>
-            <pre class="@(string.IsNullOrEmpty(language) ? "" : "sh_" + language)">@Model</pre>
+            <pre>@Model</pre>
         </div>
     }
 }
