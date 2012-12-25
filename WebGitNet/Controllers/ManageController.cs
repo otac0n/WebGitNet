@@ -28,29 +28,38 @@ namespace WebGitNet.Controllers
         [HttpPost]
         public ActionResult Create(CreateRepoRequest request)
         {
-            var invalid = Path.GetInvalidFileNameChars();
-            if (request.RepoName.Any(c => invalid.Contains(c)))
-            {
-                ModelState.AddModelError("RepoName", "Repository name must be a valid folder name.");
-            }
+            string repoPath = null;
 
-            var resourceInfo = this.FileManager.GetResourceInfo(request.RepoName);
-            if (resourceInfo.FileSystemInfo == null)
+            if (ModelState.IsValid)
             {
-                ModelState.AddModelError("RepoName", "You do not have permission to create this repository.");
-            }
+                var invalid = Path.GetInvalidFileNameChars();
 
-            if (resourceInfo.Type != ResourceType.NotFound)
-            {
-                ModelState.AddModelError("RepoName", "There is already an object at that location.");
+                if (request.RepoName.Any(c => invalid.Contains(c)))
+                {
+                    ModelState.AddModelError("RepoName", "Repository name must be a valid folder name.");
+                }
+                else
+                {
+                    var resourceInfo = this.FileManager.GetResourceInfo(request.RepoName);
+
+                    if (resourceInfo.FileSystemInfo == null)
+                    {
+                        ModelState.AddModelError("RepoName", "You do not have permission to create this repository.");
+                    }
+
+                    if (resourceInfo.Type != ResourceType.NotFound)
+                    {
+                        ModelState.AddModelError("RepoName", "There is already an object at that location.");
+                    }
+
+                    repoPath = resourceInfo.FullPath;
+                }
             }
 
             if (!ModelState.IsValid)
             {
                 return View(request);
             }
-
-            var repoPath = resourceInfo.FullPath;
 
             try
             {
