@@ -34,7 +34,7 @@
     {
         var language = MimeUtilities.GetLanguage(contentType);
         <div>
-            <pre>@Model</pre>
+            <pre class="@(string.IsNullOrEmpty(language) ? "" : "prettyprint linenums lang-" + language)">@Model</pre>
         </div>
     }
 }

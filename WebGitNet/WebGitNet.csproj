@@ -127,6 +127,7 @@
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Content\merge.png" />
+    <Content Include="Content\prettify.css" />
     <Content Include="Content\tablesort.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -150,6 +151,26 @@
     <Content Include="Scripts\json2.js" />
     <Content Include="Scripts\json2.min.js" />
     <None Include="packages.config" />
+    <Content Include="Scripts\prettify\lang-apollo.js" />
+    <Content Include="Scripts\prettify\lang-clj.js" />
+    <Content Include="Scripts\prettify\lang-css.js" />
+    <Content Include="Scripts\prettify\lang-go.js" />
+    <Content Include="Scripts\prettify\lang-hs.js" />
+    <Content Include="Scripts\prettify\lang-lisp.js" />
+    <Content Include="Scripts\prettify\lang-lua.js" />
+    <Content Include="Scripts\prettify\lang-ml.js" />
+    <Content Include="Scripts\prettify\lang-n.js" />
+    <Content Include="Scripts\prettify\lang-proto.js" />
+    <Content Include="Scripts\prettify\lang-scala.js" />
+    <Content Include="Scripts\prettify\lang-sql.js" />
+    <Content Include="Scripts\prettify\lang-tex.js" />
+    <Content Include="Scripts\prettify\lang-vb.js" />
+    <Content Include="Scripts\prettify\lang-vhdl.js" />
+    <Content Include="Scripts\prettify\lang-wiki.js" />
+    <Content Include="Scripts\prettify\lang-xq.js" />
+    <Content Include="Scripts\prettify\lang-yaml.js" />
+    <Content Include="Scripts\prettify\prettify.js" />
+    <Content Include="Scripts\site.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

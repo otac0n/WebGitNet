@@ -8,10 +8,13 @@
     <title>@ViewBag.Title | WebGit .NET</title>
     <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/prettify.css")" rel="stylesheet" type="text/css" />
     <script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery.cookie.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/json2.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/bootstrap.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/prettify/prettify.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/site.js")" type="text/javascript"></script>
     <link rel="alternate" type="application/atom+xml" href="@Url.Action("LastCommits", "Syndication")" title="Last Commit in All Repos" />
     @RenderSection("headers", required: false)
     @{WriteTo(new StringWriter(), RenderSection("intellisense", required: false));}
