@@ -4,7 +4,7 @@
 
 .icon-branch {
     background-image: url(branch.png);
-    background-position: 2px 2px;
+    background-position: 1px 1px;
 }
 
 .icon-branch.icon-white, .dropdown-menu > li > a:hover > .icon-branch {
@@ -13,7 +13,7 @@
 
 .icon-feed {
     background-image: url(feed.png);
-    background-position: 2px 3px;
+    background-position: 2px 2px;
 }
 
 .icon-feed.icon-white, .dropdown-menu > li > a:hover > .icon-feed {
