@@ -73,7 +73,7 @@ namespace WebGitNet
 
                     if (git.ExitCode != 0)
                     {
-                        throw new GitErrorException(command, git.ExitCode, readErrorTask.Result);
+                        throw new GitErrorException(command, workingDir, git.ExitCode, readErrorTask.Result);
                     }
                 }
 
