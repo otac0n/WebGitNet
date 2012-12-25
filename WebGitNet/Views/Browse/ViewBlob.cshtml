@@ -12,7 +12,6 @@
 @section headers
 {
     <script src="@Url.Content("~/Scripts/jquery.background-position.min.js")"></script>
-    <link href="@Url.Content("~/Content/browse.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/sh_typical.min.css")" rel="stylesheet" type="text/css" />
     <script src="@Url.Content("~/Scripts/shjs/sh_main.min.js")"></script>
     <script>
@@ -26,35 +25,30 @@
     </script>
 }
 
-<div class="blob-preview">
-  <div class="preview-header">
-    <div class="blob-content-type">@contentType</div>
-    <div class="blob-raw-version-link">@Html.ActionLink("raw version", "ViewBlob", new { repo = repoName, @object = tree, path = path, raw = true })</div>
-  </div>
-  <div class="preview-contents">
+<div class="pull-right">@Html.ActionLink("raw version", "ViewBlob", new { repo = repoName, @object = tree, path = path, raw = true })</div>
+<div><i class="icon-file"></i> /@path</div>
+
 @if (Model != null)
 {
     if (string.IsNullOrWhiteSpace(Model))
     {
-    <div class="preview-unavailable">File is empty.</div>
+        <div>File is empty.</div>
     }
     else
     {
         var language = MimeUtilities.GetLanguage(contentType);
-    <div class="text-preview">
-<pre class="@(string.IsNullOrEmpty(language) ? "" : "sh_" + language)">@Model</pre>
-    </div>
+        <div>
+            <pre class="@(string.IsNullOrEmpty(language) ? "" : "sh_" + language)">@Model</pre>
+        </div>
     }
 }
 else if (contentType.StartsWith("image/"))
 {
-    <div class="image-preview">
-      <img src="@Url.Action("ViewBlob", new { repo = repoName, @object = tree, path = path, raw = true })" />
+    <div class="well">
+        <img src="@Url.Action("ViewBlob", new { repo = repoName, @object = tree, path = path, raw = true })" />
     </div>
 }
 else
 {
-    <div class="preview-unavailable">Preview is unavailable.</div>
+    <div>Preview is unavailable.</div>
 }
-  </div>
-</div>
