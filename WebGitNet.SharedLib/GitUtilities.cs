@@ -378,50 +378,6 @@ namespace WebGitNet
             return author;
         }
 
-        public static Dictionary<string, int> GetLanguageLines(string repoPath)
-        {
-            const string FakeHash = "0000000000000000000000000000000000000000";
-
-            var result = Execute("diff-tree -z --numstat 4b825dc642cb6eb9a060e54bf8d69288fbee4904 HEAD", repoPath);
-            var fileStats = result.Split("\0".ToArray(), StringSplitOptions.RemoveEmptyEntries);
-
-            var ignores = LoadIgnores(repoPath);
-
-            var languages = new Dictionary<string, int>();
-            foreach (var fileStat in fileStats)
-            {
-                var parts = fileStat.Split("\t".ToArray(), 3);
-                var linesText = parts[0];
-                var path = parts[2];
-
-                int lines;
-                if (!int.TryParse(linesText, out lines))
-                {
-                    continue;
-                }
-
-                bool keepPath = ProcessIgnores(ignores, FakeHash, path);
-                if (!keepPath)
-                {
-                    continue;
-                }
-
-                var mime = MimeUtilities.GetMimeType(path);
-                var lang = MimeUtilities.GetLanguage(mime);
-
-                if (string.IsNullOrEmpty(lang))
-                {
-                    continue;
-                }
-
-                int oldLines;
-                languages.TryGetValue(lang, out oldLines);
-                languages[lang] = oldLines + lines;
-            }
-
-            return languages;
-        }
-
         public static List<UserImpact> GetUserImpacts(string repoPath)
         {
             var renames = LoadRenames(repoPath);

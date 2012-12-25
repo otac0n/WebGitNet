@@ -32,9 +32,8 @@
     }
     else
     {
-        var language = MimeUtilities.GetLanguage(contentType);
         <div>
-            <pre class="@(string.IsNullOrEmpty(language) ? "" : "prettyprint linenums lang-" + language)">@Model</pre>
+            <pre class="prettyprint linenums" data-extension="@Path.GetExtension(fileName).TrimStart('.').ToLower()" data-type="@contentType">@Model</pre>
         </div>
     }
 }
