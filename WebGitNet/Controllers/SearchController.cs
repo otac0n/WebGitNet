@@ -39,7 +39,7 @@ namespace WebGitNet.Controllers
                 return HttpNotFound();
             }
 
-			var repoInfo = GitUtilities.GetRepoInfo(resourceInfo.FullPath);
+            var repoInfo = GitUtilities.GetRepoInfo(resourceInfo.FullPath);
             if (!repoInfo.IsGitRepo)
             {
                 return HttpNotFound();
