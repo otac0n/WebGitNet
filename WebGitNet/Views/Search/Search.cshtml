@@ -8,17 +8,29 @@
 <ul class="unstyled">
 @foreach (var result in Model)
 {
+    var extension = Path.GetExtension(result.LinkText);
+    var lineGroups = from l in result.Lines.Select((l, i) => new { Index = i, Line = l })
+                     let index = l.Index
+                     let line = l.Line
+                     let offset = line.LineNumber - index
+                     group line by offset into g
+                     select g;
+
     <li>
         @Html.ActionLink(result.LinkText, result.ActionName, result.ControllerName, result.RouteValues, null)<br/>
-        @if (result.Lines.Any(r => r.LineNumber.HasValue))
+
+        @foreach (var group in lineGroups)
         {
-            <pre class="pre-scrollable">@string.Join(Environment.NewLine, result.Lines.Select(l => l.Line))</pre>
-        }
-        else
-        {
-            foreach (var r in result.Lines)
+            if (group.Key.HasValue)
             {
-                <p>@r.Line</p>
+                <pre class="prettyprint linenums:@group.First().LineNumber linenums">@string.Join(Environment.NewLine, group.Select(l => l.Line))</pre>
+            }
+            else
+            {
+                foreach (var r in group)
+                {
+                    <p>@r.Line</p>
+                }
             }
         }
     </li>
