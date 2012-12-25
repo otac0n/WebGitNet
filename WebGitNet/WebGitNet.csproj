@@ -119,7 +119,6 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\branch-white.png" />
     <Content Include="Content\branch.png" />
-    <Content Include="Content\breadcrumber_bg.png" />
     <Content Include="Content\checkerboard.png" />
     <Content Include="Content\desc.gif" />
     <Content Include="Content\feed-white.png" />
@@ -127,7 +126,6 @@
     <Content Include="Content\graph.css" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
-    <Content Include="Content\logo.png" />
     <Content Include="Content\merge.png" />
     <Content Include="Content\sh_typical.min.css" />
     <Content Include="Content\tablesort.css" />
