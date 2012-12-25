@@ -38,16 +38,16 @@ function buildGraph(div) {
     var hOut = function () {
         this.sector.animate({ scale: [1, 1, this.cx, this.cy] }, 500, "bounce");
         if (this.label) {
-            this.label[0].animate({ scale: 1 }, 500, "bounce");
+            this.label[0].animate({ scale: 1 }, 250, "bounce");
             this.label[1].attr({ "font-weight": 400 });
         }
     };
 
-    var r = Raphael(div, 1000, 220);
+    var r = Raphael(div, 940, 220);
     r.g.text(250, 20, "Commits").attr({ "font-size": 20 });
-    r.g.text(750, 20, "Impact").attr({ "font-size": 20 });
+    r.g.text(720, 20, "Impact").attr({ "font-size": 20 });
     r.g.piechart(110, 110, 100, commits, { legend: labels, legendpos: "east" }).hover(hIn, hOut);
-    r.g.piechart(610, 110, 100, impact, { legend: labels, legendpos: "east" }).hover(hIn, hOut);
+    r.g.piechart(580, 110, 100, impact, { legend: labels, legendpos: "east" }).hover(hIn, hOut);
 }
 
 $(function () {

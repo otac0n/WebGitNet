@@ -2,9 +2,7 @@
     ViewBag.Title = "Repository Impact";
     IEnumerable<dynamic> weekly = ViewBag.Weekly;
     IEnumerable<dynamic> allTime = ViewBag.AllTime;
-}
 
-@{
     var users = new Dictionary<string, int>();
     Func<string, int> getUser = u =>
     {
@@ -48,7 +46,6 @@
         var data = @Html.Raw(serializer.Serialize(json));
 
         $(function () {
-            $(".tabs").tabs();
             $(".tablesorter").tablesorter();
         });
     </script>
@@ -62,37 +59,38 @@
     </style>
 }
 
-<div class="tabs">
-<ul>
-    <li><a href="#users-dashboard">Dashboard</a></li>
-    <li><a href="#users-details">Details</a></li>
-    <li><a href="#weekly-graph">Weekly Impact</a></li>
+<ul class="nav nav-tabs" data-tabs="tabs">
+    <li class="active"><a data-toggle="tab" href="#users-dashboard">Dashboard</a></li>
+    <li><a data-toggle="tab" href="#users-details">Details</a></li>
+    <li><a data-toggle="tab" href="#weekly-graph">Weekly Impact</a></li>
 </ul>
-<div id="users-dashboard"></div>
-<div id="users-details">
-<table class="tablesorter" id="stats-table">
-  <thead>
-    <tr>
-        <th>Author</th>
-        <th>Commits</th>
-        <th>Insertions</th>
-        <th>Deletions</th>
-        <th>Impact</th>
-    </tr>
-  </thead>
-  <tbody>
-@foreach (var item in allTime)
-{
-    <tr>
-        <td>@item.Author</td>
-        <td>@item.Commits</td>
-        <td>@item.Insertions</td>
-        <td>@item.Deletions</td>
-        <td>@item.Impact</td>
-    </tr>
-}
-  </tbody>
-</table>
-</div>
-<div id="weekly-graph"></div>
+
+<div class="tab-content">
+    <div class="tab-pane active" id="users-dashboard"></div>
+    <div class="tab-pane" id="users-details">
+        <table class="table tablesorter" id="stats-table">
+            <thead>
+                <tr>
+                    <th>Author</th>
+                    <th>Commits</th>
+                    <th>Insertions</th>
+                    <th>Deletions</th>
+                    <th>Impact</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in allTime)
+                {
+                    <tr>
+                        <td>@item.Author</td>
+                        <td>@item.Commits</td>
+                        <td>@item.Insertions</td>
+                        <td>@item.Deletions</td>
+                        <td>@item.Impact</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane" id="weekly-graph"></div>
 </div>
