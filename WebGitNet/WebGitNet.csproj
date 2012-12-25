@@ -120,7 +120,6 @@
     <Content Include="Content\branch-white.png" />
     <Content Include="Content\branch.png" />
     <Content Include="Content\breadcrumber_bg.png" />
-    <Content Include="Content\browse.css" />
     <Content Include="Content\checkerboard.png" />
     <Content Include="Content\desc.gif" />
     <Content Include="Content\feed-white.png" />
