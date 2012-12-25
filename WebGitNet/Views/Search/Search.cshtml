@@ -1,32 +1,18 @@
 ﻿@model IEnumerable<WebGitNet.Search.SearchResult>
-
 @{
     ViewBag.Title = "Search Results";
 }
 
 <h2>@ViewBag.Title</h2>
 
-<ul class="search-results">
+<ul class="unstyled">
 @foreach (var result in Model)
 {
     <li>
         @Html.ActionLink(result.LinkText, result.ActionName, result.ControllerName, result.RouteValues, null)<br/>
         @if (result.Lines.Any(r => r.LineNumber.HasValue))
         {
-            int? lastLineNumber = null;
-            <table class="code">
-                @foreach (var r in result.Lines)
-                {
-                    if (lastLineNumber.HasValue && r.LineNumber.HasValue && (lastLineNumber.Value + 1 != r.LineNumber))
-                    {
-                        <tr><td class="missing-lines" colspan="2">...</td></tr>
-                    }
-
-                    <tr><td class="line-number">@r.LineNumber</td><td>@r.Line</td></tr>
-                    
-                    lastLineNumber = r.LineNumber;
-                }
-            </table>
+            <pre class="pre-scrollable">@string.Join(Environment.NewLine, result.Lines.Select(l => l.Line))</pre>
         }
         else
         {
