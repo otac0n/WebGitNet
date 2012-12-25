@@ -174,7 +174,7 @@ namespace WebGitNet.Controllers
                 routes.MapRoute(
                     "View Graph",
                     "browse/{repo}/graph",
-                    new { controller = "Graph", action = "ViewGraph", routeName = "View Graph" });
+                    new { controller = "Graph", action = "ViewGraph", routeName = "View Graph", routeIcon = "branch" });
 
                 routes.MapResource("Content/graph.css", "text/css");
                 routes.MapResource("Scripts/graph.js", "text/javascript");

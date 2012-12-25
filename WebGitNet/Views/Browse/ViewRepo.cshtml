@@ -63,10 +63,16 @@
 {
     <section>
         @Html.Partial("LogEntry", lastCommit)
-        @foreach (var route in Html.FindSatisfiableRoutes(new { repo = repoName }))
-        {
-            @Html.RouteLink(route.GetName(), route.GetName(), new { repo = repoName })
-        }
+
+        <ul class="inline">
+            @foreach (var route in Html.FindSatisfiableRoutes(new { repo = repoName }))
+            {
+                var name = route.GetName();
+                var icon = route.GetIcon();
+
+                <li><a href="@Url.RouteUrl(name, new { repo = repoName })"><i class="icon-@icon"></i> @name</a></li>
+            }
+        </ul>
     </section>
 }
 
@@ -93,7 +99,7 @@
         @if (tags.Any())
         {
             <div class="btn-group">
-                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="@(refTypeIcons[RefType.Tag])"></i> Tags <span class="caret"></span></a>
+                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-tags"></i> Tags <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     @foreach (var tag in tags)
                     {

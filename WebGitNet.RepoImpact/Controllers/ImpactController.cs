@@ -70,7 +70,7 @@ namespace WebGitNet.Controllers
                 routes.MapRoute(
                     "View Repo Impact",
                     "browse/{repo}/impact",
-                    new { controller = "Impact", action = "ViewRepoImpact", routeName = "View Repo Impact" });
+                    new { controller = "Impact", action = "ViewRepoImpact", routeName = "View Repo Impact", routeIcon = "tasks" });
 
                 routes.MapResource("Scripts/repo-impact.js", "text/javascript");
                 routes.MapResource("Scripts/g.raphael/g.impact.js", "text/javascript");

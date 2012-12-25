@@ -78,6 +78,23 @@ namespace WebGitNet
             return routeName.ToString();
         }
 
+        public static string GetIcon(this Route route)
+        {
+            if (route == null || route.Defaults == null)
+            {
+                return null;
+            }
+
+            var routeIcon = route.Defaults["routeIcon"];
+
+            if (routeIcon == null)
+            {
+                return null;
+            }
+
+            return routeIcon.ToString();
+        }
+
         public static MvcHtmlString Pager(this HtmlHelper html, int page, int pages, string controllerName, string actionName, object routeValues, string routeKey = "page")
         {
             var result = new StringBuilder();
