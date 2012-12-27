@@ -103,7 +103,7 @@
                 <ul class="dropdown-menu">
                     @foreach (var tag in tags)
                     {
-                        <li><a><i class="@(refTypeIcons[RefType.Tag])"></i> @tag.Name</a></li>
+                        <li><a href="@Url.Action("ViewTree", new { repo = repoName, @object = tag.Name, path = string.Empty })"><i class="@(refTypeIcons[RefType.Tag])"></i> @tag.Name</a></li>
                     }
                 </ul>
             </div>
