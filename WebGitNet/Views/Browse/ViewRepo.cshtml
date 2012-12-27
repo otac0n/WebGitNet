@@ -11,14 +11,6 @@
     var requestUrl = Url.RequestContext.HttpContext.Request.Url;
     var repoUrl = requestUrl.Scheme + "://" + requestUrl.Authority + Url.Action("Fetch", "File", new { url = repoName });
 
-    var refTypeIcons = new Dictionary<RefType, string>
-    {
-        { RefType.Branch, "icon-branch" },
-        { RefType.RemoteBranch, "icon-branch" },
-        { RefType.Stash, "icon-bookmark" },
-        { RefType.Tag, "icon-tag" },
-    };
-
     var refsGrouped = refs.Where(r => r.RefType != RefType.RemoteBranch).ToLookup(r => r.RefType);
 }
 
@@ -86,11 +78,11 @@
         @if (branches.Any())
         {
             <div class="btn-group">
-                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="@(refTypeIcons[RefType.Branch])"></i> Branches <span class="caret"></span></a>
+                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-branch"></i> Branches <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     @foreach (var branch in branches)
                     {
-                        <li><a><i class="@(refTypeIcons[branch.RefType])"></i> @branch.Name</a></li>
+                        <li><a href="@Url.Action("ViewCommits", new { repo = repoName, @object = branch.Name })"><i class="icon-branch"></i> @branch.Name</a></li>
                     }
                 </ul>
             </div>
@@ -103,7 +95,7 @@
                 <ul class="dropdown-menu">
                     @foreach (var tag in tags)
                     {
-                        <li><a href="@Url.Action("ViewTree", new { repo = repoName, @object = tag.Name, path = string.Empty })"><i class="@(refTypeIcons[RefType.Tag])"></i> @tag.Name</a></li>
+                        <li><a href="@Url.Action("ViewTree", new { repo = repoName, @object = tag.Name, path = string.Empty })"><i class="icon-tag"></i> @tag.Name</a></li>
                     }
                 </ul>
             </div>
