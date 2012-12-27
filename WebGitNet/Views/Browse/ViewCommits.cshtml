@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<LogEntry>
 @{
     ViewBag.Title = "Commit Log";
+    var branches = (IList<GitRef>)ViewBag.Branches;
 }
 
 @section headers
@@ -18,6 +19,19 @@
 @section syndication
 {
     <li><a href="@Url.Action("Commits", "Syndication", new { repo = ViewBag.RepoName })"><i class="icon-feed"></i> @ViewBag.RepoName Commits</a></li>
+}
+
+@if (branches.Any())
+{
+    <div class="btn-group">
+        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-branch"></i> @ViewBag.Object <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            @foreach (var branch in branches)
+            {
+                <li><a href="@Url.Action("ViewCommits", new { repo = ViewBag.RepoName, @object = branch.Name })"><i class="icon-branch"></i> @branch.Name</a></li>
+            }
+        </ul>
+    </div>
 }
 
 @Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Browse", "ViewCommits", new { repo = ViewBag.RepoName })
