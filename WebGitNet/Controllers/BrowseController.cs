@@ -13,6 +13,7 @@ namespace WebGitNet.Controllers
     using System.Web.Mvc;
     using System.Web.Routing;
     using WebGitNet.ActionResults;
+    using WebGitNet.Models;
 
     public class BrowseController : SharedControllerBase
     {
@@ -115,8 +116,7 @@ namespace WebGitNet.Controllers
             var commits = GitUtilities.GetLogEntries(resourceInfo.FullPath, PageSize, skip, @object);
             var branches = GitUtilities.GetAllRefs(resourceInfo.FullPath).Where(r => r.RefType == RefType.Branch).ToList();
 
-            ViewBag.Page = page;
-            ViewBag.PageCount = (count / PageSize) + (count % PageSize > 0 ? 1 : 0);
+            ViewBag.PaginationInfo = new PaginationInfo(page, (count + PageSize - 1) / PageSize, "Browse", "ViewCommits", new { repo });
             ViewBag.RepoName = resourceInfo.Name;
             ViewBag.Object = @object ?? "HEAD";
             ViewBag.Branches = branches;

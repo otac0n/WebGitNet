@@ -34,11 +34,11 @@
     </div>
 }
 
-@Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Browse", "ViewCommits", new { repo = ViewBag.RepoName })
+@Html.Partial("Pagination", (PaginationInfo)ViewBag.PaginationInfo)
 
 @foreach (var entry in Model)
 {
     @Html.Partial("LogEntry", entry)
 }
 
-@Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Browse", "ViewCommits", new { repo = ViewBag.RepoName })
+@Html.Partial("Pagination", (PaginationInfo)ViewBag.PaginationInfo)
