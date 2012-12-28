@@ -40,7 +40,7 @@ namespace WebGitNet
                 size,
                 fallBack);
 
-            return new MvcHtmlString("<img alt=\"\" title=\"" + html.AttributeEncode(name) + "\" src=\"" + html.AttributeEncode(imgUrl) + "\" />");
+            return new MvcHtmlString(string.Format("<img alt=\"\" width=\"{0}\" height=\"{0}\" title=\"{1}\" src=\"{2}\" />", size, html.AttributeEncode(name), html.AttributeEncode(imgUrl)));
         }
 
         public static IEnumerable<Route> FindSatisfiableRoutes(this HtmlHelper html, object routeData = null)
