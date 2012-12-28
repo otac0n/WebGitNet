@@ -39,7 +39,7 @@ namespace WebGitNet.Controllers
 
             var commits = GetLogEntries(resourceInfo.FullPath, skip + PageSize).Skip(skip).ToList();
 
-            ViewBag.PaginationInfo = new PaginationInfo(page, (count + PageSize - 1) / PageSize, "Graph", "ViewGraph", new { repo = ViewBag.RepoName });
+            ViewBag.PaginationInfo = new PaginationInfo(page, (count + PageSize - 1) / PageSize, "Graph", "ViewGraph", new { repo });
             ViewBag.RepoName = resourceInfo.Name;
 
             return View(commits);
