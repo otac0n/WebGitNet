@@ -20,6 +20,11 @@ namespace WebGitNet
 
     public static class GitUtilities
     {
+        public static string EmptyTreeHash
+        {
+            get { return "4b825dc642cb6eb9a060e54bf8d69288fbee4904"; }
+        }
+
         public static Encoding DefaultEncoding
         {
             get { return Encoding.GetEncoding(28591); }
@@ -521,7 +526,7 @@ namespace WebGitNet
             return true;
         }
 
-        public static List<DiffInfo> GetDiffInfo(string repoPath, string commit)
+        public static List<DiffInfo> GetDiffInfo(string repoPath, string parentCommit, string childCommit)
         {
             var diffs = new List<DiffInfo>();
             List<string> diffLines = null;
@@ -534,7 +539,7 @@ namespace WebGitNet
                 }
             };
 
-            using (var git = Start(string.Format("diff-tree -p -c -r {0}", Q(commit)), repoPath))
+            using (var git = Start(string.Format("diff-tree --patch -r --raw --src-prefix=\"a:/\" --dst-prefix=\"b:/\" {0} {1}", Q(parentCommit), Q(childCommit)), repoPath))
             {
                 while (!git.StandardOutput.EndOfStream)
                 {

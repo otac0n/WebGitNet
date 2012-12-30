@@ -85,7 +85,7 @@ namespace WebGitNet.Controllers
                 return HttpNotFound();
             }
 
-            var diffs = GitUtilities.GetDiffInfo(resourceInfo.FullPath, commit.CommitHash);
+            var diffs = GitUtilities.GetDiffInfo(resourceInfo.FullPath, commit.Parents.FirstOrDefault() ?? GitUtilities.EmptyTreeHash, commit.CommitHash);
 
             ViewBag.RepoName = resourceInfo.Name;
             ViewBag.CommitLogEntry = commit;
