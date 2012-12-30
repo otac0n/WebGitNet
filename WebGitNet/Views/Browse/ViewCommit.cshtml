@@ -16,17 +16,35 @@
 
 @Html.Partial("LogEntry", commitLogEntry, new ViewDataDictionary { { "Details", true } })
 
-@foreach (var diff in Model)
+@foreach (var diff in Model.OrderByDescending(d => d.Deleted || d.Added).ThenBy(d => d.DestinationFile))
 {
-    <div class="pull-right">@Html.ActionLink("view file", "ViewBlob", new { repo = (string)ViewBag.RepoName, @object = commitLogEntry.Tree, path = @diff.DestinationFile })</div>
+    if (!diff.Deleted)
+    {
+        <div class="pull-right">@Html.ActionLink("view file", "ViewBlob", new { repo = (string)ViewBag.RepoName, @object = commitLogEntry.Tree, path = @diff.DestinationFile })</div>
+    }
     <div>
-        <i class="icon-file"></i> /@diff.DestinationFile
-        @if (diff.SourceFile != diff.DestinationFile)
+        <i class="@(diff.Added ? "icon-plus" : diff.Deleted ? "icon-minus" : diff.Renamed || diff.Copied ? "icon-refresh" : "icon-file")"></i> /@diff.DestinationFile
+        @if (diff.Renamed)
+        {
+            @:(renamed from /@diff.SourceFile)
+        }
+        else if (diff.Copied)
         {
             @:(copied from /@diff.SourceFile)
         }
+        else if (diff.Added)
+        {
+            @:(added)
+        }
+        else if (diff.Deleted)
+        {
+            @:(deleted)
+        }
     </div>
-    <div>
-        <pre>@string.Join(Environment.NewLine, diff.Lines)</pre>
-    </div>
+    if (!diff.Deleted && !diff.Added)
+    {
+        <div>
+            <pre>@string.Join(Environment.NewLine, diff.Lines)</pre>
+        </div>
+    }
 }

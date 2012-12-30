@@ -18,6 +18,10 @@ namespace WebGitNet
         private readonly IList<string> lines;
         private readonly string sourceFile;
         private readonly string destinationFile;
+        private readonly bool renamed;
+        private readonly bool copied;
+        private readonly bool added;
+        private readonly bool deleted;
 
         public DiffInfo(IList<string> lines)
         {
@@ -37,6 +41,11 @@ namespace WebGitNet
                 this.sourceFile = match.Groups["src"].Value;
                 this.destinationFile = match.Groups["dst"].Value;
             }
+
+            this.renamed = this.headers.Any(h => h.StartsWith("rename from"));
+            this.copied = this.headers.Any(h => h.StartsWith("copy from"));
+            this.added = this.headers.Any(h => h.StartsWith("new file"));
+            this.deleted = this.headers.Any(h => h.StartsWith("deleted file"));
         }
 
         public IList<string> Headers
@@ -57,6 +66,26 @@ namespace WebGitNet
         public string DestinationFile
         {
             get { return this.destinationFile; }
+        }
+
+        public bool Renamed
+        {
+            get { return this.renamed; }
+        }
+
+        public bool Copied
+        {
+            get { return this.copied; }
+        }
+
+        public bool Added
+        {
+            get { return this.added; }
+        }
+
+        public bool Deleted
+        {
+            get { return this.deleted; }
         }
     }
 }
