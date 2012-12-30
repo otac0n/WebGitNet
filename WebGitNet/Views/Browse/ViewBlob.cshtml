@@ -40,7 +40,9 @@
 else if (contentType.StartsWith("image/"))
 {
     <div class="well">
-        <img src="@Url.Action("ViewBlob", new { repo = repoName, @object = tree, path = path, raw = true })" />
+        <div class="image-preview">
+            <img src="@Url.Action("ViewBlob", new { repo = repoName, @object = tree, path = path, raw = true })" />
+        </div>
     </div>
 }
 else

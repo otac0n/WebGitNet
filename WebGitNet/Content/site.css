@@ -27,3 +27,17 @@
 table.commit-metadata {
     font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
 }
+
+div.image-preview
+{
+    border: 1px solid black;
+    display: inline-block;
+    background: url(checkerboard.png);
+    background-repeat: repeat;
+}
+
+div.image-preview img
+{
+    vertical-align: top;
+    border: 1px solid white;
+}
