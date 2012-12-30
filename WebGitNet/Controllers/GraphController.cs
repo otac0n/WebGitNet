@@ -9,7 +9,6 @@ namespace WebGitNet.Controllers
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using System.Web.Mvc;
     using System.Web.Routing;
@@ -40,8 +39,7 @@ namespace WebGitNet.Controllers
 
             var commits = GetLogEntries(resourceInfo.FullPath, skip + PageSize).Skip(skip).ToList();
 
-            ViewBag.Page = page;
-            ViewBag.PageCount = (count / PageSize) + (count % PageSize > 0 ? 1 : 0);
+            ViewBag.PaginationInfo = new PaginationInfo(page, (count + PageSize - 1) / PageSize, "Graph", "ViewGraph", new { repo });
             ViewBag.RepoName = resourceInfo.Name;
 
             return View(commits);

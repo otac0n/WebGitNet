@@ -77,7 +77,7 @@
     </div>
 </div>
 
-@Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Graph", "ViewGraph", new { repo = ViewBag.RepoName })
+@Html.Partial("Pagination", (PaginationInfo)ViewBag.PaginationInfo)
 
 <a href="#" class="pull-right" data-toggle="modal" data-target="#graph-settings">Graph Settings</a>
 
@@ -97,4 +97,4 @@
 }
 </div>
 
-@Html.Pager((int)ViewBag.Page, (int)ViewBag.PageCount, "Graph", "ViewGraph", new { repo = ViewBag.RepoName })
+@Html.Partial("Pagination", (PaginationInfo)ViewBag.PaginationInfo)
