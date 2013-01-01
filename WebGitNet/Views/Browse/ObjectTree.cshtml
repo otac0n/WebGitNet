@@ -15,13 +15,20 @@
                 @item.Size
             </td>
             <td>
-                @if (item.ObjectType == ObjectType.Tree)
+                @switch (item.ObjectType)
                 {
-                    @Html.ActionLink(item.Name, "ViewTree", new { @object = Model.Tree, path = Model.Path + item.Name + "/" })
-                }
-                else
-                {
-                    @Html.ActionLink(item.Name, "ViewBlob", new { @object = Model.Tree, path = Model.Path + item.Name })
+                    case ObjectType.Commit:
+                        <span>
+                            @Html.ActionLink(item.Name, "ViewTree", new { @submodule = item.Name, @object = item.Hash, path = Model.Path + item.Name + "/" }) 
+                            @@@item.Hash.Substring(0,16)
+                        </span>
+                        break;
+                    case ObjectType.Tree:
+                        @Html.ActionLink(item.Name, "ViewTree", new { @object = Model.Tree, path = Model.Path + item.Name + "/" })
+                        break;
+                    case ObjectType.Blob:
+                        @Html.ActionLink(item.Name, "ViewBlob", new { @object = Model.Tree, path = Model.Path + item.Name })
+                        break;
                 }
             </td>
         </tr>

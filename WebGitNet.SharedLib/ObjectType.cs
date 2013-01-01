@@ -10,6 +10,7 @@ namespace WebGitNet
     public enum ObjectType
     {
         Blob,
-        Tree
+        Tree,
+        Commit
     }
 }
