@@ -18,13 +18,7 @@
                 @switch (item.ObjectType)
                 {
                     case ObjectType.Commit:
-<<<<<<< HEAD
-                        <span>
-                            @Html.ActionLink(item.Name, "ViewTree", new { @submodule = item.Name, @object = item.Hash, path = Model.Path + item.Name + "/" }) 
-                            @@@item.Hash.Substring(0,16)
-                        </span>
-                        break;
-=======
+
                         if (Model.Submodules.Keys.Contains(item.Name))
                         {
                             <a href="@Model.Submodules[item.Name].Url/tree/@item.Hash">@item.Name</a>
@@ -35,7 +29,6 @@
                         }
                         <span>@@@item.Hash.Substring(0, 16)</span>
                         break;
->>>>>>> 6e47848... changed submodule links from repo browse to link to the url specified in .submodules
                     case ObjectType.Tree:
                         @Html.ActionLink(item.Name, "ViewTree", new { @object = Model.Tree, path = Model.Path + item.Name + "/" })
                         break;
