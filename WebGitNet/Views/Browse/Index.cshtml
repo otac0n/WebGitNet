@@ -1,7 +1,8 @@
 ﻿@model IList<RepoInfo>
 
 @{
-    ViewBag.Title = "Repositories";
+    var archived = (bool)ViewBag.Archived;
+    ViewBag.Title = archived ? "Archived Repositories" : "Repositories";
 }
 
 <div class="pull-right">
@@ -28,5 +29,12 @@
 
 <p>
     <a class="btn btn-link" href="@Url.Action("Create", "Manage")"><i class="icon-plus"></i> Create a new repo</a>
-    <a class="btn btn-link" href="@Url.Action("ArchivedIndex", "Browse")"><i class="icon-folder-open"></i> View archived repos</a>
+    @if (archived)
+    {
+        <a class="btn btn-link" href="@Url.Action("Index", "Browse")"><i class="icon-folder-open"></i> View current repos</a>
+    }
+    else
+    {
+        <a class="btn btn-link" href="@Url.Action("Index", "Browse", new { archived = "true" })"><i class="icon-folder-open"></i> View archived repos</a>
+    }
 </p>

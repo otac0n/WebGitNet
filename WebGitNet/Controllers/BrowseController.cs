@@ -22,22 +22,13 @@ namespace WebGitNet.Controllers
             this.BreadCrumbs.Append("Browse", "Index", "Browse");
         }
 
-        public ActionResult Index()
+        public ActionResult Index(bool archived = false)
         {
             var directory = this.FileManager.DirectoryInfo;
 
+            ViewBag.Archived = archived;
             var repos = (from dir in directory.EnumerateDirectories()
-                         select GitUtilities.GetRepoInfo(dir.FullName)).Where(ri => !ri.IsArchived).ToList();
-
-            return View(repos);
-        }
-
-        public ActionResult ArchivedIndex()
-        {
-            var directory = this.FileManager.DirectoryInfo;
-
-            var repos = (from dir in directory.EnumerateDirectories()
-                         select GitUtilities.GetRepoInfo(dir.FullName)).Where(ri => ri.IsArchived).ToList();
+                         select GitUtilities.GetRepoInfo(dir.FullName)).Where(ri => ri.IsArchived == archived).ToList();
 
             return View(repos);
         }

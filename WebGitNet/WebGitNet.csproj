@@ -206,7 +206,6 @@
     <Content Include="Views\Browse\ViewCommit.cshtml" />
     <Content Include="Views\Browse\ViewCommits.cshtml" />
     <Content Include="Views\Graph\ViewGraph.cshtml" />
-    <Content Include="Views\Browse\ArchivedIndex.cshtml" />
     <Content Include="Views\Manage\ManageRepo.cshtml" />
     <Content Include="Views\Search\Search.cshtml" />
     <Content Include="Views\Shared\Pagination.cshtml" />
