@@ -17,11 +17,11 @@
     {
         if (repo.IsGitRepo)
         {
-            <tr><td>@Html.ActionLink(repo.Name, "ViewRepo", new { repo = repo.Name })</td><td>@repo.Description</td></tr>
+            <tr><td style="white-space: nowrap;">@Html.ActionLink(repo.Name, "ViewRepo", new { repo = repo.Name })</td><td>@repo.Description</td></tr>
         }
         else
         {
-            <tr><td>@repo.Name</td><td>(not a repository)</td></tr>
+            <tr><td style="white-space: nowrap;">@repo.Name</td><td>(not a repository)</td></tr>
         }
     }
 </table>
