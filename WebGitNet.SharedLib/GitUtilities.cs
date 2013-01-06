@@ -17,6 +17,7 @@ namespace WebGitNet
     using System.Threading.Tasks;
     using System.Web.Configuration;
     using StackExchange.Profiling;
+    using System.Web;
 
     public static class GitUtilities
     {
@@ -610,7 +611,96 @@ namespace WebGitNet
 
             var objects = from r in results.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries)
                           select parseResults(r);
-            return new TreeView(tree, path, objects);
+            IDictionary<string, SubmoduleInfo> submodules = null;
+            try
+            {
+                var gitmodules = Execute(string.Format("show {0}:{1}.gitmodules", Q(tree), Q(path)), repoPath, Encoding.UTF8, trustErrorCode: true);
+                submodules = GetSubmoduleUrls(gitmodules);
+            } 
+            catch
+            {
+                // .gitmodules file does not exist
+            }
+
+            return new TreeView(tree, path, objects, submodules);
+        }
+
+        private static IDictionary<string, SubmoduleInfo> GetSubmoduleUrls(string gitmodules)
+        {
+            var submoduleList = new Dictionary<string, SubmoduleInfo>();
+            if (gitmodules != null) {
+                using (var reader = new StringReader(gitmodules))
+                {
+                    Regex headerRegex = new Regex(@"\[(.*)\s""(.*)""\]");
+                    Regex itemsRegex = new Regex(@"\s*(.*)\s=\s(.*)");
+                    string line = reader.ReadLine();
+                    while (line != null)
+                    {
+                        Match match;
+                        if ((match = headerRegex.Match(line)).Groups.Count == 3 && match.Groups[1].Value == "submodule")
+                        {
+                            try
+                            {
+                              var submodule = match.Groups[2].Value;
+                              var items = new Dictionary<string, string>();
+                              line = reader.ReadLine();
+                              while (line != null && (match = itemsRegex.Match(line)).Groups.Count == 3)
+                              {
+                                  string key = match.Groups[1].Value;
+                                  string value = match.Groups[2].Value;
+                                  // parse url to make is useable
+                                  if (key == "url")
+                                  {
+                                      // scp-like syntax is valid for git, but does not conform to uri standards
+                                      // so we need to fix it up
+                                      Regex scpLikeRegex = new Regex(@"\w*@.*:(\d*).*");
+                                      if ((match = scpLikeRegex.Match(value)).Groups.Count > 1 && match.Groups[1].Length == 0) 
+                                      {
+                                          value = value.Replace(":", "/");
+                                      }
+                                      // if the value does not start with a scheme, we assume that it is ssh, not that it really matters
+                                      Regex schemeRegex = new Regex(@"\w*://.*");
+                                      if (!schemeRegex.Match(value).Success)
+                                      {
+                                          value = "ssh" + Uri.SchemeDelimiter + value;
+                                      }
+                                      var uri = new Uri(value);
+                                      // check to see if uri.Host is this server and fixup url
+                                      if (uri.GetLeftPart(UriPartial.Authority) ==
+                                          HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority))
+                                      {
+                                          value = value.ToString().Replace("/git/", "/browse/");
+                                      }
+                                      // fixup github urls so that we can link there
+                                      if (uri.Host.Equals("github.com", StringComparison.OrdinalIgnoreCase))
+                                      {
+                                          value = Uri.UriSchemeHttps + Uri.SchemeDelimiter + uri.Host + uri.AbsolutePath;
+                                          // drop the .git if present
+                                          if (value.EndsWith(".git"))
+                                          {
+                                              value = value.Remove(value.Length - 4, 4);
+                                          }
+                                      }
+                                      // TODO support other sites?
+                                  }
+                                  items.Add(key, value);
+                                  line = reader.ReadLine();
+                              }
+                              submoduleList.Add(submodule, new SubmoduleInfo(items["path"], items["url"]));
+                            }
+                            catch
+                            {
+                                // ignore error
+                            }
+                        } 
+                        else
+                        {
+                            line = reader.ReadLine();
+                        }
+                    }
+                }
+            }
+            return submoduleList;
         }
 
         public static Process StartGetBlob(string repoPath, string tree, string path)
