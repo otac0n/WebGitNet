@@ -632,18 +632,20 @@ namespace WebGitNet
                 using (var reader = new StringReader(gitmodules))
                 {
                     Regex headerRegex = new Regex(@"\[(.*)\s""(.*)""\]");
-                    Regex itemsRegex = new Regex(@"\s*(.*)\s=\s(.*)");                    
-                    string line = reader.ReadLine();                  
-                    while (line != null) 
+                    Regex itemsRegex = new Regex(@"\s*(.*)\s=\s(.*)");
+                    string line = reader.ReadLine();
+                    while (line != null)
                     {
                         Match match;
-                        if ((match = headerRegex.Match(line)).Groups.Count == 3 && match.Groups[1].Value == "submodule") {
-                            try 
+                        if ((match = headerRegex.Match(line)).Groups.Count == 3 && match.Groups[1].Value == "submodule")
+                        {
+                            try
                             {
                               var submodule = match.Groups[2].Value;
                               var items = new Dictionary<string, string>();
                               line = reader.ReadLine();
-                              while (line != null && (match = itemsRegex.Match(line)).Groups.Count == 3) {
+                              while (line != null && (match = itemsRegex.Match(line)).Groups.Count == 3)
+                              {
                                   string key = match.Groups[1].Value;
                                   string value = match.Groups[2].Value;
                                   // parse url to make is useable
@@ -658,7 +660,8 @@ namespace WebGitNet
                                       }
                                       // if the value does not start with a scheme, we assume that it is ssh, not that it really matters
                                       Regex schemeRegex = new Regex(@"\w*://.*");
-                                      if (!schemeRegex.Match(value).Success) {
+                                      if (!schemeRegex.Match(value).Success)
+                                      {
                                           value = "ssh" + Uri.SchemeDelimiter + value;
                                       }
                                       var uri = new Uri(value);
@@ -667,12 +670,17 @@ namespace WebGitNet
                                           HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority))
                                       {
                                           value = value.ToString().Replace("/git/", "/browse/");
-                                      }                                                                            
+                                      }
                                       // fixup github urls so that we can link there
-                                      if (uri.Host.Equals("github.com", StringComparison.OrdinalIgnoreCase)) {
-                                         
+                                      if (uri.Host.Equals("github.com", StringComparison.OrdinalIgnoreCase))
+                                      {
                                           value = Uri.UriSchemeHttps + Uri.SchemeDelimiter + uri.Host + uri.AbsolutePath;
-                                      }                                      
+                                          // drop the .git if present
+                                          if (value.EndsWith(".git"))
+                                          {
+                                              value = value.Remove(value.Length - 4, 4);
+                                          }
+                                      }
                                       // TODO support other sites?
                                   }
                                   items.Add(key, value);
