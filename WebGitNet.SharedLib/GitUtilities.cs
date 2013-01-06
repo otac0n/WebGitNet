@@ -17,7 +17,7 @@ namespace WebGitNet
     using System.Threading.Tasks;
     using System.Web.Configuration;
     using StackExchange.Profiling;
-  using System.Web;
+    using System.Web;
 
     public static class GitUtilities
     {
