@@ -18,10 +18,15 @@
                 @switch (item.ObjectType)
                 {
                     case ObjectType.Commit:
-                        <span>
-                            @Html.ActionLink(item.Name, "ViewTree", new { @submodule = item.Name, @object = item.Hash, path = Model.Path + item.Name + "/" }) 
-                            @@@item.Hash.Substring(0,16)
-                        </span>
+                        if (Model.Submodules.Keys.Contains(item.Name))
+                        {
+                            <a href="@Model.Submodules[item.Name].Url/tree/@item.Hash">@item.Name</a>
+                        }
+                        else
+                        {
+                            @item.Name
+                        }
+                        <span>@@@item.Hash.Substring(0, 16)</span>
                         break;
                     case ObjectType.Tree:
                         @Html.ActionLink(item.Name, "ViewTree", new { @object = Model.Tree, path = Model.Path + item.Name + "/" })
