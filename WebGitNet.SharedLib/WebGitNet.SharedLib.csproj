@@ -81,6 +81,7 @@
     <Compile Include="SharedControllerBase.profiling.cs">
       <DependentUpon>SharedControllerBase.cs</DependentUpon>
     </Compile>
+    <Compile Include="SubmoduleInfo.cs" />
     <Compile Include="TreeView.cs" />
     <Compile Include="UserImpact.cs" />
   </ItemGroup>

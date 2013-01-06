@@ -33,9 +33,9 @@
                 {
                     var linkText = (includeRepoName ? repo.Name + " " : string.Empty) + "/" + item.Name;
 
-                    switch(item.ObjectType)
+                    switch (item.ObjectType)
                     {
-                      case  ObjectType.Tree:
+                      case ObjectType.Tree:
                           yield return new SearchResult
                           {
                               LinkText = linkText + "/",
