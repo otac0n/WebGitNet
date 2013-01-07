@@ -9,9 +9,8 @@ namespace WebGitNet.Controllers
 {
     using System.IO;
     using System.Web.Mvc;
-    using WebGitNet.ActionResults;
-    using WebGitNet.Models;
     using System.Web.Routing;
+    using WebGitNet.ActionResults;
 
     public class FileController : SharedControllerBase
     {
@@ -45,14 +44,19 @@ namespace WebGitNet.Controllers
             var service = this.GetService();
             var resourceInfo = this.FileManager.GetResourceInfo(url);
 
+            if (resourceInfo.Type != ResourceType.Directory)
+            {
+                var repoPath = ((FileInfo)resourceInfo.FileSystemInfo).Directory.Parent.FullName;
+                GitUtilities.UpdateServerInfo(repoPath);
+
+                if (resourceInfo.Type == ResourceType.NotFound)
+                {
+                    resourceInfo = this.FileManager.GetResourceInfo(url);
+                }
+            }
+
             if (service == null || resourceInfo.Type == ResourceType.Directory)
             {
-                if (resourceInfo.Type != ResourceType.Directory)
-                {
-                    var repoPath = ((FileInfo)resourceInfo.FileSystemInfo).Directory.Parent.FullName;
-                    GitUtilities.UpdateServerInfo(repoPath);
-                }
-
                 return this.Fetch(url);
             }
             else
