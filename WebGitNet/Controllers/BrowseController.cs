@@ -115,10 +115,9 @@ namespace WebGitNet.Controllers
             return View(commits);
         }
 
-        public ActionResult ViewTree(string repo, string @submodule, string @object, string path)
+        public ActionResult ViewTree(string repo, string @object, string path)
         {
-            var resourcePath = (submodule == null) ? repo : Path.Combine(repo, submodule);
-            var resourceInfo = this.FileManager.GetResourceInfo(resourcePath);
+            var resourceInfo = this.FileManager.GetResourceInfo(repo);
             if (resourceInfo.Type != ResourceType.Directory)
             {
                 return HttpNotFound();
