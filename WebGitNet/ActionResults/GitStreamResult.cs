@@ -47,6 +47,7 @@ namespace WebGitNet.ActionResults
         {
             var response = context.HttpContext.Response;
             var request = context.HttpContext.Request;
+            var realRequest = System.Web.HttpContext.Current.Request;
 
             response.ContentType = "application/x-git-" + this.action + "-result";
 
@@ -54,13 +55,13 @@ namespace WebGitNet.ActionResults
             {
                 var readThread = new Thread(() =>
                 {
-                    var readBuffer = new byte[524288];
+                    var readBuffer = new byte[4096];
                     int readCount;
 
                     Stream wrapperStream = null;
                     try
                     {
-                        var input = request.InputStream;
+                        var input = realRequest.GetBufferlessInputStream();
                         if (request.Headers["Content-Encoding"] == "gzip")
                         {
                             input = wrapperStream = new GZipStream(input, CompressionMode.Decompress);
@@ -83,12 +84,23 @@ namespace WebGitNet.ActionResults
                 });
                 readThread.Start();
 
-                var writeBuffer = new char[4194304];
+                var writeBuffer = new byte[4096];
                 int writeCount;
-                while ((writeCount = git.StandardOutput.ReadBlock(writeBuffer, 0, writeBuffer.Length)) > 0)
+                byte[] copy = null;
+
+                while ((writeCount = git.StandardOutput.BaseStream.Read(writeBuffer, 0, writeBuffer.Length)) > 0)
                 {
-                    var bytes = GitUtilities.DefaultEncoding.GetBytes(writeBuffer, 0, writeCount);
-                    response.BinaryWrite(bytes);
+                    if (copy == null || copy.Length != writeCount)
+                    {
+                        copy = new byte[writeCount];
+                    }
+
+                    for (int i = 0; i < writeCount; i++)
+                    {
+                        copy[i] = writeBuffer[i];
+                    }
+
+                    response.BinaryWrite(copy);
                 }
 
                 readThread.Join();
