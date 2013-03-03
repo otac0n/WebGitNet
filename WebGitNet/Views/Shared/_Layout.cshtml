@@ -50,7 +50,7 @@
                     {
                         var last = i == breadcrumbList.Count - 1;
                         var breadcrumb = breadcrumbList[i];
-                        <li@Html.Raw(last ? " class=\"active\"" : "")>
+                        <li @Html.Raw(last ? " class=\"active\"" : "")>
                             @Html.ActionLink(breadcrumb.Name, breadcrumb.Action, breadcrumb.Controller, breadcrumb.RouteValues, null)
                             @if (!last)
                             {
