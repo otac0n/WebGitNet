@@ -18,6 +18,7 @@ namespace WebGitNet
         Tag,
         RemoteBranch,
         Stash,
+        Notes,
     }
 
     public class GitRef
@@ -27,6 +28,7 @@ namespace WebGitNet
             { RefType.Branch, "refs/heads" },
             { RefType.Tag,    "refs/tags" },
             { RefType.RemoteBranch, "refs/remotes" },
+            { RefType.Notes, "refs/notes" },
         };
 
         public GitRef(string shaId, string refPath)
