@@ -22,10 +22,11 @@ namespace WebGitNet.Controllers
         [HttpPost]
         public ActionResult ReceivePack(string url)
         {
-            return this.ServiceRpc(url, "receive-pack");
+            string userName = User.Identity.Name;
+            return this.ServiceRpc(url, "receive-pack", userName);
         }
 
-        private ActionResult ServiceRpc(string url, string action)
+        private ActionResult ServiceRpc(string url, string action, string userName = null)
         {
             var resourceInfo = this.FileManager.GetResourceInfo(url);
             if (resourceInfo.FileSystemInfo == null)
@@ -35,7 +36,7 @@ namespace WebGitNet.Controllers
 
             var repoPath = ((FileInfo)resourceInfo.FileSystemInfo).Directory.FullName;
 
-            return new GitStreamResult("{0} --stateless-rpc .", action, repoPath);
+            return new GitStreamResult("{0} --stateless-rpc .", action, repoPath, userName);
         }
     }
 }

@@ -18,8 +18,9 @@ namespace WebGitNet.ActionResults
         private readonly string commandFormat;
         private readonly string action;
         private readonly string repoPath;
+        private readonly string userName;
 
-        public GitStreamResult(string commandFormat, string action, string repoPath)
+        public GitStreamResult(string commandFormat, string action, string repoPath, string userName = null)
         {
             if (string.IsNullOrEmpty(commandFormat))
             {
@@ -41,6 +42,7 @@ namespace WebGitNet.ActionResults
             }
 
             this.repoPath = repoPath;
+            this.userName = userName;
         }
 
         public override void ExecuteResult(ControllerContext context)
@@ -52,7 +54,7 @@ namespace WebGitNet.ActionResults
             response.ContentType = "application/x-git-" + this.action + "-result";
             response.BufferOutput = false;
 
-            using (var git = GitUtilities.Start(string.Format(this.commandFormat, this.action), this.repoPath, redirectInput: true))
+            using (var git = GitUtilities.StartWithUserName(string.Format(this.commandFormat, this.action), this.repoPath, this.userName, redirectInput: true))
             {
                 var readThread = new Thread(() =>
                 {
