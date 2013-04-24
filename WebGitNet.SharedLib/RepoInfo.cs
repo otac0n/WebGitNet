@@ -1,6 +1,6 @@
 ﻿namespace WebGitNet
 {
-	public class RepoInfo
+    public class RepoInfo
     {
         public string Name { get; set; }
 
@@ -11,5 +11,7 @@
         public string RepoPath { get; set; }
 
         public bool IsArchived { get; set; }
-	}
+
+        public bool IsBare { get; set; }
+    }
 }
