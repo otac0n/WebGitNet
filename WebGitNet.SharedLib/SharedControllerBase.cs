@@ -14,6 +14,7 @@ namespace WebGitNet
     {
         private readonly FileManager fileManager;
         private readonly BreadCrumbTrail breadCrumbs;
+        private bool areWeLimitedReader;
 
         public SharedControllerBase()
         {
@@ -23,6 +24,13 @@ namespace WebGitNet
 
             this.breadCrumbs = new BreadCrumbTrail();
             ViewBag.BreadCrumbs = this.breadCrumbs;
+        }
+
+        protected override void Initialize(System.Web.Routing.RequestContext requestContext)
+        {
+            base.Initialize(requestContext);
+            // Set our user access rights flags
+            areWeLimitedReader = areWeInReadOnlyLimitedGroup();
         }
 
         protected void AddRepoBreadCrumb(string repo)
@@ -44,6 +52,26 @@ namespace WebGitNet
             {
                 return this.breadCrumbs;
             }
+        }
+
+        protected bool AreWeLimitedReader
+        {
+            get
+            {
+                return this.areWeLimitedReader;
+            }
+        }
+
+        private bool areWeInConfigGroup(string groupKeyName)
+        {
+            var clientPrincipal = (System.Security.Principal.WindowsPrincipal)User;
+            var groupName = WebConfigurationManager.AppSettings[groupKeyName];
+            return clientPrincipal.IsInRole(groupName);
+        }
+
+        private bool areWeInReadOnlyLimitedGroup()
+        {
+            return areWeInConfigGroup("ReadOnlyLimitedGroupName");
         }
     }
 }

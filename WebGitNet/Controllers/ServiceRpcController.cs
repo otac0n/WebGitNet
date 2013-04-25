@@ -22,6 +22,8 @@ namespace WebGitNet.Controllers
         [HttpPost]
         public ActionResult ReceivePack(string url)
         {
+            if (AreWeLimitedReader)
+                return new HttpStatusCodeResult(403, "You do not have permission to push to this repo");
             string userName = User.Identity.Name;
             return this.ServiceRpc(url, "receive-pack", userName);
         }
