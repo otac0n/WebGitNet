@@ -94,7 +94,7 @@ namespace WebGitNet.Controllers
 
             const int PageSize = 20;
             int skip = PageSize * (page - 1);
-            var count = GitUtilities.CountCommits(resourceInfo.FullPath);
+            var count = GitUtilities.CountCommits(resourceInfo.FullPath, @object);
 
             if (skip >= count)
             {
