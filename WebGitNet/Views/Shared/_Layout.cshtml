@@ -71,14 +71,12 @@
             }
         </div>
     </div>
-    
     <div class="container">
         @using (MiniProfiler.StepStatic("Rendering Body"))
         {
             @RenderBody()
         }
     </div>
-
     <div class="container" id="footer">
         Copyright &copy; @DateTime.Now.Year John Gietzen. All rights reserved.
     </div>
