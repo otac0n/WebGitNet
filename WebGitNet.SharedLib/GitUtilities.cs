@@ -190,6 +190,10 @@ namespace WebGitNet
                      File.Exists(Path.Combine(repoPath, "HEAD")))
                 );
 
+            var isRepoBare = 
+                isRepo &&
+                (!Directory.Exists(Path.Combine(repoPath, ".git")));
+
             var isArchived = IsArchived(repoPath);
 
             return new RepoInfo
@@ -199,6 +203,7 @@ namespace WebGitNet
                 Description = description,
                 RepoPath = repoPath,
                 IsArchived = isArchived,
+                IsBare = isRepoBare,
             };
         }
 
