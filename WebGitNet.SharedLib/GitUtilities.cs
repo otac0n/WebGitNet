@@ -170,41 +170,56 @@ namespace WebGitNet
             var descrPath = Path.Combine(repoPath, "description");
             repoPath = Path.GetDirectoryName(descrPath);
 
-            var repoName = Path.GetFileName(repoPath);
-
-            string description = null;
-            if (File.Exists(descrPath))
+            if (repoPath != null)
             {
-                description = File.ReadAllText(descrPath);
+                var repoName = Path.GetFileName(repoPath);
+
+                string description = null;
+                if (File.Exists(descrPath))
+                {
+                    description = File.ReadAllText(descrPath);
+                }
+
+                // We use this method rather than 'git rev-parse --git-dir' or similar, because it takes
+                // 0.0036 as much time.
+
+                var isRepoBare = IsRepoDirectory(repoPath);
+
+                var isRepo =
+                    isRepoBare ||
+                        IsRepoDirectory(Path.Combine(repoPath, ".git"));
+
+                var isArchived = IsArchived(repoPath);
+
+                return new RepoInfo
+                {
+                    Name = repoName,
+                    IsGitRepo = isRepo,
+                    Description = description,
+                    RepoPath = repoPath,
+                    IsArchived = isArchived,
+                    IsBare = isRepoBare,
+                };
             }
-
-            // We use this method rather than 'git rev-parse --git-dir' or similar, because it takes
-            // 0.0036 as much time.
-            var isRepo =
-                Directory.Exists(repoPath) &&
-                (
-                    Directory.Exists(Path.Combine(repoPath, ".git")) ||
-                    (Directory.Exists(Path.Combine(repoPath, "refs")) &&
-                     Directory.Exists(Path.Combine(repoPath, "info")) &&
-                     Directory.Exists(Path.Combine(repoPath, "objects")) &&
-                     File.Exists(Path.Combine(repoPath, "HEAD")))
-                );
-
-            var isRepoBare = 
-                isRepo &&
-                (!Directory.Exists(Path.Combine(repoPath, ".git")));
-
-            var isArchived = IsArchived(repoPath);
 
             return new RepoInfo
             {
-                Name = repoName,
-                IsGitRepo = isRepo,
-                Description = description,
+                Name = "",
+                IsGitRepo = false,
+                Description = "",
                 RepoPath = repoPath,
-                IsArchived = isArchived,
-                IsBare = isRepoBare,
+                IsArchived = false,
+                IsBare = false,
             };
+        }
+
+        private static bool IsRepoDirectory(string repoPath)
+        {
+            return (
+                Directory.Exists(Path.Combine(repoPath, "refs")) &&
+                Directory.Exists(Path.Combine(repoPath, "info")) &&
+                Directory.Exists(Path.Combine(repoPath, "objects")) &&
+                File.Exists(Path.Combine(repoPath, "HEAD")));
         }
 
         public static List<GitRef> GetAllRefs(string repoPath)
@@ -460,18 +475,28 @@ namespace WebGitNet
 
         private static string RepoInfoPath(string repoPath)
         {
-            // Basic way to check for non-bared-ness
-            var nonbare = Path.Combine(repoPath, ".git");
+            // Determine if the immediate path is a repository. If so, it is a bare repo
+            var isBareRepo = IsRepoDirectory(repoPath);
             var path = repoPath;
+            bool isNonBareRepo = false;
 
-            if (Directory.Exists(nonbare))
+            if (!isBareRepo)
             {
-                path = repoPath;
+                // Since we didn't find a bare repo, look to see if this is a non-bare repo.
+                string nonBareRepoPath = Path.Combine(repoPath, ".git");
+                isNonBareRepo = IsRepoDirectory(nonBareRepoPath);
+
+                if (isNonBareRepo)
+                {
+                    path = nonBareRepoPath;
+                }
             }
 
+            // Find our settings folder under info. If not there, create it.
             path = Path.Combine(path, "info", "webgit.net");
 
-            if (!Directory.Exists(path))
+            if ((isBareRepo || isNonBareRepo) &&
+                (!Directory.Exists(path)))
             {
                 Directory.CreateDirectory(path);
             }
