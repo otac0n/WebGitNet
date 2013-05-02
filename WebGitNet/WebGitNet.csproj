@@ -56,7 +56,7 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="MiniProfiler">
-      <HintPath>..\packages\MiniProfiler.2.0.1\lib\net40\MiniProfiler.dll</HintPath>
+      <HintPath>..\packages\MiniProfiler.2.1.0\lib\net40\MiniProfiler.dll</HintPath>
     </Reference>
     <Reference Include="System.ServiceModel" />
     <Reference Include="System" />
