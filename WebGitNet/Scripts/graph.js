@@ -1,4 +1,4 @@
-﻿/// <reference path="~/Scripts/jquery-1.7.1-vsdoc.js" />
+﻿/// <reference path="~/Scripts/jquery-2.0.0.intellisense.js" />
 /// <reference path="~/Scripts/jquery-ui-1.8.18.js" />
 /// <reference path="~/Scripts/jquery.cookie.js" />
 /// <reference path="~/Scripts/json2.js" />
