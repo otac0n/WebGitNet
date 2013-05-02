@@ -118,6 +118,9 @@
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
       <Link>CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
+    <Content Include="..\License.txt">
+      <Link>License.txt</Link>
+    </Content>
     <Content Include="Content\asc.gif" />
     <Content Include="Content\bg.gif" />
     <Content Include="Content\bootstrap-responsive.css" />
