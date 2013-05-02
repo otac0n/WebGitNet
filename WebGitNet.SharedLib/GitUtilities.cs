@@ -180,14 +180,9 @@ namespace WebGitNet
                     description = File.ReadAllText(descrPath);
                 }
 
-                // We use this method rather than 'git rev-parse --git-dir' or similar, because it takes
-                // 0.0036 as much time.
-
                 var isRepoBare = IsRepoDirectory(repoPath);
 
-                var isRepo =
-                    isRepoBare ||
-                        IsRepoDirectory(Path.Combine(repoPath, ".git"));
+                var isRepo = isRepoBare || IsRepoDirectory(Path.Combine(repoPath, ".git"));
 
                 var isArchived = IsArchived(repoPath);
 
@@ -215,6 +210,8 @@ namespace WebGitNet
 
         private static bool IsRepoDirectory(string repoPath)
         {
+            // We use this method rather than 'git rev-parse --git-dir' or similar, because it takes
+            // 0.0036 as much time.
             return (
                 Directory.Exists(Path.Combine(repoPath, "refs")) &&
                 Directory.Exists(Path.Combine(repoPath, "info")) &&
@@ -478,7 +475,7 @@ namespace WebGitNet
             // Determine if the immediate path is a repository. If so, it is a bare repo
             var isBareRepo = IsRepoDirectory(repoPath);
             var path = repoPath;
-            bool isNonBareRepo = false;
+            var isNonBareRepo = false;
 
             if (!isBareRepo)
             {
