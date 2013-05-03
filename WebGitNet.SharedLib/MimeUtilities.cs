@@ -10,9 +10,7 @@ namespace WebGitNet
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Reflection;
-    using System.Text.RegularExpressions;
     using Microsoft.Win32;
 
     public class MimeUtilities

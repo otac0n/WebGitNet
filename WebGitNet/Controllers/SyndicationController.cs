@@ -10,12 +10,11 @@ namespace WebGitNet.Controllers
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Web;
+    using System.ServiceModel.Syndication;
     using System.Web.Mvc;
     using System.Web.Routing;
-    using System.ServiceModel.Syndication;
-    using WebGitNet.ActionResults;
     using MarkdownSharp;
+    using WebGitNet.ActionResults;
 
     public class SyndicationController : SharedControllerBase
     {
