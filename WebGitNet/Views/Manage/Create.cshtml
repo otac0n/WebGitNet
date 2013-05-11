@@ -2,6 +2,18 @@
 @{
     ViewBag.Title = "Create Repo";
 }
+@{
+    var ctx = Context.ApplicationInstance.Context;
+    var cntr = (WebGitNet.Controllers.ManageController)ViewContext.Controller;
+    if( !cntr.AreWeRepoCreator )
+    {
+        var httpRsp = ctx.Response;
+        httpRsp.StatusCode = 403;
+        httpRsp.StatusDescription = "You are not allowed to create repositories";
+        httpRsp.SubStatusCode = 3;
+        return;
+    }
+}
 
 <form action="" class="form-horizontal" method="post">
     <fieldset>
