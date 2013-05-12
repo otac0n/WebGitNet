@@ -1,0 +1,87 @@
+Build machine required configuration:
+ some Git client (to connect to github.com)
+ Visual Studio 2010 (this was tried with SP1 on Ultimate SKU, can possibly work on other 
+                     SKUs and without SP1)
+ ASP.NET MVC 4 (install as separate download from MS)
+  yes, a must for Studio to open the project
+
+Building:
+ get WebGitNet from github.com, use the branch you want (like MoreUserAccessControl)
+ open the .sln file by VS2010
+ the Studio can fail to install something related to IIS Express, but the project will 
+  open and build OK anyway
+ the following should be done only once
+  in VS2010 Publish toolbar choose "New" from combobox, then "File System" and a target dir
+  this will create a profile named like "Profile1"
+ in VS2010 "Build Solution"
+ in VS2010 go to Solution explorer, to WebGitNet subproject, 
+  right-click for a subproject properties context menu
+   Build Deployment Package
+   Publish
+    to the aforementioned profile (like "Profile1")
+ here you have a copy of the web app's file/directory structure in the publish target dir
+ NOTE for ASP.NET novices: the source .cs files of controllers/models are NOT deployed to the 
+  web server, only the .cshtml files for views. The latter ones can be edited in-place 
+  on the web server and the updates will come into effect ASAP. The former ones must be 
+  updated on the build machine and the web app should be rebuilt and re-deployed.
+
+Web server machine required configuration:
+ IIS (tried on IIS8/Server 2012, can also probably work on older IIS versions)
+ proper certificate setup if you want to use SSL
+ Basic auth (install as Windows component) is a must, since:
+  Digest auth requires a domain
+  Windows (aka NTLM) auth has issues with Linux clients like CentOS 
+    (and maybe RHEL/Fedora since they are similar)
+   which have obsolete "curl" package with broken Windows auth client feature 
+    (actually what is broken there is Negotiate and its Kerberos attempt, 
+     Windows auth itself is fine, but Git always invokes "curl" with Negotiate option)
+   Windows auth is OK for Windows-only client environments though (or if you will update 
+   "curl" to newer version on CentOS and similar Linuxen)
+ proper security/access rights limitations setup
+  you should not disable POST, this also disables pull, fetch and clone, not only push
+ NOTE: the security-related changes in Windows user group membership do NOT immediately 
+   come to effect in IIS web apps, requiring IIS restart each time
+  to fix this, use:
+   HKLM\System\CurrentControlSet\Services\InetInfo\Parameters
+    UserTokenTTL DWORD in seconds
+    set to 1 second
+   restart IIS after this
+ no need in WebDAV - the web app implements the Git's "smart HTTP" protocol, which is 
+  enough for us, the web server will not implement the Git's "dumb HTTP" protocol which is 
+  based on WebDAV
+ ASP.NET 4.5 (install as Windows component), can also be tried with earlier versions
+ ASP.NET MVC 4 (install as separate download from MS)
+ typical security setup of the web server
+  add GitUsers Windows group, which is the only one which can access the web app
+  add GitWebApp user and an App Pool running with this user
+  Git repo directories must have Full Control for both GitWebApp and GitUsers
+  also add GitRepoCreators and GitReaders groups (see below)
+ mSysGit
+  is a must, since the web app only wraps it around and does not contain the full Git 
+   implementation
+
+Web server machine:
+ copy the whole subtree (under the target dir of a build/publish process 
+  on the build machine) to a new web app's directory on the web server machine
+ create a Web App in IIS mgmt, running as GitWebApp user
+ set the web.config parameters (below)
+
+web.config parameters
+ RepositoriesPath
+  path to a directory which contains all Git repos managed by this web app's instance
+   each subdir of this dir is considered to be a Git repo
+   newly created repos are also subdirs here
+   see the above security setup notes for ACLs on this dir
+ GitCommand
+  full pathname of the installed git.exe from mSysGit
+  the default value of "C:\Program Files (x86)\Git\bin\git.exe" is OK for most needs
+ groups
+  ReadOnlyLimitedGroupName
+   name of Windows user group
+   the members of this group are prohibited from pushing to repositories, but 
+    can still be allowed (by IIS's security settings) to view/browse the repositories 
+    via the web app and to fetch/pull/clone them via Git
+  RepoCreatorsGroupName
+   name of Windows user group
+   the user must be a member of this group to be able to create repos
+ 
