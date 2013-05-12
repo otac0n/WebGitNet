@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="MimeUtilities.cs" company="(none)">
-//  Copyright © 2011 John Gietzen. All rights reserved.
+//  Copyright © 2013 John Gietzen and the WebGit .NET Authors. All rights reserved.
 // </copyright>
 // <author>John Gietzen</author>
 //-----------------------------------------------------------------------
@@ -10,9 +10,7 @@ namespace WebGitNet
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Reflection;
-    using System.Text.RegularExpressions;
     using Microsoft.Win32;
 
     public class MimeUtilities

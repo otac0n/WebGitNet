@@ -46,9 +46,19 @@
 <h2>@ViewBag.Title</h2>
 
 <table class="table">
-    <tr><th style="width: 150px;">Description:</th><td>@info.Description @Html.ActionLink("edit", "ManageRepo", "Manage", new { repoName }, null)</td></tr>
-    <tr><th style="width: 150px;">Clone URL:</th><td><code>@repoUrl</code></td></tr>
-    <tr><th style="width: 150px;">Clone Command:</th><td><code>@("git clone " + repoUrl + (Uri.EscapeUriString(repoName) != repoName ? " \"" + repoName + "\"" : string.Empty))</code></td></tr>
+    <tr>
+        <th style="width: 150px;">Description:</th>
+        <td>@info.Description @Html.ActionLink("edit", "ManageRepo", "Manage", new { repoName }, null)</td>
+        <td style="text-align: right">@if (info.IsBare) { <span>bare</span> }</td>
+    </tr>
+    <tr>
+        <th style="width: 150px;">Remote URL:</th>
+        <td colspan="2"><code>@repoUrl</code></td>
+    </tr>
+    <tr>
+        <th style="width: 150px;">Clone Command:</th>
+        <td colspan="2"><code>@("git clone " + repoUrl + (Uri.EscapeUriString(repoName) != repoName ? " \"" + repoName + "\"" : string.Empty))</code></td>
+    </tr>
 </table>
 
 @if (lastCommit != null)

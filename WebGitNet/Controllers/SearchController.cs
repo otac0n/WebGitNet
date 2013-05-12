@@ -1,21 +1,18 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BrowseController.cs" company="(none)">
-//  Copyright © 2011 John Gietzen. All rights reserved.
+//  Copyright © 2013 John Gietzen and the WebGit .NET Authors. All rights reserved.
 // </copyright>
 // <author>John Gietzen</author>
 //-----------------------------------------------------------------------
 
 namespace WebGitNet.Controllers
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Web;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using System.Web.Routing;
-    using WebGitNet.Search;
     using Castle.Windsor;
-    using System.Threading.Tasks;
+    using WebGitNet.Search;
 
     public class SearchController : SharedControllerBase
     {

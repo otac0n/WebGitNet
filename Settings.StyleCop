@@ -45,7 +45,7 @@
       </Rules>
       <AnalyzerSettings>
         <StringProperty Name="CompanyName">(none)</StringProperty>
-        <StringProperty Name="Copyright">Copyright © 2011 John Gietzen. All rights reserved.</StringProperty>
+        <StringProperty Name="Copyright">Copyright © 2013 John Gietzen and the WebGit .NET Authors. All rights reserved.</StringProperty>
       </AnalyzerSettings>
     </Analyzer>
     <Analyzer AnalyzerId="Microsoft.StyleCop.CSharp.ReadabilityRules">

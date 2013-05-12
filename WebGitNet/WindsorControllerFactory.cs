@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="WindsorControllerFactory.cs" company="(none)">
-//  Copyright © 2011 John Gietzen. All rights reserved.
+//  Copyright © 2013 John Gietzen and the WebGit .NET Authors. All rights reserved.
 // </copyright>
 // <author>Dustin R. Welden</author>
 // <author>John Gietzen</author>

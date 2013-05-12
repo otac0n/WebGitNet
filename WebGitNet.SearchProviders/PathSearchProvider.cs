@@ -3,9 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using WebGitNet.Search;
     using System.Threading.Tasks;
+    using WebGitNet.Search;
 
     public class PathSearchProvider : ISearchProvider
     {
@@ -23,7 +22,16 @@
 
         private IEnumerable<SearchResult> Search(SearchQuery query, RepoInfo repo, bool includeRepoName = false)
         {
-            var tree = GitUtilities.GetTreeInfo(repo.RepoPath, "HEAD", recurse: true);
+            TreeView tree;
+
+            try
+            {
+                tree = GitUtilities.GetTreeInfo(repo.RepoPath, "HEAD", recurse: true);
+            }
+            catch (GitErrorException)
+            {
+                yield break;
+            }
 
             foreach (var item in tree.Objects)
             {
@@ -35,38 +43,39 @@
 
                     switch (item.ObjectType)
                     {
-                      case ObjectType.Tree:
-                          yield return new SearchResult
-                          {
-                              LinkText = linkText + "/",
-                              ActionName = "ViewTree",
-                              ControllerName = "Browse",
-                              RouteValues = new { repo = repo.Name, @object = tree.Tree, path = tree.Path + item.Name + "/" },
-                              Lines = new List<SearchLine>(),
-                          };
-                          break;
-                      case ObjectType.Blob:
-                          yield return new SearchResult
-                          {
-                              LinkText = linkText,
-                              ActionName = "ViewBlob",
-                              ControllerName = "Browse",
-                              RouteValues = new { repo = repo.Name, @object = tree.Tree, path = tree.Path + item.Name },
-                              Lines = new List<SearchLine>(),
-                          };
-                          break;
-                      case ObjectType.Commit:
-                          yield return new SearchResult
-                          {
-                            LinkText = linkText + "/",
-                            ActionName = "ViewTree",
-                            ControllerName = "Browse",
-                            RouteValues = new { repo = repo.Name, @object = tree.Tree, path = tree.Path + item.Name + "/" },
-                            Lines = new List<SearchLine>(),
-                          };
-                          break;
-                    }
+                        case ObjectType.Tree:
+                            yield return new SearchResult
+                            {
+                                LinkText = linkText + "/",
+                                ActionName = "ViewTree",
+                                ControllerName = "Browse",
+                                RouteValues = new { repo = repo.Name, @object = tree.Tree, path = tree.Path + item.Name + "/" },
+                                Lines = new List<SearchLine>(),
+                            };
+                            break;
 
+                        case ObjectType.Blob:
+                            yield return new SearchResult
+                            {
+                                LinkText = linkText,
+                                ActionName = "ViewBlob",
+                                ControllerName = "Browse",
+                                RouteValues = new { repo = repo.Name, @object = tree.Tree, path = tree.Path + item.Name },
+                                Lines = new List<SearchLine>(),
+                            };
+                            break;
+
+                        case ObjectType.Commit:
+                            yield return new SearchResult
+                            {
+                                LinkText = linkText + "/",
+                                ActionName = "ViewTree",
+                                ControllerName = "Browse",
+                                RouteValues = new { repo = repo.Name, @object = tree.Tree, path = tree.Path + item.Name + "/" },
+                                Lines = new List<SearchLine>(),
+                            };
+                            break;
+                    }
                 }
             }
         }

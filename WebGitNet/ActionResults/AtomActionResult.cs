@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="AtomActionResult.cs" company="(none)">
-//  Copyright © 2011 John Gietzen. All rights reserved.
+//  Copyright © 2013 John Gietzen and the WebGit .NET Authors. All rights reserved.
 // </copyright>
 // <author>John Gietzen</author>
 //-----------------------------------------------------------------------
@@ -8,11 +8,8 @@
 namespace WebGitNet.ActionResults
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
-    using System.Web.Mvc;
     using System.ServiceModel.Syndication;
+    using System.Web.Mvc;
     using System.Xml;
 
     public class AtomActionResult : ActionResult

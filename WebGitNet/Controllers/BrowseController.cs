@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BrowseController.cs" company="(none)">
-//  Copyright © 2011 John Gietzen. All rights reserved.
+//  Copyright © 2013 John Gietzen and the WebGit .NET Authors. All rights reserved.
 // </copyright>
 // <author>John Gietzen</author>
 //-----------------------------------------------------------------------
@@ -94,7 +94,7 @@ namespace WebGitNet.Controllers
 
             const int PageSize = 20;
             int skip = PageSize * (page - 1);
-            var count = GitUtilities.CountCommits(resourceInfo.FullPath);
+            var count = GitUtilities.CountCommits(resourceInfo.FullPath, @object);
 
             if (skip >= count)
             {

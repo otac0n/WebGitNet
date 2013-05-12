@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GitUtilities.cs" company="(none)">
-//  Copyright © 2011 John Gietzen. All rights reserved.
+//  Copyright © 2013 John Gietzen and the WebGit .NET Authors. All rights reserved.
 // </copyright>
 // <author>John Gietzen</author>
 //-----------------------------------------------------------------------
@@ -15,9 +15,9 @@ namespace WebGitNet
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
+    using System.Web;
     using System.Web.Configuration;
     using StackExchange.Profiling;
-    using System.Web;
 
     public static class GitUtilities
     {
@@ -183,36 +183,53 @@ namespace WebGitNet
             var descrPath = Path.Combine(repoPath, "description");
             repoPath = Path.GetDirectoryName(descrPath);
 
-            var repoName = Path.GetFileName(repoPath);
-
-            string description = null;
-            if (File.Exists(descrPath))
+            if (repoPath != null)
             {
-                description = File.ReadAllText(descrPath);
+                var repoName = Path.GetFileName(repoPath);
+
+                string description = null;
+                if (File.Exists(descrPath))
+                {
+                    description = File.ReadAllText(descrPath);
+                }
+
+                var isRepoBare = IsRepoDirectory(repoPath);
+
+                var isRepo = isRepoBare || IsRepoDirectory(Path.Combine(repoPath, ".git"));
+
+                var isArchived = IsArchived(repoPath);
+
+                return new RepoInfo
+                {
+                    Name = repoName,
+                    IsGitRepo = isRepo,
+                    Description = description,
+                    RepoPath = repoPath,
+                    IsArchived = isArchived,
+                    IsBare = isRepoBare,
+                };
             }
-
-            // We use this method rather than 'git rev-parse --git-dir' or similar, because it takes
-            // 0.0036 as much time.
-            var isRepo =
-                Directory.Exists(repoPath) &&
-                (
-                    Directory.Exists(Path.Combine(repoPath, ".git")) ||
-                    (Directory.Exists(Path.Combine(repoPath, "refs")) &&
-                     Directory.Exists(Path.Combine(repoPath, "info")) &&
-                     Directory.Exists(Path.Combine(repoPath, "objects")) &&
-                     File.Exists(Path.Combine(repoPath, "HEAD")))
-                );
-
-            var isArchived = IsArchived(repoPath);
 
             return new RepoInfo
             {
-                Name = repoName,
-                IsGitRepo = isRepo,
-                Description = description,
+                Name = "",
+                IsGitRepo = false,
+                Description = "",
                 RepoPath = repoPath,
-                IsArchived = isArchived,
+                IsArchived = false,
+                IsBare = false,
             };
+        }
+
+        private static bool IsRepoDirectory(string repoPath)
+        {
+            // We use this method rather than 'git rev-parse --git-dir' or similar, because it takes
+            // 0.0036 as much time.
+            return (
+                Directory.Exists(Path.Combine(repoPath, "refs")) &&
+                Directory.Exists(Path.Combine(repoPath, "info")) &&
+                Directory.Exists(Path.Combine(repoPath, "objects")) &&
+                File.Exists(Path.Combine(repoPath, "HEAD")));
         }
 
         public static List<GitRef> GetAllRefs(string repoPath)
@@ -468,18 +485,28 @@ namespace WebGitNet
 
         private static string RepoInfoPath(string repoPath)
         {
-            // Basic way to check for non-bared-ness
-            var nonbare = Path.Combine(repoPath, ".git");
+            // Determine if the immediate path is a repository. If so, it is a bare repo
+            var isBareRepo = IsRepoDirectory(repoPath);
             var path = repoPath;
+            var isNonBareRepo = false;
 
-            if (Directory.Exists(nonbare))
+            if (!isBareRepo)
             {
-                path = repoPath;
+                // Since we didn't find a bare repo, look to see if this is a non-bare repo.
+                string nonBareRepoPath = Path.Combine(repoPath, ".git");
+                isNonBareRepo = IsRepoDirectory(nonBareRepoPath);
+
+                if (isNonBareRepo)
+                {
+                    path = nonBareRepoPath;
+                }
             }
 
+            // Find our settings folder under info. If not there, create it.
             path = Path.Combine(path, "info", "webgit.net");
 
-            if (!Directory.Exists(path))
+            if ((isBareRepo || isNonBareRepo) &&
+                (!Directory.Exists(path)))
             {
                 Directory.CreateDirectory(path);
             }
@@ -629,7 +656,7 @@ namespace WebGitNet
             {
                 var gitmodules = Execute(string.Format("show {0}:{1}.gitmodules", Q(tree), Q(path)), repoPath, Encoding.UTF8, trustErrorCode: true);
                 submodules = GetSubmoduleUrls(gitmodules);
-            } 
+            }
             catch
             {
                 // .gitmodules file does not exist
@@ -641,7 +668,8 @@ namespace WebGitNet
         private static IDictionary<string, SubmoduleInfo> GetSubmoduleUrls(string gitmodules)
         {
             var submoduleList = new Dictionary<string, SubmoduleInfo>();
-            if (gitmodules != null) {
+            if (gitmodules != null)
+            {
                 using (var reader = new StringReader(gitmodules))
                 {
                     Regex headerRegex = new Regex(@"\[(.*)\s""(.*)""\]");
@@ -654,58 +682,58 @@ namespace WebGitNet
                         {
                             try
                             {
-                              var submodule = match.Groups[2].Value;
-                              var items = new Dictionary<string, string>();
-                              line = reader.ReadLine();
-                              while (line != null && (match = itemsRegex.Match(line)).Groups.Count == 3)
-                              {
-                                  string key = match.Groups[1].Value;
-                                  string value = match.Groups[2].Value;
-                                  // parse url to make is useable
-                                  if (key == "url")
-                                  {
-                                      // scp-like syntax is valid for git, but does not conform to uri standards
-                                      // so we need to fix it up
-                                      Regex scpLikeRegex = new Regex(@"\w*@.*:(\d*).*");
-                                      if ((match = scpLikeRegex.Match(value)).Groups.Count > 1 && match.Groups[1].Length == 0) 
-                                      {
-                                          value = value.Replace(":", "/");
-                                      }
-                                      // if the value does not start with a scheme, we assume that it is ssh, not that it really matters
-                                      Regex schemeRegex = new Regex(@"\w*://.*");
-                                      if (!schemeRegex.Match(value).Success)
-                                      {
-                                          value = "ssh" + Uri.SchemeDelimiter + value;
-                                      }
-                                      var uri = new Uri(value);
-                                      // check to see if uri.Host is this server and fixup url
-                                      if (uri.GetLeftPart(UriPartial.Authority) ==
-                                          HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority))
-                                      {
-                                          value = value.ToString().Replace("/git/", "/browse/");
-                                      }
-                                      // fixup github urls so that we can link there
-                                      if (uri.Host.Equals("github.com", StringComparison.OrdinalIgnoreCase))
-                                      {
-                                          value = Uri.UriSchemeHttps + Uri.SchemeDelimiter + uri.Host + uri.AbsolutePath;
-                                          // drop the .git if present
-                                          if (value.EndsWith(".git"))
-                                          {
-                                              value = value.Remove(value.Length - 4, 4);
-                                          }
-                                      }
-                                      // TODO support other sites?
-                                  }
-                                  items.Add(key, value);
-                                  line = reader.ReadLine();
-                              }
-                              submoduleList.Add(submodule, new SubmoduleInfo(items["path"], items["url"]));
+                                var submodule = match.Groups[2].Value;
+                                var items = new Dictionary<string, string>();
+                                line = reader.ReadLine();
+                                while (line != null && (match = itemsRegex.Match(line)).Groups.Count == 3)
+                                {
+                                    string key = match.Groups[1].Value;
+                                    string value = match.Groups[2].Value;
+                                    // parse url to make is useable
+                                    if (key == "url")
+                                    {
+                                        // scp-like syntax is valid for git, but does not conform to uri standards
+                                        // so we need to fix it up
+                                        Regex scpLikeRegex = new Regex(@"\w*@.*:(\d*).*");
+                                        if ((match = scpLikeRegex.Match(value)).Groups.Count > 1 && match.Groups[1].Length == 0)
+                                        {
+                                            value = value.Replace(":", "/");
+                                        }
+                                        // if the value does not start with a scheme, we assume that it is ssh, not that it really matters
+                                        Regex schemeRegex = new Regex(@"\w*://.*");
+                                        if (!schemeRegex.Match(value).Success)
+                                        {
+                                            value = "ssh" + Uri.SchemeDelimiter + value;
+                                        }
+                                        var uri = new Uri(value);
+                                        // check to see if uri.Host is this server and fixup url
+                                        if (uri.GetLeftPart(UriPartial.Authority) ==
+                                            HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority))
+                                        {
+                                            value = value.ToString().Replace("/git/", "/browse/");
+                                        }
+                                        // fixup github urls so that we can link there
+                                        if (uri.Host.Equals("github.com", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            value = Uri.UriSchemeHttps + Uri.SchemeDelimiter + uri.Host + uri.AbsolutePath;
+                                            // drop the .git if present
+                                            if (value.EndsWith(".git"))
+                                            {
+                                                value = value.Remove(value.Length - 4, 4);
+                                            }
+                                        }
+                                        // TODO support other sites?
+                                    }
+                                    items.Add(key, value);
+                                    line = reader.ReadLine();
+                                }
+                                submoduleList.Add(submodule, new SubmoduleInfo(items["path"], items["url"]));
                             }
                             catch
                             {
                                 // ignore error
                             }
-                        } 
+                        }
                         else
                         {
                             line = reader.ReadLine();

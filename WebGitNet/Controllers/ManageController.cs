@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="ManageController.cs" company="(none)">
-//  Copyright © 2011 John Gietzen. All rights reserved.
+//  Copyright © 2013 John Gietzen and the WebGit .NET Authors. All rights reserved.
 // </copyright>
 // <author>John Gietzen</author>
 //-----------------------------------------------------------------------
@@ -12,6 +12,7 @@ namespace WebGitNet.Controllers
     using System.Web.Mvc;
     using System.Web.Routing;
     using WebGitNet.Models;
+
     using io = System.IO;
 
     public class ManageController : SharedControllerBase

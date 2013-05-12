@@ -1,8 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGitNet", "WebGitNet\WebGitNet.csproj", "{C3153971-94BC-4991-8790-41B046680108}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DBDE7BF0-6977-414E-812C-6B0CF5ABB720}"
 	ProjectSection(SolutionItems) = preProject
 		CustomDictionary.xml = CustomDictionary.xml
@@ -12,9 +10,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGitNet.SharedLib", "WebGitNet.SharedLib\WebGitNet.SharedLib.csproj", "{F00879C2-B2F3-4202-B1BF-12A875AF4F7B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGitNet", "WebGitNet\WebGitNet.csproj", "{C3153971-94BC-4991-8790-41B046680108}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGitNet.RepoImpact", "WebGitNet.RepoImpact\WebGitNet.RepoImpact.csproj", "{136DB9D1-DC65-4EFF-821C-CCB993BD3CB3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGitNet.SharedLib", "WebGitNet.SharedLib\WebGitNet.SharedLib.csproj", "{F00879C2-B2F3-4202-B1BF-12A875AF4F7B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGitNet.SearchProviders", "WebGitNet.SearchProviders\WebGitNet.SearchProviders.csproj", "{527FE49D-8F2F-4739-AEA4-137706EFFC3C}"
 EndProject
@@ -32,10 +30,6 @@ Global
 		{F00879C2-B2F3-4202-B1BF-12A875AF4F7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F00879C2-B2F3-4202-B1BF-12A875AF4F7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F00879C2-B2F3-4202-B1BF-12A875AF4F7B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{136DB9D1-DC65-4EFF-821C-CCB993BD3CB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{136DB9D1-DC65-4EFF-821C-CCB993BD3CB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{136DB9D1-DC65-4EFF-821C-CCB993BD3CB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{136DB9D1-DC65-4EFF-821C-CCB993BD3CB3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{527FE49D-8F2F-4739-AEA4-137706EFFC3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{527FE49D-8F2F-4739-AEA4-137706EFFC3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{527FE49D-8F2F-4739-AEA4-137706EFFC3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
