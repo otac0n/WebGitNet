@@ -641,8 +641,8 @@ namespace WebGitNet
             IDictionary<string, SubmoduleInfo> submodules = null;
             try
             {
-                var gitmodules = Execute(string.Format("show {0}:{1}.gitmodules", Q(tree), Q(path)), repoPath, Encoding.UTF8, trustErrorCode: true);
-                submodules = GetSubmoduleUrls(gitmodules);
+                var gitmodules = Execute(string.Format("show {0}:.gitmodules", Q(tree)), repoPath, Encoding.UTF8, trustErrorCode: true);
+                submodules = GetSubmoduleUrls(gitmodules, path);
             }
             catch
             {
@@ -652,7 +652,7 @@ namespace WebGitNet
             return new TreeView(tree, path, objects, submodules);
         }
 
-        private static IDictionary<string, SubmoduleInfo> GetSubmoduleUrls(string gitmodules)
+        private static IDictionary<string, SubmoduleInfo> GetSubmoduleUrls(string gitmodules, string path)
         {
             var submoduleList = new Dictionary<string, SubmoduleInfo>();
             if (gitmodules != null)
@@ -714,7 +714,16 @@ namespace WebGitNet
                                     items.Add(key, value);
                                     line = reader.ReadLine();
                                 }
-                                submoduleList.Add(submodule, new SubmoduleInfo(items["path"], items["url"]));
+                                string relativePath = items["path"];
+                                if (!string.IsNullOrEmpty(path))
+                                {
+                                    if (!relativePath.StartsWith(path))
+                                    {
+                                        continue;
+                                    }
+                                    relativePath = relativePath.Substring(path.Length);
+                                }
+                                submoduleList.Add(relativePath, new SubmoduleInfo(relativePath, items["url"]));
                             }
                             catch
                             {

@@ -18,7 +18,7 @@
                 @switch (item.ObjectType)
                 {
                     case ObjectType.Commit:
-                        if (Model.Submodules.Keys.Contains(item.Name))
+                        if (Model.Submodules != null && Model.Submodules.ContainsKey(item.Name))
                         {
                             <a href="@Model.Submodules[item.Name].Url/tree/@item.Hash">@item.Name</a>
                         }
