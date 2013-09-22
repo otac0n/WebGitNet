@@ -106,12 +106,6 @@ namespace WebGitNet.ActionResults
 
                 readThread.Join();
                 git.WaitForExit();
-
-                if (git.ExitCode != 0)
-                {
-                    response.StatusCode = 500;
-                    response.SubStatusCode = git.ExitCode;
-                }
             }
         }
     }
