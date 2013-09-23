@@ -4,6 +4,10 @@
     var archived = (bool)ViewBag.Archived;
     ViewBag.Title = archived ? "Archived Repositories" : "Repositories";
 }
+@{
+    var cntr = (WebGitNet.SharedControllerBase)ViewContext.Controller;
+    bool WeCanCreateRepo = cntr.AreWeRepoCreator;
+}
 
 <div class="pull-right">
     @using (Html.BeginForm("Search", "Search", FormMethod.Get, new { @class = "form form-search" }))
@@ -28,7 +32,14 @@
 </table>
 
 <p>
-    <a class="btn btn-link" href="@Url.Action("Create", "Manage")"><i class="icon-plus"></i> Create a new repo</a>
+    @if (WeCanCreateRepo)
+    {
+        <a class="btn btn-link" href="@Url.Action("Create", "Manage")"><i class="icon-plus"></i> Create a new repo</a>
+    }
+    else
+    {
+        <i>Cannot create repo</i>
+    }
     @if (archived)
     {
         <a class="btn btn-link" href="@Url.Action("Index", "Browse")"><i class="icon-folder-open"></i> View current repos</a>

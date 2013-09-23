@@ -33,6 +33,8 @@ namespace WebGitNet.Controllers
 
             if (ModelState.IsValid)
             {
+                if( !AreWeRepoCreator )
+                    return new HttpStatusCodeResult(403, "You do not have permission to create repositories");
                 var invalid = Path.GetInvalidFileNameChars();
 
                 if (request.RepoName.Any(c => invalid.Contains(c)))

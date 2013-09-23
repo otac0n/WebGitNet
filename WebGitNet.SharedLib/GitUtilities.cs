@@ -89,6 +89,16 @@ namespace WebGitNet
 
         public static Process Start(string command, string workingDir, bool redirectInput = false, bool redirectError = false, Encoding outputEncoding = null)
         {
+            return StartInner(command, workingDir, redirectInput, redirectError, outputEncoding, null);
+        }
+
+        public static Process StartWithUserName(string command, string workingDir, string userName, bool redirectInput = false, bool redirectError = false, Encoding outputEncoding = null)
+        {
+            return StartInner(command, workingDir, redirectInput, redirectError, outputEncoding, userName);
+        }
+
+        private static Process StartInner(string command, string workingDir, bool redirectInput, bool redirectError, Encoding outputEncoding, string userName)
+        {
             var git = WebConfigurationManager.AppSettings["GitCommand"];
             var startInfo = new ProcessStartInfo(git, command)
             {
@@ -100,6 +110,9 @@ namespace WebGitNet
                 UseShellExecute = false,
                 CreateNoWindow = true,
             };
+
+            if (userName != null)
+                startInfo.EnvironmentVariables["USER"] = userName;
 
             Process process = null, returnProcess = null;
             IDisposable trace = null, traceClosure = null;
