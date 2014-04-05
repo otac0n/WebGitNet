@@ -79,17 +79,17 @@ namespace WebGitNet
             {
                 container.Register(Component.For<IWindsorContainer>().Instance(container));
 
-                container.Register(AllTypes.FromThisAssembly()
-                                           .BasedOn<IRouteRegisterer>()
-                                           .WithService.FromInterface());
-                container.Register(AllTypes.FromThisAssembly()
-                                           .BasedOn<IController>()
-                                           .Configure(c => c.Named(c.Implementation.Name))
-                                           .LifestyleTransient());
-                container.Register(AllTypes.From(typeof(PluginContentController))
-                                           .BasedOn<IController>()
-                                           .Configure(c => c.Named(c.Implementation.Name))
-                                           .LifestyleTransient());
+                container.Register(Classes.FromThisAssembly()
+                                          .BasedOn<IRouteRegisterer>()
+                                          .WithService.FromInterface());
+                container.Register(Classes.FromThisAssembly()
+                                          .BasedOn<IController>()
+                                          .Configure(c => c.Named(c.Implementation.Name))
+                                          .LifestyleTransient());
+                container.Register(Classes.From(typeof(PluginContentController))
+                                          .BasedOn<IController>()
+                                          .Configure(c => c.Named(c.Implementation.Name))
+                                          .LifestyleTransient());
             }
         }
     }

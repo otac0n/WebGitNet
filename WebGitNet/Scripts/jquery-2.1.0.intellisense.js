@@ -37,11 +37,11 @@ intellisense.annotate(jQuery, {
     /// <returns type="Boolean" />
   },
   'browser': function() {
-    /// <summary>Contains flags for the useragent, read from navigator.userAgent. We recommend against using this property; please try to use feature detection instead (see jQuery.support). jQuery.browser may be moved to a plugin in a future release of jQuery.</summary>
+    /// <summary>Contains flags for the useragent, read from navigator.userAgent. This property was removed in jQuery 1.9 and is available only through the jQuery.migrate plugin. Please try to use feature detection instead.</summary>
     /// <returns type="PlainObject" />
   },
   'browser.version': function() {
-    /// <summary>The version number of the rendering engine for the user's browser.</summary>
+    /// <summary>The version number of the rendering engine for the user's browser. This property was removed in jQuery 1.9 and is available only through the jQuery.migrate plugin.</summary>
     /// <returns type="String" />
   },
   'Callbacks': function() {
@@ -121,6 +121,13 @@ intellisense.annotate(jQuery, {
     ///   <returns type="Object" />
     /// </signature>
   },
+  'fn.extend': function() {
+    /// <signature>
+    ///   <summary>Merge the contents of an object onto the jQuery prototype to provide new jQuery instance methods.</summary>
+    ///   <param name="object" type="Object">An object to merge onto the jQuery prototype.</param>
+    ///   <returns type="Object" />
+    /// </signature>
+  },
   'get': function() {
     /// <signature>
     ///   <summary>Load data from the server using a HTTP GET request.</summary>
@@ -189,7 +196,7 @@ intellisense.annotate(jQuery, {
     /// <signature>
     ///   <summary>Determine whether the argument is an array.</summary>
     ///   <param name="obj" type="Object">Object to test whether or not it is an array.</param>
-    ///   <returns type="boolean" />
+    ///   <returns type="Boolean" />
     /// </signature>
   },
   'isEmptyObject': function() {
@@ -203,7 +210,7 @@ intellisense.annotate(jQuery, {
     /// <signature>
     ///   <summary>Determine if the argument passed is a Javascript function object.</summary>
     ///   <param name="obj" type="PlainObject">Object to test whether or not it is a function.</param>
-    ///   <returns type="boolean" />
+    ///   <returns type="Boolean" />
     /// </signature>
   },
   'isNumeric': function() {
@@ -224,7 +231,7 @@ intellisense.annotate(jQuery, {
     /// <signature>
     ///   <summary>Determine whether the argument is a window.</summary>
     ///   <param name="obj" type="PlainObject">Object to test whether or not it is a window.</param>
-    ///   <returns type="boolean" />
+    ///   <returns type="Boolean" />
     /// </signature>
   },
   'isXMLDoc': function() {
@@ -294,7 +301,7 @@ intellisense.annotate(jQuery, {
     /// <signature>
     ///   <summary>Parses a string into an array of DOM nodes.</summary>
     ///   <param name="data" type="String">HTML string to be parsed</param>
-    ///   <param name="context" type="Element">DOM element to serve as the context in which the HTML fragment will be created</param>
+    ///   <param name="context" type="Element">Document element to serve as the context in which the HTML fragment will be created</param>
     ///   <param name="keepScripts" type="Boolean">A Boolean indicating whether to include scripts passed in the HTML string</param>
     ///   <returns type="Array" />
     /// </signature>
@@ -318,7 +325,7 @@ intellisense.annotate(jQuery, {
     ///   <summary>Load data from the server using a HTTP POST request.</summary>
     ///   <param name="url" type="String">A string containing the URL to which the request is sent.</param>
     ///   <param name="data" type="">A plain object or string that is sent to the server with the request.</param>
-    ///   <param name="success(data, textStatus, jqXHR)" type="Function">A callback function that is executed if the request succeeds.</param>
+    ///   <param name="success(data, textStatus, jqXHR)" type="Function">A callback function that is executed if the request succeeds. Required if dataType is provided, but can be null in that case.</param>
     ///   <param name="dataType" type="String">The type of data expected from the server. Default: Intelligent Guess (xml, json, script, text, html).</param>
     ///   <returns type="jqXHR" />
     /// </signature>
@@ -715,7 +722,7 @@ intellisense.annotate(jQuery.fn, {
     /// </signature>
     /// <signature>
     ///   <summary>Add elements to the set of matched elements.</summary>
-    ///   <param name="html" type="String">An HTML fragment to add to the set of matched elements.</param>
+    ///   <param name="html" type="htmlString">An HTML fragment to add to the set of matched elements.</param>
     ///   <returns type="jQuery" />
     /// </signature>
     /// <signature>
@@ -999,7 +1006,7 @@ intellisense.annotate(jQuery.fn, {
     /// <summary>Selects all elements of type checkbox.</summary>
   },
   'checked': function() {
-    /// <summary>Matches all elements that are checked.</summary>
+    /// <summary>Matches all elements that are checked or selected.</summary>
   },
   'child': function() {
     /// <signature>
@@ -1423,9 +1430,9 @@ intellisense.annotate(jQuery.fn, {
   },
   'get': function() {
     /// <signature>
-    ///   <summary>Retrieve the DOM elements matched by the jQuery object.</summary>
+    ///   <summary>Retrieve one of the DOM elements matched by the jQuery object.</summary>
     ///   <param name="index" type="Number">A zero-based integer indicating which element to retrieve.</param>
-    ///   <returns type="Element, Array" />
+    ///   <returns type="Element" />
     /// </signature>
   },
   'gt': function() {
@@ -1566,11 +1573,11 @@ intellisense.annotate(jQuery.fn, {
   },
   'innerHeight': function() {
     /// <summary>Get the current computed height for the first element in the set of matched elements, including padding but not border.</summary>
-    /// <returns type="Integer" />
+    /// <returns type="Number" />
   },
   'innerWidth': function() {
     /// <summary>Get the current computed width for the first element in the set of matched elements, including padding but not border.</summary>
-    /// <returns type="Integer" />
+    /// <returns type="Number" />
   },
   'input': function() {
     /// <summary>Selects all input, textarea, select and button elements.</summary>
@@ -1995,14 +2002,14 @@ intellisense.annotate(jQuery.fn, {
     /// <signature>
     ///   <summary>Get the current computed height for the first element in the set of matched elements, including padding, border, and optionally margin. Returns an integer (without "px") representation of the value or null if called on an empty set of elements.</summary>
     ///   <param name="includeMargin" type="Boolean">A Boolean indicating whether to include the element's margin in the calculation.</param>
-    ///   <returns type="Integer" />
+    ///   <returns type="Number" />
     /// </signature>
   },
   'outerWidth': function() {
     /// <signature>
     ///   <summary>Get the current computed width for the first element in the set of matched elements, including padding and border.</summary>
     ///   <param name="includeMargin" type="Boolean">A Boolean indicating whether to include the element's margin in the calculation.</param>
-    ///   <returns type="Integer" />
+    ///   <returns type="Number" />
     /// </signature>
   },
   'parent': function() {

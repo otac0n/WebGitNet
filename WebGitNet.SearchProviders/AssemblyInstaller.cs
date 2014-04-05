@@ -16,9 +16,9 @@ namespace WebGitNet.SearchProviders
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            container.Register(AllTypes.FromThisAssembly()
-                                       .BasedOn<ISearchProvider>()
-                                       .WithService.FromInterface());
+            container.Register(Classes.FromThisAssembly()
+                                      .BasedOn<ISearchProvider>()
+                                      .WithService.FromInterface());
         }
     }
 }
