@@ -7,5 +7,6 @@
 Thumbs.db
 *.Publish.xml
 
+/packages/
 /WebGitNet/Plugins/
 /WebGitNet/Views/PluginCache/
