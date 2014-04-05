@@ -1,19 +1,7 @@
-# Auto detect text files and perform LF normalization
+# Auto detect text files and perform line-ending normalization
 * text=auto
 
-# Custom for Visual Studio
-*.cs     diff=csharp
-*.sln    merge=union
-*.csproj merge=union
-
-# Standard to msysgit
-*.doc  diff=astextplain
-*.DOC  diff=astextplain
-*.docx diff=astextplain
-*.DOCX diff=astextplain
-*.dot  diff=astextplain
-*.DOT  diff=astextplain
-*.pdf  diff=astextplain
-*.PDF  diff=astextplain
-*.rtf  diff=astextplain
-*.RTF  diff=astextplain
+# Add special handling for common file types.
+*.cs     text diff=csharp
+*.sln    text merge=union eol=crlf
+*.csproj text merge=union

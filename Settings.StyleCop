@@ -1,11 +1,25 @@
-<StyleCopSettings Version="4.3">
+<StyleCopSettings Version="105">
   <GlobalSettings>
     <StringProperty Name="MergeSettingsFiles">NoMerge</StringProperty>
   </GlobalSettings>
+  <Parsers>
+    <Parser ParserId="StyleCop.CSharp.CsParser">
+      <ParserSettings>
+        <CollectionProperty Name="GeneratedFileFilters">
+          <Value>\.designer\.cs$</Value>
+          <Value>\.g\.cs$</Value>
+          <Value>\.g\.i\.cs$</Value>
+          <Value>\.generated\.cs$</Value>
+          <Value>TemporaryGeneratedFile_.*\.cs$</Value>
+        </CollectionProperty>
+      </ParserSettings>
+    </Parser>
+  </Parsers>
   <Analyzers>
-    <Analyzer AnalyzerId="Microsoft.StyleCop.CSharp.NamingRules">
+    <Analyzer AnalyzerId="StyleCop.CSharp.NamingRules">
       <AnalyzerSettings>
         <CollectionProperty Name="Hungarian">
+          <Value>as</Value>
           <Value>if</Value>
           <Value>in</Value>
           <Value>is</Value>
@@ -15,7 +29,7 @@
         </CollectionProperty>
       </AnalyzerSettings>
     </Analyzer>
-    <Analyzer AnalyzerId="Microsoft.StyleCop.CSharp.DocumentationRules">
+    <Analyzer AnalyzerId="StyleCop.CSharp.DocumentationRules">
       <Rules>
         <Rule Name="DocumentationTextMustBeginWithACapitalLetter">
           <RuleSettings>
@@ -44,15 +58,22 @@
         </Rule>
       </Rules>
       <AnalyzerSettings>
+        <BooleanProperty Name="IgnorePrivates">True</BooleanProperty>
+        <BooleanProperty Name="IgnoreInternals">True</BooleanProperty>
         <StringProperty Name="CompanyName">(none)</StringProperty>
         <StringProperty Name="Copyright">Copyright © 2013 John Gietzen and the WebGit .NET Authors. All rights reserved.</StringProperty>
       </AnalyzerSettings>
     </Analyzer>
-    <Analyzer AnalyzerId="Microsoft.StyleCop.CSharp.ReadabilityRules">
+    <Analyzer AnalyzerId="StyleCop.CSharp.ReadabilityRules">
       <Rules>
         <Rule Name="DoNotUseRegions">
           <RuleSettings>
             <BooleanProperty Name="Enabled">True</BooleanProperty>
+          </RuleSettings>
+        </Rule>
+        <Rule Name="UseStringEmptyForEmptyStrings">
+          <RuleSettings>
+            <BooleanProperty Name="Enabled">False</BooleanProperty>
           </RuleSettings>
         </Rule>
       </Rules>

@@ -1,12 +1,35 @@
+# Ignore all */bin/ and */obj/ folders...
 [Bb]in/
 [Oo]bj/
-*.user
+
+# Ignore backup files.
+*.orig
+
+# Ignore all Visual Studio generated files.
 *.suo
+*.user
+*.ncb
+_ReSharper.*
 *.[Cc]ache
+*.ncrunch*
 *.docstates
+
+# Ignore all MonoDevelop generated files.
+*.userprefs
+*.pidb
+
+# Ignore all Operating System generated files.
 Thumbs.db
+
+# Ignore all Test Suite status files.
+TestResult.xml
+*.VisualState.xml
+
+# Ignore publish configuration files.
 *.Publish.xml
 
+# Ignore NuGet packages (let package restore handle these)
 /packages/
+
 /WebGitNet/Plugins/
 /WebGitNet/Views/PluginCache/
