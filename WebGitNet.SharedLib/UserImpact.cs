@@ -15,12 +15,12 @@ namespace WebGitNet
 
         public int Commits { get; set; }
 
-        public int Insertions { get; set; }
+        public DateTime Date { get; set; }
 
         public int Deletions { get; set; }
 
         public int Impact { get; set; }
 
-        public DateTime Date { get; set; }
+        public int Insertions { get; set; }
     }
 }

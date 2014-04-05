@@ -12,8 +12,8 @@ namespace WebGitNet.Models
 
     public class ImpactWeek
     {
-        public DateTime Week { get; set; }
-
         public List<UserImpact> Impacts { get; set; }
+
+        public DateTime Week { get; set; }
     }
 }

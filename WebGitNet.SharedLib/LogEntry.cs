@@ -13,17 +13,17 @@ namespace WebGitNet
 
     public class LogEntry
     {
-        private readonly string commitHash;
-        private readonly string tree;
-        private readonly IList<string> parents;
         private readonly string author;
-        private readonly string authorEmail;
         private readonly DateTimeOffset authorDate;
-        private readonly string committer;
-        private readonly string committerEmail;
-        private readonly DateTimeOffset committerDate;
-        private readonly string subject;
+        private readonly string authorEmail;
         private readonly string body;
+        private readonly string commitHash;
+        private readonly string committer;
+        private readonly DateTimeOffset committerDate;
+        private readonly string committerEmail;
+        private readonly IList<string> parents;
+        private readonly string subject;
+        private readonly string tree;
 
         public LogEntry(string commitHash, string tree, string parents, string author, string authorEmail, string authorDate, string committer, string committerEmail, string committerDate, string subject, string body)
         {
@@ -42,43 +42,11 @@ namespace WebGitNet
             this.body = body;
         }
 
-        public string CommitHash
-        {
-            get
-            {
-                return this.commitHash;
-            }
-        }
-
-        public string Tree
-        {
-            get
-            {
-                return this.tree;
-            }
-        }
-
-        public IList<string> Parents
-        {
-            get
-            {
-                return this.parents;
-            }
-        }
-
         public string Author
         {
             get
             {
                 return this.author;
-            }
-        }
-
-        public string AuthorEmail
-        {
-            get
-            {
-                return this.authorEmail;
             }
         }
 
@@ -90,19 +58,35 @@ namespace WebGitNet
             }
         }
 
+        public string AuthorEmail
+        {
+            get
+            {
+                return this.authorEmail;
+            }
+        }
+
+        public string Body
+        {
+            get
+            {
+                return this.body;
+            }
+        }
+
+        public string CommitHash
+        {
+            get
+            {
+                return this.commitHash;
+            }
+        }
+
         public string Committer
         {
             get
             {
                 return this.committer;
-            }
-        }
-
-        public string CommitterEmail
-        {
-            get
-            {
-                return this.committerEmail;
             }
         }
 
@@ -114,6 +98,22 @@ namespace WebGitNet
             }
         }
 
+        public string CommitterEmail
+        {
+            get
+            {
+                return this.committerEmail;
+            }
+        }
+
+        public IList<string> Parents
+        {
+            get
+            {
+                return this.parents;
+            }
+        }
+
         public string Subject
         {
             get
@@ -122,11 +122,11 @@ namespace WebGitNet
             }
         }
 
-        public string Body
+        public string Tree
         {
             get
             {
-                return this.body;
+                return this.tree;
             }
         }
     }

@@ -12,8 +12,8 @@ namespace WebGitNet
     public class GitErrorException : Exception
     {
         private readonly string command;
-        private readonly int exitCode;
         private readonly string errorOutput;
+        private readonly int exitCode;
 
         public GitErrorException(string command, string workingDir, int exitCode, string errorOutput)
             : base("Fatal error executing git command in '" + workingDir + "'." + Environment.NewLine + errorOutput)
@@ -28,14 +28,14 @@ namespace WebGitNet
             get { return this.command; }
         }
 
-        public int ExitCode
-        {
-            get { return this.exitCode; }
-        }
-
         public string ErrorOutput
         {
             get { return this.errorOutput; }
+        }
+
+        public int ExitCode
+        {
+            get { return this.exitCode; }
         }
     }
 }

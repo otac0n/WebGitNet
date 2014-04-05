@@ -7,7 +7,6 @@
 
 namespace WebGitNet.Controllers
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Web.Mvc;
@@ -16,35 +15,6 @@ namespace WebGitNet.Controllers
 
     public class GraphController : SharedControllerBase
     {
-        public ActionResult ViewGraph(string repo, int page = 1)
-        {
-            var resourceInfo = this.FileManager.GetResourceInfo(repo);
-            if (resourceInfo.Type != ResourceType.Directory || page < 1)
-            {
-                return HttpNotFound();
-            }
-
-            const int PageSize = 50;
-            int skip = PageSize * (page - 1);
-            var count = GitUtilities.CountCommits(resourceInfo.FullPath, allRefs: true);
-
-            if (skip >= count)
-            {
-                return HttpNotFound();
-            }
-
-            this.BreadCrumbs.Append("Browse", "Index", "Browse");
-            AddRepoBreadCrumb(repo);
-            this.BreadCrumbs.Append("Graph", "ViewGraph", "View Graph", new { repo });
-
-            var commits = GetLogEntries(resourceInfo.FullPath, skip + PageSize).Skip(skip).ToList();
-
-            ViewBag.PaginationInfo = new PaginationInfo(page, (count + PageSize - 1) / PageSize, "Graph", "ViewGraph", new { repo });
-            ViewBag.RepoName = resourceInfo.Name;
-
-            return View(commits);
-        }
-
         public List<GraphEntry> GetLogEntries(string path, int count)
         {
             var nodeColors = new Dictionary<string, int>();
@@ -74,6 +44,35 @@ namespace WebGitNet.Controllers
             }
 
             return results;
+        }
+
+        public ActionResult ViewGraph(string repo, int page = 1)
+        {
+            var resourceInfo = this.FileManager.GetResourceInfo(repo);
+            if (resourceInfo.Type != ResourceType.Directory || page < 1)
+            {
+                return HttpNotFound();
+            }
+
+            const int PageSize = 50;
+            int skip = PageSize * (page - 1);
+            var count = GitUtilities.CountCommits(resourceInfo.FullPath, allRefs: true);
+
+            if (skip >= count)
+            {
+                return HttpNotFound();
+            }
+
+            this.BreadCrumbs.Append("Browse", "Index", "Browse");
+            AddRepoBreadCrumb(repo);
+            this.BreadCrumbs.Append("Graph", "ViewGraph", "View Graph", new { repo });
+
+            var commits = GetLogEntries(resourceInfo.FullPath, skip + PageSize).Skip(skip).ToList();
+
+            ViewBag.PaginationInfo = new PaginationInfo(page, (count + PageSize - 1) / PageSize, "Graph", "ViewGraph", new { repo });
+            ViewBag.RepoName = resourceInfo.Name;
+
+            return View(commits);
         }
 
         private static int ColorNode(LogEntry entry, Dictionary<string, int> nodeColors, ref int colorNumber)
@@ -139,6 +138,20 @@ namespace WebGitNet.Controllers
             return outgoing;
         }
 
+        public class RouteRegisterer : IRouteRegisterer
+        {
+            public void RegisterRoutes(RouteCollection routes)
+            {
+                routes.MapRoute(
+                    "View Graph",
+                    "browse/{repo}/graph",
+                    new { controller = "Graph", action = "ViewGraph", routeName = "View Graph", routeIcon = "branch" });
+
+                routes.MapResource("Content/graph.css", "text/css");
+                routes.MapResource("Scripts/graph.js", "text/javascript");
+            }
+        }
+
         private class LogEntryComparer : IComparer<LogEntry>
         {
             private static readonly LogEntryComparer instance = new LogEntryComparer();
@@ -162,20 +175,6 @@ namespace WebGitNet.Controllers
                 }
 
                 return c;
-            }
-        }
-
-        public class RouteRegisterer : IRouteRegisterer
-        {
-            public void RegisterRoutes(RouteCollection routes)
-            {
-                routes.MapRoute(
-                    "View Graph",
-                    "browse/{repo}/graph",
-                    new { controller = "Graph", action = "ViewGraph", routeName = "View Graph", routeIcon = "branch" });
-
-                routes.MapResource("Content/graph.css", "text/css");
-                routes.MapResource("Scripts/graph.js", "text/javascript");
             }
         }
     }

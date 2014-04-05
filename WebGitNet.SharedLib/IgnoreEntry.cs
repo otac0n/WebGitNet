@@ -18,15 +18,13 @@ namespace WebGitNet
 
         public string CommitHash { get; set; }
 
+        public bool Negated { get; set; }
+
         public string PathGlobs
         {
             get { return this.pathGlobs; }
             set { this.pathGlobs = value; this.pathRegexes = null; }
         }
-
-        public bool Negated { get; set; }
-
-        public bool Rooted { get; set; }
 
         public ReadOnlyCollection<Regex> PathRegexes
         {
@@ -41,6 +39,8 @@ namespace WebGitNet
                 return this.pathRegexes;
             }
         }
+
+        public bool Rooted { get; set; }
 
         public bool IsMatch(string path)
         {

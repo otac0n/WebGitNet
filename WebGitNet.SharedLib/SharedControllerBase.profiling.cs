@@ -8,9 +8,6 @@
 namespace WebGitNet
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
     using System.Web.Mvc;
     using StackExchange.Profiling;
 
@@ -18,12 +15,6 @@ namespace WebGitNet
     {
         private IDisposable actionExecuting;
         private IDisposable resultExecuting;
-
-        protected override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            this.actionExecuting = MiniProfiler.StepStatic("Action Executing");
-            base.OnActionExecuting(filterContext);
-        }
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
@@ -35,10 +26,10 @@ namespace WebGitNet
             }
         }
 
-        protected override void OnResultExecuting(ResultExecutingContext filterContext)
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            this.resultExecuting = MiniProfiler.StepStatic("Result Executing");
-            base.OnResultExecuting(filterContext);
+            this.actionExecuting = MiniProfiler.StepStatic("Action Executing");
+            base.OnActionExecuting(filterContext);
         }
 
         protected override void OnResultExecuted(ResultExecutedContext filterContext)
@@ -49,6 +40,12 @@ namespace WebGitNet
                 this.resultExecuting.Dispose();
                 this.resultExecuting = null;
             }
+        }
+
+        protected override void OnResultExecuting(ResultExecutingContext filterContext)
+        {
+            this.resultExecuting = MiniProfiler.StepStatic("Result Executing");
+            base.OnResultExecuting(filterContext);
         }
     }
 }

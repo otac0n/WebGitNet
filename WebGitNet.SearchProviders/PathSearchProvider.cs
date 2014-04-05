@@ -20,6 +20,18 @@
             }
         }
 
+        public IEnumerable<SearchResult> Search(SearchQuery query, FileManager fileManager)
+        {
+            var repos = from dir in fileManager.DirectoryInfo.EnumerateDirectories()
+                        let repoInfo = GitUtilities.GetRepoInfo(dir.FullName)
+                        where repoInfo.IsGitRepo
+                        select repoInfo;
+
+            return from repo in repos
+                   from searchResult in Search(query, repo, includeRepoName: true)
+                   select searchResult;
+        }
+
         private IEnumerable<SearchResult> Search(SearchQuery query, RepoInfo repo, bool includeRepoName = false)
         {
             TreeView tree;
@@ -78,18 +90,6 @@
                     }
                 }
             }
-        }
-
-        public IEnumerable<SearchResult> Search(SearchQuery query, FileManager fileManager)
-        {
-            var repos = from dir in fileManager.DirectoryInfo.EnumerateDirectories()
-                        let repoInfo = GitUtilities.GetRepoInfo(dir.FullName)
-                        where repoInfo.IsGitRepo
-                        select repoInfo;
-
-            return from repo in repos
-                   from searchResult in Search(query, repo, includeRepoName: true)
-                   select searchResult;
         }
     }
 }

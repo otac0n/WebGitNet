@@ -14,15 +14,15 @@ namespace WebGitNet.Controllers
     public class ServiceRpcController : SharedControllerBase
     {
         [HttpPost]
-        public ActionResult UploadPack(string url)
-        {
-            return this.ServiceRpc(url, "upload-pack");
-        }
-
-        [HttpPost]
         public ActionResult ReceivePack(string url)
         {
             return this.ServiceRpc(url, "receive-pack");
+        }
+
+        [HttpPost]
+        public ActionResult UploadPack(string url)
+        {
+            return this.ServiceRpc(url, "upload-pack");
         }
 
         private ActionResult ServiceRpc(string url, string action)

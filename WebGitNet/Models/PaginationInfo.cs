@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace WebGitNet.Models
+﻿namespace WebGitNet.Models
 {
     public class PaginationInfo
     {
+        private readonly string actionName;
+        private readonly string controllerName;
         private readonly int page;
         private readonly int pageCount;
-        private readonly string controllerName;
-        private readonly string actionName;
-        private readonly object routeValues;
         private readonly string routeKey;
+        private readonly object routeValues;
 
         public PaginationInfo(int page, int pageCount, string controllerName, string actionName, object routeValues, string routeKey = "page")
         {
@@ -21,6 +17,16 @@ namespace WebGitNet.Models
             this.actionName = actionName;
             this.routeValues = routeValues;
             this.routeKey = routeKey;
+        }
+
+        public string ActionName
+        {
+            get { return this.actionName; }
+        }
+
+        public string ControllerName
+        {
+            get { return this.controllerName; }
         }
 
         public int Page
@@ -33,24 +39,14 @@ namespace WebGitNet.Models
             get { return this.pageCount; }
         }
 
-        public string ControllerName
+        public string RouteKey
         {
-            get { return this.controllerName; }
-        }
-
-        public string ActionName
-        {
-            get { return this.actionName; }
+            get { return this.routeKey; }
         }
 
         public object RouteValues
         {
             get { return this.routeValues; }
-        }
-
-        public string RouteKey
-        {
-            get { return this.routeKey; }
         }
     }
 }

@@ -15,8 +15,8 @@ namespace WebGitNet.ActionResults
 
     public class GitStreamResult : ActionResult
     {
-        private readonly string commandFormat;
         private readonly string action;
+        private readonly string commandFormat;
         private readonly string repoPath;
 
         public GitStreamResult(string commandFormat, string action, string repoPath)

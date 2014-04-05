@@ -18,7 +18,6 @@ function readValues(column, normalize) {
 }
 
 function buildGraph(div) {
-
     var labels = readValues("Author");
     var commits = readValues("Commits", function (a) { return +a; });
     var insertions = readValues("Insertions", function (a) { return +a; });

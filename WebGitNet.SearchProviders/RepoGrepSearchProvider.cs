@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Search;
     using System.Threading.Tasks;
+    using Search;
 
     public class RepoGrepSearchProvider : ISearchProvider
     {
@@ -18,6 +18,18 @@
             {
                 return Task.Factory.StartNew(() => (IList<SearchResult>)Search(query, fileManager).Skip(skip).Take(count).ToList());
             }
+        }
+
+        public IEnumerable<SearchResult> Search(SearchQuery query, FileManager fileManager)
+        {
+            var repos = from dir in fileManager.DirectoryInfo.EnumerateDirectories()
+                        let repoInfo = GitUtilities.GetRepoInfo(dir.FullName)
+                        where repoInfo.IsGitRepo
+                        select repoInfo;
+
+            return from repo in repos
+                   from searchResult in Search(query, repo, includeRepoName: true)
+                   select searchResult;
         }
 
         private IEnumerable<SearchResult> Search(SearchQuery query, RepoInfo repo, bool includeRepoName = false)
@@ -46,18 +58,6 @@
                        RouteValues = new { repo = repo.Name, @object = "HEAD", path = g.Key },
                        Lines = g.ToList(),
                    };
-        }
-
-        public IEnumerable<SearchResult> Search(SearchQuery query, FileManager fileManager)
-        {
-            var repos = from dir in fileManager.DirectoryInfo.EnumerateDirectories()
-                        let repoInfo = GitUtilities.GetRepoInfo(dir.FullName)
-                        where repoInfo.IsGitRepo
-                        select repoInfo;
-
-            return from repo in repos
-                   from searchResult in Search(query, repo, includeRepoName: true)
-                   select searchResult;
         }
     }
 }

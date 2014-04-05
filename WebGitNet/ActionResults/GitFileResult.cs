@@ -11,10 +11,10 @@ namespace WebGitNet.ActionResults
 
     public class GitFileResult : ActionResult
     {
+        private readonly string contentType;
+        private readonly string path;
         private readonly string repoPath;
         private readonly string tree;
-        private readonly string path;
-        private readonly string contentType;
 
         public GitFileResult(string repoPath, string tree, string path, string contentType = null)
         {

@@ -77,9 +77,9 @@ namespace WebGitNet
 
         public sealed class BreadCrumb
         {
-            private readonly string name;
-            private readonly string controller;
             private readonly string action;
+            private readonly string controller;
+            private readonly string name;
             private readonly object routeValues;
 
             public BreadCrumb(string name, string controller, string action, object routeValues)
@@ -108,11 +108,11 @@ namespace WebGitNet
                 this.routeValues = routeValues;
             }
 
-            public string Name
+            public string Action
             {
                 get
                 {
-                    return this.name;
+                    return this.action;
                 }
             }
 
@@ -124,11 +124,11 @@ namespace WebGitNet
                 }
             }
 
-            public string Action
+            public string Name
             {
                 get
                 {
-                    return this.action;
+                    return this.name;
                 }
             }
 

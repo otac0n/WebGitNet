@@ -54,14 +54,14 @@ namespace WebGitNet.ActionResults
             response.BinaryWrite(commandData);
         }
 
-        private static byte[] PacketFormat(string packet)
-        {
-            return GitUtilities.DefaultEncoding.GetBytes((packet.Length + 4).ToString("X").ToLower().PadLeft(4, '0') + packet);
-        }
-
         private static byte[] PacketFlush()
         {
             return new[] { (byte)'0', (byte)'0', (byte)'0', (byte)'0' };
+        }
+
+        private static byte[] PacketFormat(string packet)
+        {
+            return GitUtilities.DefaultEncoding.GetBytes((packet.Length + 4).ToString("X").ToLower().PadLeft(4, '0') + packet);
         }
     }
 }

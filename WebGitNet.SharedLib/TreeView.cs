@@ -10,14 +10,13 @@ namespace WebGitNet
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
-    using System;
 
     public class TreeView
     {
-        private readonly string tree;
-        private readonly string path;
         private readonly ReadOnlyCollection<ObjectInfo> objects;
+        private readonly string path;
         private readonly IDictionary<string, SubmoduleInfo> submodules;
+        private readonly string tree;
 
         public TreeView(string tree, string path, IEnumerable<ObjectInfo> objects, IDictionary<string, SubmoduleInfo> submodules)
         {
@@ -35,9 +34,9 @@ namespace WebGitNet
             this.submodules = submodules;
         }
 
-        public string Tree
+        public IList<ObjectInfo> Objects
         {
-            get { return this.tree; }
+            get { return this.objects; }
         }
 
         public string Path
@@ -45,14 +44,14 @@ namespace WebGitNet
             get { return this.path; }
         }
 
-        public IList<ObjectInfo> Objects
-        {
-            get { return this.objects; }
-        }
-
         public IDictionary<string, SubmoduleInfo> Submodules
         {
-          get { return this.submodules; }
+            get { return this.submodules; }
+        }
+
+        public string Tree
+        {
+            get { return this.tree; }
         }
     }
 }

@@ -11,8 +11,8 @@ namespace WebGitNet
 
     public class FileManager
     {
-        private readonly string rootPath;
         private readonly DirectoryInfo dirInfo;
+        private readonly string rootPath;
 
         public FileManager(string path)
         {

@@ -11,14 +11,14 @@ namespace WebGitNet
 
     public class ResourceInfo
     {
-        public ResourceType Type { get; set; }
+        public FileSystemInfo FileSystemInfo { get; set; }
+
+        public string FullPath { get; set; }
 
         public string LocalPath { get; set; }
 
         public string Name { get; set; }
 
-        public string FullPath { get; set; }
-
-        public FileSystemInfo FileSystemInfo { get; set; }
+        public ResourceType Type { get; set; }
     }
 }

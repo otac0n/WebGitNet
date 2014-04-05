@@ -18,30 +18,6 @@ namespace WebGitNet
 
     public static class HtmlHelpers
     {
-        public static MvcHtmlString Markdown(this HtmlHelper html, string markdown)
-        {
-            var markdownParser = new Markdown(true);
-
-            return new MvcHtmlString(markdownParser.Transform(markdown));
-        }
-
-        public static MvcHtmlString Gravatar(this HtmlHelper html, string email, string name, int size = 72)
-        {
-            var fallBack = WebConfigurationManager.AppSettings["GravatarFallBack"];
-            if (string.IsNullOrEmpty(fallBack))
-            {
-                fallBack = "mm";
-            }
-
-            var imgUrl = string.Format(
-                "https://secure.gravatar.com/avatar/{0}.png?s={1}&d={2}&r=g",
-                HashString(email),
-                size,
-                fallBack);
-
-            return new MvcHtmlString(string.Format("<img alt=\"\" width=\"{0}\" height=\"{0}\" title=\"{1}\" src=\"{2}\" />", size, html.AttributeEncode(name), html.AttributeEncode(imgUrl)));
-        }
-
         public static IEnumerable<Route> FindSatisfiableRoutes(this HtmlHelper html, object routeData = null)
         {
             var routes = html.RouteCollection;
@@ -57,6 +33,23 @@ namespace WebGitNet
                    where routed != null
                    orderby name
                    select route;
+        }
+
+        public static string GetIcon(this Route route)
+        {
+            if (route == null || route.Defaults == null)
+            {
+                return null;
+            }
+
+            var routeIcon = route.Defaults["routeIcon"];
+
+            if (routeIcon == null)
+            {
+                return null;
+            }
+
+            return routeIcon.ToString();
         }
 
         public static string GetName(this Route route)
@@ -76,21 +69,28 @@ namespace WebGitNet
             return routeName.ToString();
         }
 
-        public static string GetIcon(this Route route)
+        public static MvcHtmlString Gravatar(this HtmlHelper html, string email, string name, int size = 72)
         {
-            if (route == null || route.Defaults == null)
+            var fallBack = WebConfigurationManager.AppSettings["GravatarFallBack"];
+            if (string.IsNullOrEmpty(fallBack))
             {
-                return null;
+                fallBack = "mm";
             }
 
-            var routeIcon = route.Defaults["routeIcon"];
+            var imgUrl = string.Format(
+                "https://secure.gravatar.com/avatar/{0}.png?s={1}&d={2}&r=g",
+                HashString(email),
+                size,
+                fallBack);
 
-            if (routeIcon == null)
-            {
-                return null;
-            }
+            return new MvcHtmlString(string.Format("<img alt=\"\" width=\"{0}\" height=\"{0}\" title=\"{1}\" src=\"{2}\" />", size, html.AttributeEncode(name), html.AttributeEncode(imgUrl)));
+        }
 
-            return routeIcon.ToString();
+        public static MvcHtmlString Markdown(this HtmlHelper html, string markdown)
+        {
+            var markdownParser = new Markdown(true);
+
+            return new MvcHtmlString(markdownParser.Transform(markdown));
         }
 
         private static string HashString(string value)

@@ -33,117 +33,6 @@ namespace WebGitNet.Controllers
             return View(repos);
         }
 
-        public ActionResult ViewRepo(string repo)
-        {
-            var resourceInfo = this.FileManager.GetResourceInfo(repo);
-            if (resourceInfo.Type != ResourceType.Directory)
-            {
-                return HttpNotFound();
-            }
-
-            var repoInfo = GitUtilities.GetRepoInfo(resourceInfo.FullPath);
-            if (!repoInfo.IsGitRepo)
-            {
-                return HttpNotFound();
-            }
-
-            AddRepoBreadCrumb(repo);
-
-            var lastCommit = GitUtilities.GetLogEntries(resourceInfo.FullPath, 1).FirstOrDefault();
-
-            ViewBag.RepoInfo = GitUtilities.GetRepoInfo(resourceInfo.FullPath);
-            ViewBag.LastCommit = lastCommit;
-            ViewBag.CurrentTree = lastCommit != null ? GitUtilities.GetTreeInfo(resourceInfo.FullPath, "HEAD") : null;
-            ViewBag.Refs = GitUtilities.GetAllRefs(resourceInfo.FullPath);
-
-            return View();
-        }
-
-        public ActionResult ViewCommit(string repo, string @object)
-        {
-            var resourceInfo = this.FileManager.GetResourceInfo(repo);
-            if (resourceInfo.Type != ResourceType.Directory)
-            {
-                return HttpNotFound();
-            }
-
-            AddRepoBreadCrumb(repo);
-            this.BreadCrumbs.Append("Browse", "ViewCommit", @object, new { repo, @object });
-
-            var commit = GitUtilities.GetLogEntries(resourceInfo.FullPath, 1, 0, @object).FirstOrDefault();
-            if (commit == null)
-            {
-                return HttpNotFound();
-            }
-
-            var diffs = GitUtilities.GetDiffInfo(resourceInfo.FullPath, commit.Parents.FirstOrDefault() ?? GitUtilities.EmptyTreeHash, commit.CommitHash);
-
-            ViewBag.RepoName = resourceInfo.Name;
-            ViewBag.CommitLogEntry = commit;
-
-            return View(diffs);
-        }
-
-        public ActionResult ViewCommits(string repo, string @object = null, int page = 1)
-        {
-            var resourceInfo = this.FileManager.GetResourceInfo(repo);
-            if (resourceInfo.Type != ResourceType.Directory || page < 1)
-            {
-                return HttpNotFound();
-            }
-
-            const int PageSize = 20;
-            int skip = PageSize * (page - 1);
-            var count = GitUtilities.CountCommits(resourceInfo.FullPath, @object);
-
-            if (skip >= count)
-            {
-                return HttpNotFound();
-            }
-
-            AddRepoBreadCrumb(repo);
-            this.BreadCrumbs.Append("Browse", "ViewCommits", "Commit Log", new { repo, @object });
-
-            var commits = GitUtilities.GetLogEntries(resourceInfo.FullPath, PageSize, skip, @object);
-            var branches = GitUtilities.GetAllRefs(resourceInfo.FullPath).Where(r => r.RefType == RefType.Branch).ToList();
-
-            ViewBag.PaginationInfo = new PaginationInfo(page, (count + PageSize - 1) / PageSize, "Browse", "ViewCommits", new { repo });
-            ViewBag.RepoName = resourceInfo.Name;
-            ViewBag.Object = @object ?? "HEAD";
-            ViewBag.Branches = branches;
-
-            return View(commits);
-        }
-
-        public ActionResult ViewTree(string repo, string @object, string path)
-        {
-            var resourceInfo = this.FileManager.GetResourceInfo(repo);
-            if (resourceInfo.Type != ResourceType.Directory)
-            {
-                return HttpNotFound();
-            }
-
-            TreeView items;
-            try
-            {
-                items = GitUtilities.GetTreeInfo(resourceInfo.FullPath, @object, path);
-            }
-            catch (GitErrorException)
-            {
-                return HttpNotFound();
-            }
-
-            AddRepoBreadCrumb(repo);
-            this.BreadCrumbs.Append("Browse", "ViewTree", @object, new { repo, @object, path = string.Empty });
-            this.BreadCrumbs.Append("Browse", "ViewTree", BreadCrumbTrail.EnumeratePath(path), p => p.Key, p => new { repo, @object, path = p.Value });
-
-            ViewBag.RepoName = resourceInfo.Name;
-            ViewBag.Tree = @object;
-            ViewBag.Path = path ?? string.Empty;
-
-            return View(items);
-        }
-
         public ActionResult ViewBlob(string repo, string @object, string path, bool raw = false)
         {
             var resourceInfo = this.FileManager.GetResourceInfo(repo);
@@ -202,6 +91,117 @@ namespace WebGitNet.Controllers
             }
 
             return View((object)model);
+        }
+
+        public ActionResult ViewCommit(string repo, string @object)
+        {
+            var resourceInfo = this.FileManager.GetResourceInfo(repo);
+            if (resourceInfo.Type != ResourceType.Directory)
+            {
+                return HttpNotFound();
+            }
+
+            AddRepoBreadCrumb(repo);
+            this.BreadCrumbs.Append("Browse", "ViewCommit", @object, new { repo, @object });
+
+            var commit = GitUtilities.GetLogEntries(resourceInfo.FullPath, 1, 0, @object).FirstOrDefault();
+            if (commit == null)
+            {
+                return HttpNotFound();
+            }
+
+            var diffs = GitUtilities.GetDiffInfo(resourceInfo.FullPath, commit.Parents.FirstOrDefault() ?? GitUtilities.EmptyTreeHash, commit.CommitHash);
+
+            ViewBag.RepoName = resourceInfo.Name;
+            ViewBag.CommitLogEntry = commit;
+
+            return View(diffs);
+        }
+
+        public ActionResult ViewCommits(string repo, string @object = null, int page = 1)
+        {
+            var resourceInfo = this.FileManager.GetResourceInfo(repo);
+            if (resourceInfo.Type != ResourceType.Directory || page < 1)
+            {
+                return HttpNotFound();
+            }
+
+            const int PageSize = 20;
+            int skip = PageSize * (page - 1);
+            var count = GitUtilities.CountCommits(resourceInfo.FullPath, @object);
+
+            if (skip >= count)
+            {
+                return HttpNotFound();
+            }
+
+            AddRepoBreadCrumb(repo);
+            this.BreadCrumbs.Append("Browse", "ViewCommits", "Commit Log", new { repo, @object });
+
+            var commits = GitUtilities.GetLogEntries(resourceInfo.FullPath, PageSize, skip, @object);
+            var branches = GitUtilities.GetAllRefs(resourceInfo.FullPath).Where(r => r.RefType == RefType.Branch).ToList();
+
+            ViewBag.PaginationInfo = new PaginationInfo(page, (count + PageSize - 1) / PageSize, "Browse", "ViewCommits", new { repo });
+            ViewBag.RepoName = resourceInfo.Name;
+            ViewBag.Object = @object ?? "HEAD";
+            ViewBag.Branches = branches;
+
+            return View(commits);
+        }
+
+        public ActionResult ViewRepo(string repo)
+        {
+            var resourceInfo = this.FileManager.GetResourceInfo(repo);
+            if (resourceInfo.Type != ResourceType.Directory)
+            {
+                return HttpNotFound();
+            }
+
+            var repoInfo = GitUtilities.GetRepoInfo(resourceInfo.FullPath);
+            if (!repoInfo.IsGitRepo)
+            {
+                return HttpNotFound();
+            }
+
+            AddRepoBreadCrumb(repo);
+
+            var lastCommit = GitUtilities.GetLogEntries(resourceInfo.FullPath, 1).FirstOrDefault();
+
+            ViewBag.RepoInfo = GitUtilities.GetRepoInfo(resourceInfo.FullPath);
+            ViewBag.LastCommit = lastCommit;
+            ViewBag.CurrentTree = lastCommit != null ? GitUtilities.GetTreeInfo(resourceInfo.FullPath, "HEAD") : null;
+            ViewBag.Refs = GitUtilities.GetAllRefs(resourceInfo.FullPath);
+
+            return View();
+        }
+
+        public ActionResult ViewTree(string repo, string @object, string path)
+        {
+            var resourceInfo = this.FileManager.GetResourceInfo(repo);
+            if (resourceInfo.Type != ResourceType.Directory)
+            {
+                return HttpNotFound();
+            }
+
+            TreeView items;
+            try
+            {
+                items = GitUtilities.GetTreeInfo(resourceInfo.FullPath, @object, path);
+            }
+            catch (GitErrorException)
+            {
+                return HttpNotFound();
+            }
+
+            AddRepoBreadCrumb(repo);
+            this.BreadCrumbs.Append("Browse", "ViewTree", @object, new { repo, @object, path = string.Empty });
+            this.BreadCrumbs.Append("Browse", "ViewTree", BreadCrumbTrail.EnumeratePath(path), p => p.Key, p => new { repo, @object, path = p.Value });
+
+            ViewBag.RepoName = resourceInfo.Name;
+            ViewBag.Tree = @object;
+            ViewBag.Path = path ?? string.Empty;
+
+            return View(items);
         }
 
         public class RouteRegisterer : IRouteRegisterer

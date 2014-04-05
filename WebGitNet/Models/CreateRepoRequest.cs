@@ -11,9 +11,9 @@ namespace WebGitNet.Models
 
     public class CreateRepoRequest
     {
+        public string Description { get; set; }
+
         [Required]
         public string RepoName { get; set; }
-
-        public string Description { get; set; }
     }
 }

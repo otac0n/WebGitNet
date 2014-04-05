@@ -14,14 +14,14 @@ namespace WebGitNet
 
     public class DiffInfo
     {
+        private readonly bool added;
+        private readonly bool copied;
+        private readonly bool deleted;
+        private readonly string destinationFile;
         private readonly IList<string> headers;
         private readonly IList<string> lines;
-        private readonly string sourceFile;
-        private readonly string destinationFile;
         private readonly bool renamed;
-        private readonly bool copied;
-        private readonly bool added;
-        private readonly bool deleted;
+        private readonly string sourceFile;
 
         public DiffInfo(IList<string> lines)
         {
@@ -48,6 +48,26 @@ namespace WebGitNet
             this.deleted = this.headers.Any(h => h.StartsWith("deleted file"));
         }
 
+        public bool Added
+        {
+            get { return this.added; }
+        }
+
+        public bool Copied
+        {
+            get { return this.copied; }
+        }
+
+        public bool Deleted
+        {
+            get { return this.deleted; }
+        }
+
+        public string DestinationFile
+        {
+            get { return this.destinationFile; }
+        }
+
         public IList<string> Headers
         {
             get { return this.headers; }
@@ -58,34 +78,14 @@ namespace WebGitNet
             get { return this.lines; }
         }
 
-        public string SourceFile
-        {
-            get { return this.sourceFile; }
-        }
-
-        public string DestinationFile
-        {
-            get { return this.destinationFile; }
-        }
-
         public bool Renamed
         {
             get { return this.renamed; }
         }
 
-        public bool Copied
+        public string SourceFile
         {
-            get { return this.copied; }
-        }
-
-        public bool Added
-        {
-            get { return this.added; }
-        }
-
-        public bool Deleted
-        {
-            get { return this.deleted; }
+            get { return this.sourceFile; }
         }
     }
 }

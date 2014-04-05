@@ -11,14 +11,14 @@ namespace WebGitNet.Search
 
     public class SearchResult
     {
-        public string LinkText { get; set; }
+        public string ActionName { get; set; }
 
         public string ControllerName { get; set; }
 
-        public string ActionName { get; set; }
+        public IList<SearchLine> Lines { get; set; }
+
+        public string LinkText { get; set; }
 
         public object RouteValues { get; set; }
-
-        public IList<SearchLine> Lines { get; set; }
     }
 }

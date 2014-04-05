@@ -23,11 +23,6 @@ namespace WebGitNet
             this.kernel = kernel;
         }
 
-        public void ReleaseController(IController controller)
-        {
-            kernel.ReleaseComponent(controller);
-        }
-
         public IController CreateController(RequestContext requestContext, string controllerName)
         {
             controllerName =
@@ -46,6 +41,11 @@ namespace WebGitNet
         public SessionStateBehavior GetControllerSessionBehavior(RequestContext requestContext, string controllerName)
         {
             return SessionStateBehavior.Default;
+        }
+
+        public void ReleaseController(IController controller)
+        {
+            kernel.ReleaseComponent(controller);
         }
     }
 }

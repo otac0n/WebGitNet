@@ -7,35 +7,12 @@
 
 namespace WebGitNet
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+    using System.Reflection;
     using System.Web.Mvc;
     using System.Web.Routing;
-    using System.Reflection;
 
     public static class RouteCollectionHelpers
     {
-        public static void MapResource(this RouteCollection routes, string resourcePath, string contentType)
-        {
-            var assembly = Assembly.GetCallingAssembly();
-            var assemblyName = assembly.GetName().Name;
-            var resourceName = assembly.GetResourceName(resourcePath);
-
-            routes.MapRoute(
-                assemblyName + " " + resourcePath,
-                resourcePath,
-                new
-                {
-                    assemblyName,
-                    resourceName,
-                    contentType,
-                    controller = "PluginContent",
-                    action = "Resource"
-                });
-        }
-
         public static string GetResourceName(this Assembly assembly, string virtualPath)
         {
             if (string.IsNullOrEmpty(virtualPath))
@@ -57,6 +34,25 @@ namespace WebGitNet
             return (assemblyName + "." + virtualPath)
                 .Replace(@"/", ".")
                 .Replace(@"\", ".");
+        }
+
+        public static void MapResource(this RouteCollection routes, string resourcePath, string contentType)
+        {
+            var assembly = Assembly.GetCallingAssembly();
+            var assemblyName = assembly.GetName().Name;
+            var resourceName = assembly.GetResourceName(resourcePath);
+
+            routes.MapRoute(
+                assemblyName + " " + resourcePath,
+                resourcePath,
+                new
+                {
+                    assemblyName,
+                    resourceName,
+                    contentType,
+                    controller = "PluginContent",
+                    action = "Resource"
+                });
         }
     }
 }

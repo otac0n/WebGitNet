@@ -40,6 +40,11 @@ namespace WebGitNet
                 new { controller = "Browse", action = "Index" });
         }
 
+        protected void Application_End()
+        {
+            container.Dispose();
+        }
+
         protected void Application_Start()
         {
             Bootstrap();
@@ -54,11 +59,6 @@ namespace WebGitNet
             ViewEngines.Engines.Add(new ResourceRazorViewEngine());
 
             HostingEnvironment.RegisterVirtualPathProvider(new ResourceVirtualPathProvider());
-        }
-
-        protected void Application_End()
-        {
-            container.Dispose();
         }
 
         private static void Bootstrap()

@@ -12,8 +12,8 @@ namespace WebGitNet
 
     public abstract partial class SharedControllerBase : Controller
     {
-        private readonly FileManager fileManager;
         private readonly BreadCrumbTrail breadCrumbs;
+        private readonly FileManager fileManager;
 
         public SharedControllerBase()
         {
@@ -25,9 +25,12 @@ namespace WebGitNet
             ViewBag.BreadCrumbs = this.breadCrumbs;
         }
 
-        protected void AddRepoBreadCrumb(string repo)
+        public BreadCrumbTrail BreadCrumbs
         {
-            this.BreadCrumbs.Append("Browse", "ViewRepo", repo, new { repo });
+            get
+            {
+                return this.breadCrumbs;
+            }
         }
 
         public FileManager FileManager
@@ -38,12 +41,9 @@ namespace WebGitNet
             }
         }
 
-        public BreadCrumbTrail BreadCrumbs
+        protected void AddRepoBreadCrumb(string repo)
         {
-            get
-            {
-                return this.breadCrumbs;
-            }
+            this.BreadCrumbs.Append("Browse", "ViewRepo", repo, new { repo });
         }
     }
 }

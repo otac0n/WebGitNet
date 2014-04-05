@@ -54,12 +54,12 @@ namespace WebGitNet
             throw new ArgumentException("The ref path specified is not recognized.", "refPath");
         }
 
-        public string ShaId { get; private set; }
-
         public string Name { get; private set; }
 
         public string RefPath { get; private set; }
 
         public RefType RefType { get; private set; }
+
+        public string ShaId { get; private set; }
     }
 }

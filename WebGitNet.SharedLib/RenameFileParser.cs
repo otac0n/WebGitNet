@@ -14,18 +14,6 @@ namespace WebGitNet
 
     public static class RenameFileParser
     {
-        private enum Terminal
-        {
-            Field,
-            SearchType,
-            Assignment,
-            Seperator,
-            Definition,
-            String,
-            Whitespace,
-            EndOfLine,
-        }
-
         private static readonly Dictionary<Terminal, string> terminals = new Dictionary<Terminal, string>
         {
             { Terminal.Field, "name|email" },
@@ -38,9 +26,37 @@ namespace WebGitNet
             { Terminal.EndOfLine, @"$" },
         };
 
+        private enum Terminal
+        {
+            Field,
+            SearchType,
+            Assignment,
+            Seperator,
+            Definition,
+            String,
+            Whitespace,
+            EndOfLine,
+        }
+
         public static List<RenameEntry> Parse(string[] lines)
         {
             return lines.Select(l => Parse(l)).Where(l => l != null).ToList();
+        }
+
+        private static string Accept(Terminal terminal, ref string subject)
+        {
+            var regex = terminals[terminal];
+
+            var match = Regex.Match(subject, "^" + regex, RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                subject = subject.Substring(match.Length);
+                return match.Value;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private static RenameEntry Parse(string line)
@@ -129,22 +145,6 @@ namespace WebGitNet
                 Match = match,
                 Destinations = destinations,
             };
-        }
-
-        private static string Accept(Terminal terminal, ref string subject)
-        {
-            var regex = terminals[terminal];
-
-            var match = Regex.Match(subject, "^" + regex, RegexOptions.IgnoreCase);
-            if (match.Success)
-            {
-                subject = subject.Substring(match.Length);
-                return match.Value;
-            }
-            else
-            {
-                return null;
-            }
         }
 
         private static string Require(Terminal terminal, ref string subject)

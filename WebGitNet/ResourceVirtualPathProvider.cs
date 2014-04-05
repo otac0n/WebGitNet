@@ -1,15 +1,13 @@
 ﻿namespace WebGitNet
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
-    using System.Web.Mvc;
-    using System.Web.Hosting;
-    using System.Web.Caching;
     using System.Collections;
-    using System.Reflection;
     using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Web;
+    using System.Web.Caching;
+    using System.Web.Hosting;
 
     public class ResourceVirtualPathProvider : VirtualPathProvider
     {
@@ -19,21 +17,6 @@
         {
             var isPlugin = IsPluginPath(virtualPath);
             return isPlugin || base.FileExists(virtualPath);
-        }
-
-        public override VirtualFile GetFile(string virtualPath)
-        {
-            string resourceName;
-            var assembly = FindAssembly(virtualPath, out resourceName);
-
-            if (assembly != null)
-            {
-                return new AssemblyResourceVirtualFile(virtualPath, assembly, resourceName);
-            }
-            else
-            {
-                return base.GetFile(virtualPath);
-            }
         }
 
         public override CacheDependency GetCacheDependency(string virtualPath, IEnumerable virtualPathDependencies, DateTime utcStart)
@@ -49,11 +32,19 @@
             }
         }
 
-        private bool IsPluginPath(string virtualPath)
+        public override VirtualFile GetFile(string virtualPath)
         {
             string resourceName;
             var assembly = FindAssembly(virtualPath, out resourceName);
-            return assembly != null;
+
+            if (assembly != null)
+            {
+                return new AssemblyResourceVirtualFile(virtualPath, assembly, resourceName);
+            }
+            else
+            {
+                return base.GetFile(virtualPath);
+            }
         }
 
         private Assembly FindAssembly(string virtualPath, out string resourceName)
@@ -90,6 +81,13 @@
             {
                 return null;
             }
+        }
+
+        private bool IsPluginPath(string virtualPath)
+        {
+            string resourceName;
+            var assembly = FindAssembly(virtualPath, out resourceName);
+            return assembly != null;
         }
 
         private class AssemblyResourceVirtualFile : VirtualFile

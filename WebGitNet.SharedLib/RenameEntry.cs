@@ -23,13 +23,13 @@ namespace WebGitNet
 
     public class RenameEntry
     {
-        public RenameStyle RenameStyle { get; set; }
-
-        public RenameField SourceField { get; set; }
+        public Destination[] Destinations { get; set; }
 
         public string Match { get; set; }
 
-        public Destination[] Destinations { get; set; }
+        public RenameStyle RenameStyle { get; set; }
+
+        public RenameField SourceField { get; set; }
 
         public class Destination
         {
