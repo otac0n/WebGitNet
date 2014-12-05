@@ -49,6 +49,8 @@ namespace WebGitNet.ActionResults
             var request = context.HttpContext.Request;
             var realRequest = System.Web.HttpContext.Current.Request;
 
+            bool receivePack = action == "receive-pack";
+
             response.ContentType = "application/x-git-" + this.action + "-result";
             response.BufferOutput = false;
 
@@ -96,12 +98,25 @@ namespace WebGitNet.ActionResults
                         copy = new byte[writeCount];
                     }
 
-                    for (int i = 0; i < writeCount; i++)
-                    {
-                        copy[i] = writeBuffer[i];
-                    }
+                    //Copy to smaller array because BinairyWrite usses the length of the array.
+                    Array.Copy(writeBuffer, copy, writeCount);
 
                     response.BinaryWrite(copy);
+
+                    //LB20140922 If uploadpack en responce lf00000000 then end of data so stop. 
+                    //When using Subgit the process kees on running for a longer peiod till everuthing is pushed into Subversion. Top prevent this wait break;
+                    //When not using Subgit this is still no problem because these bytes mark the end of the pack according to the protocol.
+                    if (receivePack && writeCount > 8 &&
+                        copy[writeCount - 9] == 10 &&
+                        copy[writeCount - 8] == 48 &&
+                        copy[writeCount - 7] == 48 &&
+                        copy[writeCount - 6] == 48 &&
+                        copy[writeCount - 5] == 48 &&
+                        copy[writeCount - 4] == 48 &&
+                        copy[writeCount - 3] == 48 &&
+                        copy[writeCount - 2] == 48 &&
+                        copy[writeCount - 1] == 48)
+                        break;
                 }
 
                 readThread.Join();

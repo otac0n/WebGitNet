@@ -17,6 +17,7 @@ namespace WebGitNet
         RemoteBranch,
         Stash,
         Notes,
+        Svn
     }
 
     public class GitRef
@@ -27,6 +28,7 @@ namespace WebGitNet
             { RefType.Tag,    "refs/tags" },
             { RefType.RemoteBranch, "refs/remotes" },
             { RefType.Notes, "refs/notes" },
+            { RefType.Svn, "refs/svn" },//Reference created by subgit. Fot internal use. So when found skip.
         };
 
         public GitRef(string shaId, string refPath)
@@ -36,6 +38,7 @@ namespace WebGitNet
 
             foreach (var prefix in prefixes)
             {
+                //Skip for internal subgit use
                 if (refPath.StartsWith(prefix.Value))
                 {
                     this.Name = refPath.Substring(prefix.Value.Length + 1);
