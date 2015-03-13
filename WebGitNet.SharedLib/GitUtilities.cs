@@ -243,6 +243,42 @@ namespace WebGitNet
                     select parseResults(r)).ToList();
         }
 
+        public static List<LogEntry> GetLogEntriesAdvanced(string repoPath, string repoAuthor, int count, int skip = 0, string @object = null, bool allRefs = false)
+        {
+            if (count < 0)
+            {
+                throw new ArgumentOutOfRangeException("count");
+            }
+
+            if (skip < 0)
+            {
+                throw new ArgumentOutOfRangeException("skip");
+            }
+
+            @object = @object ?? "HEAD";
+            var results = Execute(string.Format("log -n {0} --encoding=UTF-8 --author=\"{3}\" -z --date-order --format=\"format:commit %H%ntree %T%nparent %P%nauthor %an%nauthor mail %ae%nauthor date %aD%ncommitter %cn%ncommitter mail %ce%ncommitter date %cD%nsubject %s%%b%n%x00\"{1} {2}", count + skip, allRefs ? " --all" : "", Q(@object), repoAuthor), repoPath, Encoding.UTF8);
+
+            Func<string, LogEntry> parseResults = result =>
+            {
+                var commit = ParseResultLine("commit ", result, out result);
+                var tree = ParseResultLine("tree ", result, out result);
+                var parent = ParseResultLine("parent ", result, out result);
+                var author = ParseResultLine("author ", result, out result);
+                var authorEmail = ParseResultLine("author mail ", result, out result);
+                var authorDate = ParseResultLine("author date ", result, out result);
+                var committer = ParseResultLine("committer ", result, out result);
+                var committerEmail = ParseResultLine("committer mail ", result, out result);
+                var committerDate = ParseResultLine("committer date ", result, out result);
+                var subject = ParseResultLine("subject ", result, out result);
+                var body = result;
+
+                return new LogEntry(commit, tree, parent, author, authorEmail, authorDate, committer, committerEmail, committerDate, subject, body);
+            };
+
+            return (from r in results.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries).Skip(skip)
+                    select parseResults(r)).ToList();
+        }
+
         public static RepoInfo GetRepoInfo(string repoPath)
         {
             var descrPath = Path.Combine(repoPath, "description");
