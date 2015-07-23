@@ -23,6 +23,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGitNet.SharedLib", "WebGitNet.SharedLib\WebGitNet.SharedLib.csproj", "{F00879C2-B2F3-4202-B1BF-12A875AF4F7B}"
 EndProject
 Global
+	GlobalSection(CodealikeProperties) = postSolution
+		SolutionGuid = 8151b6c3-93c1-47c6-8f9c-533dc883a853
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
