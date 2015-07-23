@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGitNet.SearchProviders",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGitNet.SharedLib", "WebGitNet.SharedLib\WebGitNet.SharedLib.csproj", "{F00879C2-B2F3-4202-B1BF-12A875AF4F7B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGitNet.SharedLib.Tests", "WebGitNet.SharedLib.Tests\WebGitNet.SharedLib.Tests.csproj", "{C4491FF4-D782-4351-A907-60E859EC623E}"
+EndProject
 Global
 	GlobalSection(CodealikeProperties) = postSolution
 		SolutionGuid = 8151b6c3-93c1-47c6-8f9c-533dc883a853
@@ -43,6 +45,10 @@ Global
 		{F00879C2-B2F3-4202-B1BF-12A875AF4F7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F00879C2-B2F3-4202-B1BF-12A875AF4F7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F00879C2-B2F3-4202-B1BF-12A875AF4F7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4491FF4-D782-4351-A907-60E859EC623E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4491FF4-D782-4351-A907-60E859EC623E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4491FF4-D782-4351-A907-60E859EC623E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4491FF4-D782-4351-A907-60E859EC623E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

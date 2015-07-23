@@ -8,6 +8,7 @@
 namespace WebGitNet
 {
     using System.IO;
+    using System.Web;
 
     public class FileManager
     {
@@ -31,7 +32,8 @@ namespace WebGitNet
 
         public ResourceInfo GetResourceInfo(string resourcePath)
         {
-            var fullPath = this.FindFullPath(resourcePath);
+            string decodedPath = HttpUtility.UrlDecode(resourcePath);
+            var fullPath = this.FindFullPath(decodedPath);
             var info = new ResourceInfo { FullPath = fullPath };
 
             if (!fullPath.StartsWith(this.rootPath))
