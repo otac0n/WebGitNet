@@ -32,8 +32,7 @@ namespace WebGitNet
 
         public ResourceInfo GetResourceInfo(string resourcePath)
         {
-            string decodedPath = HttpUtility.UrlDecode(resourcePath);
-            var fullPath = this.FindFullPath(decodedPath);
+            var fullPath = this.FindFullPath(resourcePath);
             var info = new ResourceInfo { FullPath = fullPath };
 
             if (!fullPath.StartsWith(this.rootPath))
@@ -69,7 +68,8 @@ namespace WebGitNet
 
         private string FindFullPath(string url)
         {
-            var path = Path.Combine(this.rootPath, url);
+            string decodedUrl = HttpUtility.UrlDecode(url);
+            var path = Path.Combine(this.rootPath, decodedUrl);
             return Path.GetFullPath(path);
         }
     }
