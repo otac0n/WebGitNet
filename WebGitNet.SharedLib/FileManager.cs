@@ -8,6 +8,7 @@
 namespace WebGitNet
 {
     using System.IO;
+    using System.Web;
 
     public class FileManager
     {
@@ -67,7 +68,8 @@ namespace WebGitNet
 
         private string FindFullPath(string url)
         {
-            var path = Path.Combine(this.rootPath, url);
+            string decodedUrl = HttpUtility.UrlDecode(url);
+            var path = Path.Combine(this.rootPath, decodedUrl);
             return Path.GetFullPath(path);
         }
     }
