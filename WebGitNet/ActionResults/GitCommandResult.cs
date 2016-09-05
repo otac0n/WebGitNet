@@ -61,7 +61,7 @@ namespace WebGitNet.ActionResults
 
         private static byte[] PacketFormat(string packet)
         {
-            return GitUtilities.DefaultEncoding.GetBytes((packet.Length + 4).ToString("X").ToLower().PadLeft(4, '0') + packet);
+            return GitUtilities.DefaultEncoding.GetBytes((packet.Length + 4).ToString("x").PadLeft(4, '0') + packet);
         }
     }
 }
