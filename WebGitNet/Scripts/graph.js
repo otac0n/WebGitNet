@@ -32,7 +32,7 @@ Graph.defaults = {
 };
 
 Graph.init = function () {
-    Graph.options = JSON.parse($.cookie("Graph.options")) || {};
+    Graph.options = JSON.parse($.cookie("Graph.options") || '{}');
 
     var node = function (str) {
         var i = str.split(':');
