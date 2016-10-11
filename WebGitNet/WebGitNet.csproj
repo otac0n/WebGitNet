@@ -235,6 +235,8 @@
     <None Include="Scripts\jquery.validate.unobtrusive.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <None Include="Scripts\jquery-2.1.0.intellisense.js" />
+    <Content Include="Views\Browse\ShortLogEntry.cshtml" />
+    <Content Include="Views\Browse\ViewCommitsAdvanced.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WebGitNet.SearchProviders\WebGitNet.SearchProviders.csproj">

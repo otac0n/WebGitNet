@@ -1,17 +1,22 @@
 ﻿@model PaginationInfo
-@helper Link(string text, int page) {
+@helper Link(string text, int page, string author = "") {
     var r = new RouteValueDictionary((object)Model.RouteValues);
     if (page != 1)
     {
         r[Model.RouteKey ?? "page"] = page;
+    }
+    
+    if(author != "")
+    {
+        r["author"] = author;
     }
 
     <li class="@(page == Model.Page ? "active" : string.Empty)">@Html.ActionLink(text, (string)Model.ActionName, (string)Model.ControllerName, r, null)</li>
 }
 <div class="pagination pagination-centered">
     <ul>
-        @Link("Newest", 1)
-        @Link("Newer", Math.Max(Model.Page - 1, 1))
+        @Link("Newest", 1, Model.Author)
+        @Link("Newer", Math.Max(Model.Page - 1, 1), Model.Author)
 
         @{
             int left = Math.Min(Model.Page - 1, 2);
@@ -20,11 +25,11 @@
             int endPage = Math.Min(Model.PageCount, Model.Page + right + (2 - left));
             for (int p = startPage; p <= endPage; p++)
             {
-                @Link(p.ToString(), p);
+                @Link(p.ToString(), p, Model.Author);
             }
         }
 
-        @Link("Older", Math.Min(Model.Page + 1, Model.PageCount))
-        @Link("Oldest", Model.PageCount)
+        @Link("Older", Math.Min(Model.Page + 1, Model.PageCount), Model.Author)
+        @Link("Oldest", Model.PageCount, Model.Author)
     </ul>
 </div>

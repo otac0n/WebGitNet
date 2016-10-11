@@ -149,6 +149,37 @@ namespace WebGitNet.Controllers
             return View(commits);
         }
 
+        public ActionResult ViewCommitsAdvanced(string repo, string @object = null, int page = 1, string author = "", int pagesize = 20)
+        {
+            var resourceInfo = this.FileManager.GetResourceInfo(repo);
+            if (resourceInfo.Type != ResourceType.Directory || page < 1 || author == "")
+            {
+                return HttpNotFound();
+            }
+
+            int PageSize = pagesize;
+            int skip = PageSize * (page - 1);
+            var count = GitUtilities.CountCommits(resourceInfo.FullPath, @object);
+
+            if (skip >= count)
+            {
+                return HttpNotFound();
+            }
+
+            AddRepoBreadCrumb(repo);
+            this.BreadCrumbs.Append("Browse", "ViewCommitsAdvanced", "Commit Log", new { repo, @object });
+
+            var commits = GitUtilities.GetLogEntriesAdvanced(resourceInfo.FullPath, author, PageSize, skip, @object);
+            var branches = GitUtilities.GetAllRefs(resourceInfo.FullPath).Where(r => r.RefType == RefType.Branch).ToList();
+
+            ViewBag.PaginationInfo = new PaginationInfo(page, (count + PageSize - 1) / PageSize, "Browse", "ViewCommitsAdvanced", new { repo }, "page", author);
+            ViewBag.RepoName = resourceInfo.Name;
+            ViewBag.Object = @object ?? "HEAD";
+            ViewBag.Branches = branches;
+
+            return View(commits);
+        }
+
         public ActionResult ViewRepo(string repo)
         {
             var resourceInfo = this.FileManager.GetResourceInfo(repo);
@@ -242,6 +273,11 @@ namespace WebGitNet.Controllers
                     "View Commit Log",
                     "browse/{repo}/commits/{object}",
                     new { controller = "Browse", action = "ViewCommits", routeName = "View Commit Log", routeIcon = "list", @object = UrlParameter.Optional });
+
+                routes.MapRoute(
+                    "View Commit Log Advanced",
+                    "browse/{repo}/commitsadvanced/{object}",
+                    new { controller = "Browse", action = "ViewCommitsAdvanced", routeName = "View Commit Log Advanced", routeIcon = "list", @object = UrlParameter.Optional });
             }
         }
     }

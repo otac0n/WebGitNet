@@ -14,7 +14,7 @@
                 {
                     <tr><td>parent:</td><td>@Html.ActionLink(parent.Substring(0, 16), "ViewCommit", new { @object = parent })</td></tr>
                 }
-                <tr><td>author:</td><td><a href="mailto:@Model.AuthorEmail">@Model.Author</a></td></tr>
+                <tr><td>author:</td><td><a href="commitsadvanced?author=@Model.Author">@Model.Author</a></td></tr>
                 @if (Model.Author != Model.Committer ||
                      Model.AuthorEmail.Trim().ToLowerInvariant() != Model.CommitterEmail.Trim().ToLowerInvariant())
                 {
